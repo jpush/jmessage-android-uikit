@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/chat_item_send_layout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <com.sample.recordvoicedemo.CircleImageView
+            android:id="@+id/avatar_iv"
+            style="@style/chat_item_sender_avatar_style"/>
+
+        <FrameLayout
+            android:id="@+id/voice_fl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/avatar_iv"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/msg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/msg_send_bg"
+                android:maxWidth="220dp" />
+
+            <ImageView
+                android:id="@+id/voice_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/voice_send" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/voice_length_tv"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/voice_fl"
+            android:text="@string/voice_length"
+            android:textColor="#555555"
+            android:textSize="12sp" />
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

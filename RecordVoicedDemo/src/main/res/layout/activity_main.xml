@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/title_bar_layout"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="50dp"
+        android:background="#3f80dc">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:text="@string/app_name"/>
+
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_bar_layout"
+        android:layout_above="@+id/record_voice_layout"
+        android:background="#F0F1F3"
+        android:listSelector="@android:color/transparent"
+        android:transcriptMode="normal"
+        android:divider="@null"/>
+
+    <LinearLayout
+        android:id="@+id/record_voice_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:background="#E5E5E5"
+        android:layout_alignParentBottom="true">
+
+        <com.sample.recordvoicedemo.RecordVoiceButton
+            android:id="@+id/voice_btn"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:background="@drawable/voice_bg"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/record_voice_hint"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

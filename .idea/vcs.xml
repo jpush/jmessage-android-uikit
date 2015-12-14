@@ -2,8 +2,14 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+<<<<<<< 4694c06d787ac8b88c1d10695dbb8750c48284c8
     <mapping directory="$PROJECT_DIR$/RecordVoicedDemo" vcs="" />
     <mapping directory="$PROJECT_DIR$/RecordVoicedDemo/here" vcs="" />
     <mapping directory="$PROJECT_DIR$/SimpleChatDemo" vcs="" />
+=======
+    <mapping directory="$PROJECT_DIR$/RecordVoicedDemo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/RecordVoicedDemo/here" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/SimpleChatDemo" vcs="Git" />
+>>>>>>> first commit
   </component>
 </project>

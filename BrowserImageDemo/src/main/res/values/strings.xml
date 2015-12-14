@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BrowserImageDemo</string>
+    <string name="loading">加载中</string>
+    <string name="album">相册</string>
+    <string name="my_album">我的相册</string>
+    <string name="sdcard_not_prepare_toast">sd卡尚未准备好</string>
+    <string name="picture_not_found">没找到你想要的图片</string>
+    <string name="send">发送</string>
+    <string name="sending_hint">正在发送</string>
+    <string name="picture_num_limit_toast">你最多只能同时发送9张图片</string>
+    <string name="load_origin_image">下载原图</string>
+    <string name="origin_picture">原图</string>
+    <string name="choose">选择</string>
+    <string name="combine_title">(%s)</string>
+
+</resources>

@@ -10,10 +10,16 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+<<<<<<< 4694c06d787ac8b88c1d10695dbb8750c48284c8
             <option value="$PROJECT_DIR$/Chatting" />
             <option value="$PROJECT_DIR$/GroupChatDetail" />
             <option value="$PROJECT_DIR$/MultiSelectPhotos" />
             <option value="$PROJECT_DIR$/RecordVoice" />
+=======
+            <option value="$PROJECT_DIR$/BrowserImageDemo" />
+            <option value="$PROJECT_DIR$/RecordVoicedDemo" />
+            <option value="$PROJECT_DIR$/SimpleChatDemo" />
+>>>>>>> first commit
           </set>
         </option>
       </GradleProjectSettings>
