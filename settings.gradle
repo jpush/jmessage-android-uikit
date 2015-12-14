@@ -1,0 +1,1 @@
+include ':SimpleChatDemo', ':RecordVoicedDemo', ':BrowserImageDemo'

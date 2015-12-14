@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">RecordVoiceDemo</string>
+    <string name="record_voice_hint">按住 说话</string>
+    <string name="voice_length">10"</string>
+    <string name="symbol_second">\"</string>
+    <string name="cancel_record_voice_hint">松开手指，取消发送</string>
+    <string name="send_voice_hint">松开 结束</string>
+    <string name="create_file_failed">创建文件失败</string>
+    <string name="move_to_cancel_hint">手指上滑，取消发送</string>
+    <string name="rest_record_time_hint">还可以说%s秒</string>
+    <string name="time_too_short_toast">时间太短！</string>
+    <string name="file_fetch_failed">文件获取失败</string>
+    <string name="record_voice_permission_denied">请在应用的权限管理中将使用录音选项设置为允许，
+        否则将无法使用录音功能</string>
+    <string name="record_voice_permission_request">若要使用语音功能，请选择允许录音</string>
+    <string name="sdcard_not_exist_toast">暂无外部存储</string>
+    <string name="file_not_found_toast">文件丢失</string>
+</resources>
