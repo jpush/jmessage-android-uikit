@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/BrowserImageDemo" />
+            <option value="$PROJECT_DIR$/ChatDetailDemo" />
             <option value="$PROJECT_DIR$/RecordVoicedDemo" />
             <option value="$PROJECT_DIR$/SimpleChatDemo" />
           </set>

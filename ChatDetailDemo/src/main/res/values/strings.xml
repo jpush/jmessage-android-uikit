@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ChatDetailDemo</string>
+    <string name="chat_detail_title">聊天详情</string>
+    <string name="combine_title">(%s)</string>
+    <string name="group_name_hit">群聊名称</string>
+    <string name="all_group_members">全部群成员</string>
+    <string name="group_people_num_hit">群人数上限</string>
+    <string name="group_my_name_hit">我在本群昵称</string>
+    <string name="group_chat_history_hit">查找聊天内容</string>
+    <string name="group_clear_history_hit">清空聊天记录</string>
+    <string name="clear_history_confirm_title">确定清空聊天记录？</string>
+    <string name="delete_group_confirm_title">确定删除并退出群聊？</string>
+    <string name="group_exit_btn">删除并退出</string>
+
+</resources>
