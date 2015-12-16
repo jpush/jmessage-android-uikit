@@ -48,7 +48,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="15dp" />
 
-        <com.sample.application.view.CircleImageView
+        <cn.jmessage.android.uicomponents.view.CircleImageView
             android:id="@+id/avatar_iv"
             style="@style/chat_item_sender_avatar_style" />
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sample.application.view.ChatView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.jmessage.android.uicomponents.view.ChatView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chat_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,7 +34,7 @@
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
 
-        <com.sample.application.view.DropDownListView
+        <cn.jmessage.android.uicomponents.view.DropDownListView
             android:id="@+id/chat_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -45,7 +45,7 @@
             listViewAttr:isDropDownStyle="true"
             listViewAttr:isOnBottomStyle="false"
             listViewAttr:isAutoLoadOnBottom="false">
-        </com.sample.application.view.DropDownListView>
+        </cn.jmessage.android.uicomponents.view.DropDownListView>
     </LinearLayout>
 
     <LinearLayout
@@ -95,7 +95,7 @@
                 android:textColor="#000000"
                 android:inputType="textMultiLine"/>
 
-            <com.sample.application.view.RecordVoiceButton
+            <cn.jmessage.android.uicomponents.view.RecordVoiceButton
                 android:id="@+id/voice_btn"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
@@ -235,4 +235,4 @@
     </LinearLayout>
 
 
-</com.sample.application.view.ChatView>
+</cn.jmessage.android.uicomponents.view.ChatView>

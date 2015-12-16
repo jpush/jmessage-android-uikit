@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp" >
 
-        <com.sample.application.view.CircleImageView
+        <cn.jmessage.android.uicomponents.view.CircleImageView
             android:id="@+id/avatar_iv"
             style="@style/chat_item_sender_avatar_style" />
 
@@ -31,7 +31,7 @@
             android:maxWidth="200.0dip"
              >
 
-            <com.sample.application.view.BubbleImageView
+            <cn.jmessage.android.uicomponents.view.BubbleImageView
                 android:id="@+id/picture_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

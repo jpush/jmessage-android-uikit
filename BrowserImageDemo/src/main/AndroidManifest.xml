@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sample.browserimagedemo">
+    package="cn.jmessage.android.uicomponents">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/noTitle">
-        <activity android:name=".MainActivity">
+        <activity android:name="cn.jmessage.android.uicomponents.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +23,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.sample.browserimagedemo.BrowserViewPagerActivity"
+        <activity android:name="cn.jmessage.android.uicomponents.BrowserViewPagerActivity"
             android:theme="@style/noTitle"/>
-        <activity android:name="com.sample.browserimagedemo.PickPictureActivity"
+        <activity android:name="cn.jmessage.android.uicomponents.PickPictureActivity"
             android:theme="@style/noTitle"/>
     </application>
 
