@@ -1,0 +1,75 @@
+<resources>
+
+    <style name="noTitle" parent="android:Theme.Holo">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="ChatDetailItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@drawable/list_item_bg</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ChatDetailItemHit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#555555</item>
+    </style>
+
+    <style name="ChatDetailItemContent">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">45dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textColorHint">#808080</item>
+    </style>
+
+    <style name="ChatDetailArrow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/arrow</item>
+    </style>
+
+    <style name="LoadingDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="default_input_style_with_bg">
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:maxLength">64</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/default_input_bg</item>
+    </style>
+
+    <style name="change_group_name_style" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@drawable/dialog_default_bg</item>
+    </style>
+
+</resources>
