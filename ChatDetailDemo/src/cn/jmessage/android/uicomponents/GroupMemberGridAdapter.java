@@ -21,7 +21,7 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
-public class GroupMemberGridAdapter extends BaseAdapter {
+public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.RefreshMemberListener {
 
     private static final String TAG = "GroupMemberGridAdapter";
 
@@ -69,7 +69,21 @@ public class GroupMemberGridAdapter extends BaseAdapter {
         mRestNum = mRestArray[mCurrentNum % 4];
     }
 
+    @Override
+    public void onRefreshMemberList(List<UserInfo> memberList) {
+        mMemberList = memberList;
+        if (mMemberList.size() > 40) {
+            mCurrentNum = 39;
+        } else {
+            mCurrentNum = mMemberList.size();
+        }
+        mRestNum = mRestArray[mCurrentNum % 4];
+        notifyDataSetChanged();
+        Log.d(TAG, "Refreshed!");
+    }
+
     public void refreshMemberList(long groupId) {
+        //由于此demo没有Conversation,只能每次都从服务器更新群成员信息
 //        Conversation conv = JMessageClient.getGroupConversation(groupId);
 //        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
         JMessageClient.getGroupInfo(groupId, new GetGroupInfoCallback() {

@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private static final String GROUP_ID = "groupId";
     private static final String DELETE_MODE = "deleteMode";
+    private static final String MEMBERS_COUNT = "membersCount";
     private static final int REQUEST_CODE_ALL_MEMBER = 100;
     private static final int ON_GROUP_EVENT = 101;
     private static final int GET_GROUP_INFO_SUCCESS = 102;
@@ -60,6 +61,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     // 当前GridView群成员项数
     private int mCurrentNum;
     private boolean mIsCreator;
+    private RefreshMemberListener mListener;
 
 
     @Override
@@ -249,10 +251,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void handleMsg(Message msg) {
         switch (msg.what) {
             case ON_GROUP_EVENT:
-                mAdapter.refreshMemberList(mGroupId);
+//                mAdapter.refreshMemberList(mGroupId);
+                refreshMemberList();
                 break;
             case GET_GROUP_INFO_SUCCESS:
                 mAdapter = new GroupMemberGridAdapter(mContext, mMembersList, mIsCreator, mAvatarSize);
+                setRMLListener(mAdapter);
                 if (mMembersList.size() > 40) {
                     mCurrentNum = 39;
                 } else {
@@ -392,7 +396,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void gotResult(final int status, final String desc) {
                 if (status == 0) {
-                    mAdapter.refreshMemberList(mGroupId);
+//                    mAdapter.refreshMemberList(mGroupId);
+                    refreshMemberList();
+                    mCurrentNum++;
                     mChatDetailView.setTitle(mMembersList.size() + 1);
                     mChatDetailView.setMembersNum(mMembersList.size() + 1);
                     mLoadingDialog.dismiss();
@@ -439,5 +445,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             //无论是否添加群成员，刷新界面
             mHandler.sendEmptyMessage(ON_GROUP_EVENT);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ALL_MEMBER) {
+            refreshMemberList();
+        }
+    }
+
+    /**
+     * 此demo没有Conversation,所以每次都要调用getGroupInfo更新群成员信息
+     */
+    private void refreshMemberList() {
+        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
+            @Override
+            public void gotResult(int status, String desc, GroupInfo groupInfo) {
+                if (status == 0) {
+                    mMembersList = groupInfo.getGroupMembers();
+                    mListener.onRefreshMemberList(mMembersList);
+                    mChatDetailView.setTitle(mMembersList.size());
+                    mChatDetailView.setMembersNum(mMembersList.size());
+                } else {
+                    HandleResponseCode.onHandle(mContext, status, false);
+                }
+            }
+        });
+    }
+
+    public void setRMLListener(RefreshMemberListener listener) {
+        mListener = listener;
+    }
+
+    interface RefreshMemberListener {
+        public void onRefreshMemberList(List<UserInfo> memberList);
     }
 }

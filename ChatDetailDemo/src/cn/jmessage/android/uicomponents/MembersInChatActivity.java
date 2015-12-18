@@ -35,9 +35,9 @@ import cn.jpush.im.api.BasicCallback;
  */
 public class MembersInChatActivity extends Activity {
 
-    private String GROUP_ID = "groupId";
-    private String DELETE_MODE = "deleteMode";
-    private String MEMBERS_COUNT = "membersCount";
+    private static final String GROUP_ID = "groupId";
+    private static final String DELETE_MODE = "deleteMode";
+    private static final String MEMBERS_COUNT = "membersCount";
     private int RESULT_CODE_ALL_MEMBER = 100;
 
     private ListView mListView;
@@ -53,6 +53,7 @@ public class MembersInChatActivity extends Activity {
     private long mGroupId;
     private boolean mIsDeleteMode;
     private boolean mIsCreator;
+    private RefreshMemberListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class MembersInChatActivity extends Activity {
                         mIsCreator = true;
                     }
                     mAdapter = new AllMembersAdapter(mContext, mMemberInfoList, mIsDeleteMode);
+                    setRMLListener(mAdapter);
                     mListView.setAdapter(mAdapter);
                     mListView.requestFocus();
                     String title = mContext.getString(R.string.combine_title);
@@ -127,9 +129,10 @@ public class MembersInChatActivity extends Activity {
                                         public void gotResult(int status, String desc) {
                                             mLoadingDialog.dismiss();
                                             if (status == 0) {
-                                                mAdapter.refreshMemberList(mGroupId);
+//                                                mAdapter.refreshMemberList(mGroupId);
                                                 refreshMemberList();
-                                                mTitle.setText("(" + mMemberInfoList.size() + ")");
+//                                                mMemberInfoList = mAdapter.getMemberList();
+//                                                mTitle.setText("(" + mMemberInfoList.size() + ")");
                                             } else {
                                                 HandleResponseCode.onHandle(mContext, status, false);
                                             }
@@ -210,7 +213,7 @@ public class MembersInChatActivity extends Activity {
                                 mLoadingDialog.dismiss();
                                 if (status == 0) {
                                     Intent intent = new Intent();
-                                    intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size());
+                                    intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size() - list.size());
                                     setResult(RESULT_CODE_ALL_MEMBER, intent);
                                     finish();
                                 } else {
@@ -321,10 +324,11 @@ public class MembersInChatActivity extends Activity {
             public void gotResult(final int status, final String desc) {
                 if (status == 0) {
                     // 添加群成员
+//                    mAdapter.refreshMemberList(mGroupId);
                     refreshMemberList();
-                    mAdapter.refreshMemberList(mGroupId);
+//                    mMemberInfoList = mAdapter.getMemberList();
                     mListView.setSelection(mListView.getBottom());
-                    mTitle.setText("(" + mMemberInfoList.size() + ")");
+//                    mTitle.setText("(" + mMemberInfoList.size() + ")");
                     mLoadingDialog.dismiss();
                 } else {
                     mLoadingDialog.dismiss();
@@ -332,13 +336,6 @@ public class MembersInChatActivity extends Activity {
                 }
             }
         });
-    }
-
-    //添加或者删除成员后重新获得MemberInfoList
-    private void refreshMemberList() {
-        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
-        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
-        mMemberInfoList = groupInfo.getGroupMembers();
     }
 
     /**
@@ -387,6 +384,24 @@ public class MembersInChatActivity extends Activity {
         mAdapter.updateListView(filterList);
     }
 
+    /**
+     * 此demo没有Conversation,所以每次都要调用getGroupInfo更新群成员信息
+     */
+    private void refreshMemberList() {
+        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
+            @Override
+            public void gotResult(int status, String desc, GroupInfo groupInfo) {
+                if (status == 0) {
+                    mMemberInfoList = groupInfo.getGroupMembers();
+                    mListener.onRefreshMemberList(mMemberInfoList);
+                    mTitle.setText("(" + mMemberInfoList.size() + ")");
+                } else {
+                    HandleResponseCode.onHandle(mContext, status, false);
+                }
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -394,5 +409,13 @@ public class MembersInChatActivity extends Activity {
         setResult(RESULT_CODE_ALL_MEMBER, intent);
         finish();
         super.onBackPressed();
+    }
+
+    public void setRMLListener(RefreshMemberListener listener) {
+        mListener = listener;
+    }
+
+    interface RefreshMemberListener {
+        public void onRefreshMemberList(List<UserInfo> memberList);
     }
 }

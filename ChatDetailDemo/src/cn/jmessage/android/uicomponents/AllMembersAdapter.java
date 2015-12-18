@@ -17,6 +17,7 @@ import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
+import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
@@ -24,7 +25,7 @@ import cn.jpush.im.android.api.model.UserInfo;
 /**
  * Created by Ken on 2015/11/25.
  */
-public class AllMembersAdapter extends BaseAdapter {
+public class AllMembersAdapter extends BaseAdapter implements MembersInChatActivity.RefreshMemberListener {
 
     private Context mContext;
     private List<UserInfo> mMemberList = new ArrayList<UserInfo>();
@@ -38,10 +39,24 @@ public class AllMembersAdapter extends BaseAdapter {
         this.mIsDeleteMode = isDeleteMode;
     }
 
-    public void refreshMemberList(long groupId){
-        Conversation conv = JMessageClient.getGroupConversation(groupId);
-        GroupInfo groupInfo = (GroupInfo)conv.getTargetInfo();
-        mMemberList = groupInfo.getGroupMembers();
+//    public void refreshMemberList(long groupId){
+//        JMessageClient.getGroupInfo(groupId, new GetGroupInfoCallback() {
+//            @Override
+//            public void gotResult(int status, String desc, GroupInfo groupInfo) {
+//                if (status == 0) {
+//                    mMemberList = groupInfo.getGroupMembers();
+//                    notifyDataSetChanged();
+//                } else {
+//                    HandleResponseCode.onHandle(mContext, status, false);
+//                }
+//            }
+//        });
+//        mSelectMap.clear();
+//    }
+
+    @Override
+    public void onRefreshMemberList(List<UserInfo> memberList) {
+        mMemberList = memberList;
         mSelectMap.clear();
         notifyDataSetChanged();
     }
@@ -123,6 +138,10 @@ public class AllMembersAdapter extends BaseAdapter {
     public List<String> getSelectedList() {
         Log.d("AllMembersAdapter", "SelectedList: " + mSelectedList.toString());
         return mSelectedList;
+    }
+
+    public List<UserInfo> getMemberList() {
+        return mMemberList;
     }
 
     public void setOnCheck(int position) {
