@@ -47,7 +47,7 @@
        android:layout_below="@id/title_bar_rl"
        android:layout_above="@+id/check_box_rl">
        
-    <com.sample.browserimagedemo.ImgBrowserViewPager
+    <cn.jmessage.android.uicomponents.ImgBrowserViewPager
         android:id="@+id/img_browser_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

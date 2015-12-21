@@ -56,6 +56,7 @@
     <color name="sidebar_text_color">#0a6afd</color>
     <color name="select_friend_item_split_color">#dddddd</color>
     <color name="network_disconnected_bg_color">#ffdfe0</color>
+    <color name="send_press_color">#346fc3</color>
     <!-- 黑色 -->
     <color name="black">#000000</color>
     <color name="gray">#808080</color>

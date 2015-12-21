@@ -10,7 +10,7 @@
         android:padding="10dp">
 
         <!-- 联系人信息 -->
-        <cn.jmessage.android.uicomponents.CircleImageView
+        <cn.jmessage.android.uicomponents.groupchatdetail.CircleImageView
             android:id="@+id/icon_iv"
             android:layout_width="50dp"
             android:layout_height="50dp"

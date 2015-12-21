@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import cn.jmessage.android.uicomponents.recordvoice.RecordVoiceButton;
+
 public class MainActivity extends Activity {
 
     private ListView mListView;

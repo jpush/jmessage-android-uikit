@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants">
 
-    <com.sample.browserimagedemo.MyImageView
+    <cn.jmessage.android.uicomponents.MyImageView
         android:id="@+id/child_image"
         android:layout_width="fill_parent"
         android:layout_height="100dip"

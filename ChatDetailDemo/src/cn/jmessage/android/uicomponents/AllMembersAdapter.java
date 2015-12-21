@@ -15,11 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jpush.im.android.api.JMessageClient;
+import cn.jmessage.android.uicomponents.groupchatdetail.CircleImageView;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
-import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
-import cn.jpush.im.android.api.model.Conversation;
-import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
 /**

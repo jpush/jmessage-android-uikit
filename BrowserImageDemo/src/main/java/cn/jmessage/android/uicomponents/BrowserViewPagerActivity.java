@@ -278,6 +278,7 @@ public class BrowserViewPagerActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.pick_picture_send_btn:
+                    //TODO 发送图片
                     mProgressDialog = new ProgressDialog(mContext);
                     mProgressDialog.setMessage(mContext.getString(R.string.sending_hint));
                     mProgressDialog.setCanceledOnTouchOutside(false);

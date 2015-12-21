@@ -42,7 +42,7 @@
         android:background="#E5E5E5"
         android:layout_alignParentBottom="true">
 
-        <com.sample.uicomponents.RecordVoiceButton
+        <cn.jmessage.android.uicomponents.recordvoice.RecordVoiceButton
             android:id="@+id/voice_btn"
             android:layout_width="match_parent"
             android:layout_height="34dp"

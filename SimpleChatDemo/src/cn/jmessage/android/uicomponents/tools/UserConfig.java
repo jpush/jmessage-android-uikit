@@ -2,31 +2,48 @@ package cn.jmessage.android.uicomponents.tools;
 
 public class UserConfig {
 
-    private boolean mIsUser1;
     private String mUser1;
     private String mUser2;
-    private String mPassword = "1111";
+    private String mMyPassword;
+    private String mPassword;
+    private long mGroupId;
+    private static UserConfig mInstance = new UserConfig();
 
-    public UserConfig(boolean isUser1) {
-        mIsUser1 = isUser1;
-        if (mIsUser1) {
-            mUser1 = "user001";
-            mUser2 = "user002";
-        } else {
-            mUser1 = "user002";
-            mUser2 = "user001";
-        }
+    public static UserConfig getInstance() {
+        return mInstance;
+    }
+
+    public void setMyInfo(String username, String password) {
+        this.mUser1 = username;
+        this.mMyPassword = password;
+    }
+
+    public String  getMyUsername() {
+        return mUser1;
+    }
+
+    public String getMyPassword() {
+        return mMyPassword;
+    }
+
+    public void setTargetInfo(String username, String password) {
+        this.mUser2 = username;
+        this.mPassword = password;
     }
 
     public String getTargetId() {
         return mUser2;
     }
 
-    public String getMyUsername() {
-        return mUser1;
-    }
-
     public String getPassword() {
         return mPassword;
+    }
+
+    public void setGroupId(long groupId) {
+        this.mGroupId = groupId;
+    }
+
+    public long getGroupId() {
+        return mGroupId;
     }
 }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.jmessage.android.uicomponents.ChatDetailView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.jmessage.android.uicomponents.groupchatdetail.ChatDetailView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/chat_detail_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    >
+    android:background="@android:color/white">
 
     <ScrollView
         android:id="@+id/chat_detail_sv"
@@ -20,7 +19,7 @@
 
             <include layout="@layout/menu_title_bar"/>
 
-            <cn.jmessage.android.uicomponents.GroupGridView
+            <cn.jmessage.android.uicomponents.groupchatdetail.GroupGridView
                 android:id="@+id/chat_detail_group_gv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,7 +30,7 @@
                 android:numColumns="4"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp">
-            </cn.jmessage.android.uicomponents.GroupGridView>
+            </cn.jmessage.android.uicomponents.groupchatdetail.GroupGridView>
 
             <View
                 android:id="@+id/all_member_split_line1"
@@ -186,4 +185,4 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</cn.jmessage.android.uicomponents.ChatDetailView>
+</cn.jmessage.android.uicomponents.groupchatdetail.ChatDetailView>

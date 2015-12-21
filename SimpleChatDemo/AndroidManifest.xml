@@ -33,7 +33,7 @@
 
 
     <application
-        android:name="cn.jmessage.android.uicomponents.application.SimpleChatApplication"
+        android:name=".SimpleChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -116,7 +116,7 @@
 
 
         <activity
-            android:name="cn.jmessage.android.uicomponents.activity.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/noTitle">
             <intent-filter>
@@ -125,6 +125,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AboutActivity"
+            android:theme="@style/noTitle"/>
+        <activity android:name=".chatting.ChatActivity"
+            android:theme="@style/noTitle"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

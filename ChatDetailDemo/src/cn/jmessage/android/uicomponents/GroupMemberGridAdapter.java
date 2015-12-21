@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jmessage.android.uicomponents.groupchatdetail.BitmapLoader;
+import cn.jmessage.android.uicomponents.groupchatdetail.CircleImageView;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;

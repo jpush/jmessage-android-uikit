@@ -3,7 +3,7 @@ package cn.jmessage.android.uicomponents.tools;
 import android.os.Environment;
 import android.text.format.DateFormat;
 
-import cn.jmessage.android.uicomponents.application.SimpleChatApplication;
+import cn.jmessage.android.uicomponents.SimpleChatApplication;
 
 import java.io.File;
 import java.util.Calendar;

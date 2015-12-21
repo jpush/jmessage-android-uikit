@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.sample.browserimagedemo.MyImageView
+    <cn.jmessage.android.uicomponents.MyImageView
         android:id="@+id/group_image"
         android:layout_width="80dp"
         android:layout_height="80dp"

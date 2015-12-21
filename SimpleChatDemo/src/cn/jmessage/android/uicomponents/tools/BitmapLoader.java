@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import cn.jmessage.android.uicomponents.application.SimpleChatApplication;
+import cn.jmessage.android.uicomponents.SimpleChatApplication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
