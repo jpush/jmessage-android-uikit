@@ -20,5 +20,5 @@ XML file, like this:
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
-That's all.
+Don't forget change the package name. That's all.
 

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
-        <com.sample.uicomponents.CircleImageView
+        <cn.jmessage.android.uicomponents.recordvoice.CircleImageView
             android:id="@+id/avatar_iv"
             style="@style/chat_item_sender_avatar_style"/>
 
