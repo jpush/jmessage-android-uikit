@@ -27,6 +27,7 @@
     <string name="forward_msg">转发</string>
     <string name="delete">删除</string>
     <string name="loading">加载中</string>
+    <string name="login">登录中</string>
     <string name="record_voice_permission_denied">请在应用的权限管理中将使用录音选项设置为允许，
         否则将无法使用录音功能</string>
     <string name="record_voice_permission_request">若要使用语音功能，请选择允许录音</string>

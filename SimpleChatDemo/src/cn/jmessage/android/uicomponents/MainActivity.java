@@ -24,6 +24,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        JMessageClient.init(this);
+        JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_NO_NOTIFICATION);
         LinearLayout mSingleChatLl;
         LinearLayout mGroupChatLl;
         Button mAboutBtn;
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
         userConfig.setGroupId(10048379);
 
 
-        final Dialog loadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.loading));
+        final Dialog loadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.login));
         loadingDialog.show();
 //        JMessageClient.register("user001", "1111", new BasicCallback() {
 //            @Override

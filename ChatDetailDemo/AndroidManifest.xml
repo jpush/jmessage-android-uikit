@@ -3,7 +3,7 @@
     package="cn.jmessage.android.uicomponents">
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="9"
         android:targetSdkVersion="23" />
 
     <!--Required 一些系统要求的权限，如访问网络等-->

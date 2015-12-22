@@ -107,6 +107,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             mChatView.setChatListAdapter(mChatAdapter);
         } else {
             mGroupId = userConfig.getGroupId();
+            Log.d(TAG, "GroupId : " + mGroupId);
             JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
                 @Override
                 public void gotResult(int status, String desc, GroupInfo groupInfo) {
@@ -497,6 +498,16 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
                     if (targetID.equals(mTargetId)) {
                         Message lastMsg = mChatAdapter.getLastMsg();
                         //收到的消息和Adapter中最后一条消息比较，如果最后一条为空或者不相同，则加入到MsgList
+                        if (lastMsg == null || msg.getId() != lastMsg.getId()) {
+                            mChatAdapter.addMsgToList(msg);
+                        } else {
+                            mChatAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } else {
+                    long groupId = ((GroupInfo)msg.getTargetInfo()).getGroupID();
+                    if (!mIsSingle && groupId == mGroupId) {
+                        Message lastMsg = mChatAdapter.getLastMsg();
                         if (lastMsg == null || msg.getId() != lastMsg.getId()) {
                             mChatAdapter.addMsgToList(msg);
                         } else {
