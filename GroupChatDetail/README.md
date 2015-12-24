@@ -30,7 +30,9 @@ IM SDK UI 组件
 ```
 别忘了更改包名
 
-5、配置用户信息, 使用UserConfig提供的方法更改登录用户信息.你可以调用JMessageClient.register(username, password, callback)
+5、配置用户信息, 使用UserConfig提供的方法更改登录用户信息.
+
+你可以调用JMessageClient.register(username, password, callback)
 
 来注册用户, 也可以使用curl的方式注册用户:
 
