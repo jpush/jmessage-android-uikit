@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.jmessage.android.uikit.browser.AlbumListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/album_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -33,4 +34,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</cn.jmessage.android.uikit.browser.AlbumListView>

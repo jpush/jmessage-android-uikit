@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.jmessage.android.uikit.browser.PickPictureView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pick_picture_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -48,6 +49,6 @@
         android:numColumns="auto_fit"
         android:padding="5dip"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dip"></GridView>
+        android:verticalSpacing="5dip"/>
 
-</LinearLayout>
+</cn.jmessage.android.uikit.browser.PickPictureView>
