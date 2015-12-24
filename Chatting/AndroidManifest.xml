@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.jmessage.android.uicomponents">
+    package="cn.jmessage.android.uikit">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -8,12 +8,12 @@
 
 
     <permission
-        android:name="cn.jmessage.android.uicomponents.permission.JPUSH_MESSAGE"
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
 
     <!--Required 一些系统要求的权限，如访问网络等-->
-    <uses-permission android:name="cn.jmessage.android.uicomponents.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -33,7 +33,7 @@
 
 
     <application
-        android:name=".SimpleChatApplication"
+        android:name="cn.jmessage.android.uikit.SimpleChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -58,7 +58,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -81,7 +81,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
@@ -101,7 +101,7 @@
                 <action android:name="cn.jpush.im.android.action.IM_RESPONSE" />
                 <action android:name="cn.jpush.im.android.action.NOTIFICATION_CLICK_PROXY" />
 
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -111,12 +111,12 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="b0585383bd5f451b7fc6014e" />
+            android:value="5fbb6030a7c7b853dc199ea0" />
 
 
 
         <activity
-            android:name=".MainActivity"
+            android:name="cn.jmessage.android.uikit.MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
@@ -125,9 +125,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity"
+        <activity android:name="cn.jmessage.android.uikit.AboutActivity"
             android:theme="@style/noTitle"/>
-        <activity android:name=".chatting.ChatActivity"
+        <activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"
             android:theme="@style/noTitle"
             android:windowSoftInputMode="adjustResize"/>
     </application>

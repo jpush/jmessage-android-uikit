@@ -10,10 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/BrowserImageDemo" />
+            <option value="$PROJECT_DIR$/BrowserImage" />
             <option value="$PROJECT_DIR$/Chatting" />
             <option value="$PROJECT_DIR$/GroupChatDetail" />
-            <option value="$PROJECT_DIR$/RecordVoicedDemo" />
+            <option value="$PROJECT_DIR$/RecordVoiced" />
           </set>
         </option>
       </GradleProjectSettings>

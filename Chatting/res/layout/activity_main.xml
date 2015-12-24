@@ -17,7 +17,7 @@
         android:clickable="true"
         android:background="@drawable/list_item_bg">
 
-        <cn.jmessage.android.uicomponents.chatting.CircleImageView
+        <cn.jmessage.android.uikit.chatting.CircleImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
@@ -49,7 +49,7 @@
         android:clickable="true"
         android:background="@drawable/list_item_bg">
 
-        <cn.jmessage.android.uicomponents.chatting.CircleImageView
+        <cn.jmessage.android.uikit.chatting.CircleImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"

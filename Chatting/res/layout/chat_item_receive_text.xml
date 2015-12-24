@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
-        <cn.jmessage.android.uicomponents.chatting.CircleImageView
+        <cn.jmessage.android.uikit.chatting.CircleImageView
             android:id="@+id/avatar_iv"
             style="@style/chat_item_receiver_avatar_style"/>
 

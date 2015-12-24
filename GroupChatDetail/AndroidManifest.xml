@@ -7,7 +7,7 @@
         android:targetSdkVersion="23" />
 
     <!--Required 一些系统要求的权限，如访问网络等-->
-    <uses-permission android:name="cn.jmessage.android.uicomponents.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <permission
-        android:name="cn.jmessage.android.uicomponents.permission.JPUSH_MESSAGE"
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
     <application
@@ -49,7 +49,7 @@
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -72,7 +72,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </activity>
 
@@ -92,7 +92,7 @@
                 <action android:name="cn.jpush.im.android.action.IM_RESPONSE" />
                 <action android:name="cn.jpush.im.android.action.NOTIFICATION_CLICK_PROXY" />
 
-                <category android:name="cn.jmessage.android.uicomponents" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -104,7 +104,7 @@
             android:name="JPUSH_APPKEY"
             android:value="b0585383bd5f451b7fc6014e" />
 
-        <activity android:name="cn.jmessage.android.uicomponents.MainActivity"
+        <activity android:name="cn.jmessage.android.uikit.MainActivity"
             android:theme="@style/noTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -112,8 +112,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.jmessage.android.uicomponents.BaseActivity"/>
-        <activity android:name="cn.jmessage.android.uicomponents.MembersInChatActivity"
+        <activity android:name="cn.jmessage.android.uikit.BaseActivity"/>
+        <activity android:name="cn.jmessage.android.uikit.MembersInChatActivity"
             android:theme="@style/noTitle"/>
     </application>
 

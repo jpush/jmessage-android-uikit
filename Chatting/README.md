@@ -9,7 +9,9 @@ Usage:
 
 2.Config AndroidManifest. Use demo's package name and AppKey is OK, or you can replace with your
 
-package name and AppKey.
+package name and AppKey. When you change package name, you should change the applicationId in 
+
+build.gradle file, too.
 
 3.copy the resources that this demo needed to your project. You can custom your views by changing
 
