@@ -5,13 +5,13 @@ IM SDK UI 组件
 
 用法:
 
-1. 复制chatting文件夹下的文件到你的项目.
+1、复制chatting文件夹下的文件到你的项目.
 
-2. 配置AndroidManifest, 更换包名, AppKey和applicationId.
+2、配置AndroidManifest, 更换包名, AppKey和applicationId.
 
-3. 复制资源文件到你的项目, 你可以自定义界面的样式
+3、复制资源文件到你的项目, 你可以自定义界面的样式
 
-4. 在XML文件中引用这些组件, 比如:
+4、在XML文件中引用这些组件, 比如:
 
 ```
 <cn.jmessage.android.uicomponents.chatting.ChatView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,10 +24,9 @@ IM SDK UI 组件
     </cn.jmessage.android.uicomponents.chatting.ChatView>
 
 ```
-
 别忘了更改为你的包名
 
-5. 配置用户信息, 使用UserConfig提供的方法更改登录用户信息.你可以调用JMessageClient.register(username, password, callback)
+5、配置用户信息, 使用UserConfig提供的方法更改登录用户信息.你可以调用JMessageClient.register(username, password, callback)
 
 来注册用户, 也可以使用curl的方式注册用户:
 
