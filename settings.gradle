@@ -1,1 +1,1 @@
-include ':Chatting', ':RecordVoiced', ':BrowserImage', ':GroupChatDetail'
+include ':Chatting', ':RecordVoiced', ':MultiSelectPhotos', ':GroupChatDetail'

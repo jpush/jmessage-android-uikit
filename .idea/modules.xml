@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BrowserImage/BrowserImage.iml" filepath="$PROJECT_DIR$/BrowserImage/BrowserImage.iml" />
       <module fileurl="file://$PROJECT_DIR$/Chatting/Chatting.iml" filepath="$PROJECT_DIR$/Chatting/Chatting.iml" />
       <module fileurl="file://$PROJECT_DIR$/GroupChatDetail/GroupChatDetail.iml" filepath="$PROJECT_DIR$/GroupChatDetail/GroupChatDetail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MultiSelectPhotos/MultiSelectPhotos.iml" filepath="$PROJECT_DIR$/MultiSelectPhotos/MultiSelectPhotos.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/RecordVoiced/RecordVoiced.iml" filepath="$PROJECT_DIR$/RecordVoiced/RecordVoiced.iml" />
     </modules>

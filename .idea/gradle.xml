@@ -10,9 +10,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/BrowserImage" />
             <option value="$PROJECT_DIR$/Chatting" />
             <option value="$PROJECT_DIR$/GroupChatDetail" />
+            <option value="$PROJECT_DIR$/MultiSelectPhotos" />
             <option value="$PROJECT_DIR$/RecordVoiced" />
           </set>
         </option>
