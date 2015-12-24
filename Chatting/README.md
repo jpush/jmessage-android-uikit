@@ -24,7 +24,7 @@ IM SDK UI 组件
     </cn.jmessage.android.uicomponents.chatting.ChatView>
 
 ```
-别忘了更改为你的包名
+别忘了更改包名
 
 5、配置用户信息, 使用UserConfig提供的方法更改登录用户信息.你可以调用JMessageClient.register(username, password, callback)
 
