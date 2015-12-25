@@ -13,7 +13,7 @@
             <option value="$PROJECT_DIR$/Chatting" />
             <option value="$PROJECT_DIR$/GroupChatDetail" />
             <option value="$PROJECT_DIR$/MultiSelectPhotos" />
-            <option value="$PROJECT_DIR$/RecordVoiced" />
+            <option value="$PROJECT_DIR$/RecordVoice" />
           </set>
         </option>
       </GradleProjectSettings>

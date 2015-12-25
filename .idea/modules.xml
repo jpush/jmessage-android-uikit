@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/GroupChatDetail/GroupChatDetail.iml" filepath="$PROJECT_DIR$/GroupChatDetail/GroupChatDetail.iml" />
       <module fileurl="file://$PROJECT_DIR$/MultiSelectPhotos/MultiSelectPhotos.iml" filepath="$PROJECT_DIR$/MultiSelectPhotos/MultiSelectPhotos.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyApplication.iml" filepath="$PROJECT_DIR$/MyApplication.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RecordVoiced/RecordVoiced.iml" filepath="$PROJECT_DIR$/RecordVoiced/RecordVoiced.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RecordVoice/RecordVoice.iml" filepath="$PROJECT_DIR$/RecordVoice/RecordVoice.iml" />
     </modules>
   </component>
 </project>
