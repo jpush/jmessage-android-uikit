@@ -18,8 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.sample.application.R;
+
 import cn.jmessage.android.uikit.MsgListAdapter;
-import cn.jmessage.android.uikit.R;
 import cn.jmessage.android.uikit.tools.SharePreferenceManager;
 
 import cn.jpush.im.android.api.model.Conversation;

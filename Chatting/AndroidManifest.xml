@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.jmessage.android.uikit">
+    package="com.sample.application">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
 
     <!-- JMessage Demo required for record audio-->
@@ -111,7 +112,7 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="5fbb6030a7c7b853dc199ea0" />
+            android:value="426251cac0146ce0a08ca38f" />
 
 
 

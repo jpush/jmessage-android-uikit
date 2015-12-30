@@ -4,6 +4,7 @@
     <string name="about">关于</string>
     <string name="send">发送</string>
     <string name="chat">聊天</string>
+    <string name="cross_app_chat">跨应用单聊</string>
     <string name="single_chat">单聊</string>
     <string name="group_chat">群聊</string>
     <string name="picture">图片</string>

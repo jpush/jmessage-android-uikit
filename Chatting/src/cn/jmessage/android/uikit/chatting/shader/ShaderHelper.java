@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
-import cn.jmessage.android.uikit.R;
+import com.sample.application.R;
 
 
 @SuppressWarnings("WeakerAccess")

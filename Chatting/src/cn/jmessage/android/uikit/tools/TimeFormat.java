@@ -2,7 +2,7 @@ package cn.jmessage.android.uikit.tools;
 
 import android.content.Context;
 
-import cn.jmessage.android.uikit.R;
+import com.sample.application.R;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

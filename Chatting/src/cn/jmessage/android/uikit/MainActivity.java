@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.sample.application.R;
+
 import cn.jmessage.android.uikit.chatting.ChatActivity;
 import cn.jmessage.android.uikit.tools.DialogCreator;
 import cn.jmessage.android.uikit.tools.HandleResponseCode;
@@ -19,6 +21,8 @@ import cn.jpush.im.api.BasicCallback;
 
 public class MainActivity extends Activity {
 
+    private final String TARGET_APP_KEY = "4f7aef34fb361292c566a1cd";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,21 +30,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         JMessageClient.init(this);
         JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_NO_NOTIFICATION);
+        LinearLayout mCrossAppChatLl;
         LinearLayout mSingleChatLl;
         LinearLayout mGroupChatLl;
         Button mAboutBtn;
+        mCrossAppChatLl = (LinearLayout) findViewById(R.id.cross_app_chat_ll);
         mSingleChatLl = (LinearLayout) findViewById(R.id.sing_chat_ll);
         mGroupChatLl = (LinearLayout) findViewById(R.id.group_chat_ll);
         mAboutBtn = (Button) findViewById(R.id.about_btn);
 
+        mCrossAppChatLl.setOnClickListener(listener);
         mSingleChatLl.setOnClickListener(listener);
         mGroupChatLl.setOnClickListener(listener);
         mAboutBtn.setOnClickListener(listener);
 
         //设置用户信息聊天对象及群聊Id
         UserConfig userConfig = UserConfig.getInstance();
-        userConfig.setMyInfo("user001", "1111");
-        userConfig.setTargetInfo("user002", "1111");
+        userConfig.setMyInfo("kkkkk", "kkkkk");
+        userConfig.setTargetInfo("0002", "1111");
         userConfig.setGroupId(10049741);
 
 
@@ -84,6 +91,11 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             Intent intent = new Intent();
             switch (v.getId()) {
+                case R.id.cross_app_chat_ll:
+                    intent.putExtra("appKey", TARGET_APP_KEY);
+                    intent.setClass(MainActivity.this, ChatActivity.class);
+                    startActivity(intent);
+                    break;
                 case R.id.sing_chat_ll:
                     intent.putExtra("isSingle", true);
                     intent.setClass(MainActivity.this, ChatActivity.class);

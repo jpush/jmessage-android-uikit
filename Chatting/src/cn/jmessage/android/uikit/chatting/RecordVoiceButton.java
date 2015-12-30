@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.jmessage.android.uikit.R;
+import com.sample.application.R;
 import cn.jmessage.android.uikit.MsgListAdapter;
 import cn.jmessage.android.uikit.tools.FileHelper;
 import cn.jmessage.android.uikit.tools.HandleResponseCode;

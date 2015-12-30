@@ -43,6 +43,8 @@ import cn.jmessage.android.uikit.tools.FileHelper;
 import cn.jmessage.android.uikit.tools.HandleResponseCode;
 import cn.jmessage.android.uikit.tools.TimeFormat;
 import cn.jmessage.android.uikit.chatting.CircleImageView;
+
+import com.sample.application.R;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -113,10 +115,14 @@ public class MsgListAdapter extends BaseAdapter {
     private float mDensity;
     private int mWidth;
 
-    public MsgListAdapter(Context context, String targetId) {
+    public MsgListAdapter(Context context, String targetId, String appKey) {
         initData(context);
         this.mTargetId = targetId;
-        this.mConv = JMessageClient.getSingleConversation(mTargetId);
+        if (appKey != null) {
+            this.mConv = JMessageClient.getSingleConversation(mTargetId, appKey);
+        } else {
+            this.mConv = JMessageClient.getSingleConversation(mTargetId);
+        }
         this.mMsgList = mConv.getMessagesFromNewest(0, mOffset);
         reverse(mMsgList);
         mStart = mOffset;
@@ -225,8 +231,8 @@ public class MsgListAdapter extends BaseAdapter {
      */
     private void checkSendingImgMsg() {
         for (Message msg : mMsgList) {
-            if (msg.getStatus().equals(MessageStatus.created)
-                    && msg.getContentType().equals(ContentType.image)) {
+            if (msg.getStatus() == MessageStatus.created
+                    && msg.getContentType() == ContentType.image) {
                 mMsgQueue.offer(msg);
             }
         }
@@ -327,14 +333,14 @@ public class MsgListAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         Message msg = mMsgList.get(position);
         //是文字类型或者自定义类型（用来显示群成员变化消息）
-        if (msg.getContentType().equals(ContentType.text)) {
-            return msg.getDirect().equals(MessageDirect.send) ? TYPE_SEND_TXT
+        if (msg.getContentType() == ContentType.text) {
+            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_TXT
                     : TYPE_RECEIVE_TXT;
-        } else if (msg.getContentType().equals(ContentType.image)) {
-            return msg.getDirect().equals(MessageDirect.send) ? TYPE_SEND_IMAGE
+        } else if (msg.getContentType() == ContentType.image) {
+            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_IMAGE
                     : TYPE_RECEIVER_IMAGE;
-        } else if (msg.getContentType().equals(ContentType.voice)) {
-            return msg.getDirect().equals(MessageDirect.send) ? TYPE_SEND_VOICE
+        } else if (msg.getContentType() == ContentType.voice) {
+            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_VOICE
                     : TYPE_RECEIVER_VOICE;
         } else {
             return TYPE_CUSTOM_TXT;
@@ -550,7 +556,7 @@ public class MsgListAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         switch (v.getId()) {
                             case R.id.copy_msg_btn:
-                                if (msg.getContentType().equals(ContentType.text)) {
+                                if (msg.getContentType() == ContentType.text) {
                                     final String content = ((TextContent) msg.getContent()).getText();
                                     if (Build.VERSION.SDK_INT > 11) {
                                         ClipboardManager clipboard = (ClipboardManager) mContext
@@ -583,7 +589,7 @@ public class MsgListAdapter extends BaseAdapter {
                         }
                     }
                 };
-                boolean hide = msg.getContentType().equals(ContentType.voice);
+                boolean hide = msg.getContentType() == ContentType.voice;
                 mDialog = DialogCreator.createLongPressMessageDialog(mContext, name, hide, listener);
                 mDialog.show();
                 mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -627,7 +633,7 @@ public class MsgListAdapter extends BaseAdapter {
         holder.txtContent.setText(content);
         holder.txtContent.setOnLongClickListener(longClickListener);
         // 检查发送状态，发送方有重发机制
-        if (msg.getDirect().equals(MessageDirect.send)) {
+        if (msg.getDirect() == MessageDirect.send) {
             final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
             LinearInterpolator lin = new LinearInterpolator();
             sendingAnim.setInterpolator(lin);
@@ -705,7 +711,7 @@ public class MsgListAdapter extends BaseAdapter {
                         break;
                     case R.id.commit_btn:
                         mDialog.dismiss();
-                        if (msg.getContentType().equals(ContentType.image)) {
+                        if (msg.getContentType() == ContentType.image) {
                             resendImage(holder, sendingAnim, msg);
                         } else {
                             resendTextOrVoice(holder, sendingAnim, msg);
@@ -724,7 +730,7 @@ public class MsgListAdapter extends BaseAdapter {
         // 先拿本地缩略图
         final String path = imgContent.getLocalThumbnailPath();
         // 接收图片
-        if (msg.getDirect().equals(MessageDirect.receive)) {
+        if (msg.getDirect() == MessageDirect.receive) {
             if (path == null) {
                 //从服务器上拿缩略图
                 imgContent.downloadThumbnailImage(msg, new DownloadCompletionCallback() {
@@ -1005,7 +1011,7 @@ public class MsgListAdapter extends BaseAdapter {
         int width = (int) (-0.04 * length * length + 4.526 * length + 75.214);
         holder.txtContent.setWidth((int) (width * mDensity));
         holder.txtContent.setOnLongClickListener(longClickListener);
-        if (msgDirect.equals(MessageDirect.send)) {
+        if (msgDirect == MessageDirect.send) {
             holder.voice.setImageResource(R.drawable.send_3);
             final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
             LinearInterpolator lin = new LinearInterpolator();
@@ -1094,7 +1100,7 @@ public class MsgListAdapter extends BaseAdapter {
         holder.txtContent.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if (!FileHelper.isSdCardExist() && msg.getDirect().equals(MessageDirect.send)) {
+                if (!FileHelper.isSdCardExist() && msg.getDirect() == MessageDirect.send) {
                     Toast.makeText(mContext, mContext.getString(R.string.sdcard_not_exist_toast), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -1104,7 +1110,7 @@ public class MsgListAdapter extends BaseAdapter {
                 }
                 // 播放中点击了正在播放的Item 则暂停播放
                 if (mp.isPlaying() && mPosition == position) {
-                    if (msgDirect.equals(MessageDirect.send)) {
+                    if (msgDirect == MessageDirect.send) {
                         holder.voice.setImageResource(R.anim.voice_send);
                     } else {
                         holder.voice.setImageResource(R.anim.voice_receive);
@@ -1113,7 +1119,7 @@ public class MsgListAdapter extends BaseAdapter {
                     pauseVoice();
                     mVoiceAnimation.stop();
                     // 开始播放录音
-                } else if (msgDirect.equals(MessageDirect.send)) {
+                } else if (msgDirect == MessageDirect.send) {
                     holder.voice.setImageResource(R.anim.voice_send);
                     mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
 

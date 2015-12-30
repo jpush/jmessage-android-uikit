@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "cn.jmessage.android.uikit"
+        applicationId "com.sample.application"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode getVersionCode()

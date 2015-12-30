@@ -19,11 +19,12 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.sample.application.R;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
 import cn.jmessage.android.uikit.MsgListAdapter;
-import cn.jmessage.android.uikit.R;
 import cn.jmessage.android.uikit.SimpleChatApplication;
 import cn.jmessage.android.uikit.tools.BitmapLoader;
 import cn.jmessage.android.uikit.tools.FileHelper;
@@ -82,9 +83,24 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
         initReceiver();
         Intent intent = getIntent();
         mIsSingle = intent.getBooleanExtra("isSingle", false);
+        String appKey = intent.getStringExtra("appKey");
         UserConfig userConfig = UserConfig.getInstance();
         mTargetId = userConfig.getTargetId();
-        if (mIsSingle) {
+        if (appKey != null) {
+            JMessageClient.getUserInfo(mTargetId, appKey, new GetUserInfoCallback() {
+                @Override
+                public void gotResult(int status, String desc, UserInfo userInfo) {
+                    if (status == 0){
+                        mChatView.setChatTitle(userInfo.getUserName());
+                    }
+                }
+            });
+            mConv = JMessageClient.getSingleConversation(mTargetId, appKey);
+            if (mConv == null) {
+                mConv = Conversation.createSingleConversation(mTargetId, appKey);
+            }
+            mChatAdapter = new MsgListAdapter(mContext, mTargetId, appKey);
+        } else if (mIsSingle) {
             JMessageClient.getUserInfo(mTargetId, new GetUserInfoCallback() {
                 @Override
                 public void gotResult(int status, String desc, UserInfo userInfo) {
@@ -98,8 +114,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             if (mConv == null) {
                 mConv = Conversation.createSingleConversation(mTargetId);
             }
-            mChatAdapter = new MsgListAdapter(mContext, mTargetId);
-            mChatView.setChatListAdapter(mChatAdapter);
+            mChatAdapter = new MsgListAdapter(mContext, mTargetId, null);
         } else {
             mGroupId = userConfig.getGroupId();
             Log.d(TAG, "GroupId : " + mGroupId);
@@ -116,8 +131,8 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
                 mConv = Conversation.createGroupConversation(mGroupId);
             }
             mChatAdapter = new MsgListAdapter(mContext, mGroupId);
-            mChatView.setChatListAdapter(mChatAdapter);
         }
+        mChatView.setChatListAdapter(mChatAdapter);
 
 
         mChatAdapter.initMediaPlayer();
@@ -483,6 +498,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
      */
     public void onEvent(MessageEvent event) {
         final Message msg = event.getMessage();
+        Log.d(TAG, "收到消息 msg.toString() " + msg.toString());
         //若为群聊相关事件，如添加、删除群成员
         Log.i(TAG, event.getMessage().toString());
         //刷新消息
@@ -491,9 +507,9 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             public void run() {
                 //收到消息的类型为单聊
                 if (msg.getTargetType().equals(ConversationType.single)) {
-                    String targetID = ((UserInfo) msg.getTargetInfo()).getUserName();
+                    String targetId = ((UserInfo) msg.getTargetInfo()).getUserName();
                     //判断消息是否在当前会话中
-                    if (targetID.equals(mTargetId)) {
+                    if (targetId.equals(mTargetId)) {
                         Message lastMsg = mChatAdapter.getLastMsg();
                         //收到的消息和Adapter中最后一条消息比较，如果最后一条为空或者不相同，则加入到MsgList
                         if (lastMsg == null || msg.getId() != lastMsg.getId()) {
