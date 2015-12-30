@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import cn.jmessage.android.uikit.SimpleChatApplication;
+import cn.jmessage.android.uikit.ChattingApplication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,11 +57,11 @@ public class BitmapLoader {
         FileOutputStream fileOutput = null;
         File imgFile;
         try {
-            File desDir = new File(SimpleChatApplication.PICTURE_DIR);
+            File desDir = new File(ChattingApplication.PICTURE_DIR);
             if (!desDir.exists()) {
                 desDir.mkdirs();
             }
-            imgFile = new File(SimpleChatApplication.PICTURE_DIR, userName + ".png");
+            imgFile = new File(ChattingApplication.PICTURE_DIR, userName + ".png");
             imgFile.createNewFile();
             fileOutput = new FileOutputStream(imgFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutput);

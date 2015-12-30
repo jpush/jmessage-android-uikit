@@ -15,12 +15,17 @@
     </style>
 
     <style name="chat_item_receive_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:orientation">vertical</item>
     </style>
 
     <style name="chat_item_send_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">10dp</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="chat_item_receiver_avatar_style">
@@ -101,6 +106,9 @@
     </style>
 
     <style name="chat_text_date_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:paddingTop">2dp</item>

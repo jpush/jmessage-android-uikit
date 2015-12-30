@@ -7,7 +7,7 @@ import cn.jmessage.android.uikit.tools.SharePreferenceManager;
 
 import cn.jpush.im.android.api.JMessageClient;
 
-public class SimpleChatApplication extends Application {
+public class ChattingApplication extends Application {
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 4;
     public static final int RESULT_CODE_SELECT_PICTURE = 8;

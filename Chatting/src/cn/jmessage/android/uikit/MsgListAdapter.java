@@ -44,7 +44,6 @@ import cn.jmessage.android.uikit.tools.HandleResponseCode;
 import cn.jmessage.android.uikit.tools.TimeFormat;
 import cn.jmessage.android.uikit.chatting.CircleImageView;
 
-import cn.jmessage.android.uikit.R;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -106,7 +105,7 @@ public class MsgListAdapter extends BaseAdapter {
     //当前第0项消息的位置
     private int mStart;
     //上一页的消息数
-    private int mOffset = SimpleChatApplication.PAGE_MESSAGE_COUNT;
+    private int mOffset = ChattingApplication.PAGE_MESSAGE_COUNT;
     private boolean mHasLastPage = false;
     private Dialog mDialog;
     //发送图片消息的队列
@@ -183,7 +182,7 @@ public class MsgListAdapter extends BaseAdapter {
 
     public void dropDownToRefresh() {
         if (mConv != null) {
-            List<Message> msgList = mConv.getMessagesFromNewest(mStart, SimpleChatApplication.PAGE_MESSAGE_COUNT);
+            List<Message> msgList = mConv.getMessagesFromNewest(mStart, ChattingApplication.PAGE_MESSAGE_COUNT);
             if (msgList != null) {
                 for (Message msg : msgList) {
                     mMsgList.add(0, msg);
@@ -226,10 +225,12 @@ public class MsgListAdapter extends BaseAdapter {
      * 检查图片是否处于创建状态，如果是，则加入发送队列
      */
     private void checkSendingImgMsg() {
-        for (Message msg : mMsgList) {
-            if (msg.getStatus() == MessageStatus.created
-                    && msg.getContentType() == ContentType.image) {
-                mMsgQueue.offer(msg);
+        if (mMsgList.size() > 0) {
+            for (Message msg : mMsgList) {
+                if (msg.getStatus() == MessageStatus.created
+                        && msg.getContentType() == ContentType.image) {
+                    mMsgQueue.offer(msg);
+                }
             }
         }
     }

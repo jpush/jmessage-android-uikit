@@ -25,7 +25,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import cn.jmessage.android.uikit.MsgListAdapter;
-import cn.jmessage.android.uikit.SimpleChatApplication;
+import cn.jmessage.android.uikit.ChattingApplication;
 import cn.jmessage.android.uikit.tools.BitmapLoader;
 import cn.jmessage.android.uikit.tools.FileHelper;
 import cn.jmessage.android.uikit.tools.SharePreferenceManager;
@@ -227,7 +227,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
                     mChatView.dismissMoreMenu();
                 }
                 Intent intent = new Intent();
-                intent.putExtra(SimpleChatApplication.TARGET_ID, mTargetId);
+                intent.putExtra(ChattingApplication.TARGET_ID, mTargetId);
                 //TODO 发送本地图片
 //                mContext.startPickPictureTotalActivity(intent);
                 break;
@@ -240,7 +240,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mPhotoPath)));
             try {
-                startActivityForResult(intent, SimpleChatApplication.REQUEST_CODE_TAKE_PHOTO);
+                startActivityForResult(intent, ChattingApplication.REQUEST_CODE_TAKE_PHOTO);
             } catch (ActivityNotFoundException anf) {
                 Toast.makeText(mContext, mContext.getString(R.string.camera_not_prepared),
                         Toast.LENGTH_SHORT).show();
@@ -257,13 +257,18 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
      * @param data intent
      */
     private void handleImgRefresh(Intent data) {
-        String targetId = data.getStringExtra(SimpleChatApplication.TARGET_ID);
-        long groupId = data.getLongExtra(SimpleChatApplication.GROUP_ID, 0);
+        String targetId = data.getStringExtra(ChattingApplication.TARGET_ID);
+        long groupId = data.getLongExtra(ChattingApplication.GROUP_ID, 0);
         Log.i(TAG, "Refresh Image groupId: " + groupId);
         //判断是否在当前会话中发图片
         if (targetId != null) {
             if (targetId.equals(mTargetId)) {
-                mChatAdapter.setSendImg(targetId, data.getIntArrayExtra(SimpleChatApplication.MsgIDs));
+                mChatAdapter.setSendImg(targetId, data.getIntArrayExtra(ChattingApplication.MsgIDs));
+                mChatView.setToBottom();
+            }
+        } else if (groupId != 0) {
+            if (groupId == mGroupId) {
+                mChatAdapter.setSendImg(groupId, data.getIntArrayExtra(ChattingApplication.MsgIDs));
                 mChatView.setToBottom();
             }
         }
@@ -325,11 +330,11 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
     protected void onResume() {
         if (!RecordVoiceButton.mIsPressed)
             mChatView.dismissRecordDialog();
-        String targetID = getIntent().getStringExtra(SimpleChatApplication.TARGET_ID);
-        boolean isGroup = getIntent().getBooleanExtra(SimpleChatApplication.IS_GROUP, false);
+        String targetID = getIntent().getStringExtra(ChattingApplication.TARGET_ID);
+        boolean isGroup = getIntent().getBooleanExtra(ChattingApplication.IS_GROUP, false);
         if (isGroup) {
             try {
-                long groupID = getIntent().getLongExtra(SimpleChatApplication.GROUP_ID, 0);
+                long groupID = getIntent().getLongExtra(ChattingApplication.GROUP_ID, 0);
                 if (groupID == 0) {
                     JMessageClient.enterGroupConversation(Long.parseLong(targetID));
                 } else JMessageClient.enterGroupConversation(groupID);
@@ -360,7 +365,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
-        if (requestCode == SimpleChatApplication.REQUEST_CODE_TAKE_PHOTO) {
+        if (requestCode == ChattingApplication.REQUEST_CODE_TAKE_PHOTO) {
             try {
                 Bitmap bitmap = BitmapLoader.getBitmapFromFile(mPhotoPath, 720, 1280);
                 ImageContent.createImageContentAsync(bitmap, new ImageContent.CreateImageContentCallback() {
@@ -369,9 +374,13 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
                         if (status == 0) {
                             Message msg = mConv.createSendMessage(imageContent);
                             Intent intent = new Intent();
-                            intent.putExtra(SimpleChatApplication.MsgIDs, new int[]{msg.getId()});
-                            intent.putExtra(SimpleChatApplication.TARGET_ID,
-                                    ((UserInfo) mConv.getTargetInfo()).getUserName());
+                            intent.putExtra(ChattingApplication.MsgIDs, new int[]{msg.getId()});
+                            if (mConv.getType() == ConversationType.group) {
+                                intent.putExtra(ChattingApplication.GROUP_ID, mGroupId);
+                            } else {
+                                intent.putExtra(ChattingApplication.TARGET_ID,
+                                        ((UserInfo) mConv.getTargetInfo()).getUserName());
+                            }
                             handleImgRefresh(intent);
                         }
                     }
@@ -379,7 +388,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             } catch (NullPointerException e) {
                 Log.i(TAG, "onActivityResult unexpected result");
             }
-        } else if (resultCode == SimpleChatApplication.RESULT_CODE_SELECT_PICTURE) {
+        } else if (resultCode == ChattingApplication.RESULT_CODE_SELECT_PICTURE) {
             handleImgRefresh(data);
         }
     }

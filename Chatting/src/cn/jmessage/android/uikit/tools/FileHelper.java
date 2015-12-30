@@ -3,7 +3,7 @@ package cn.jmessage.android.uikit.tools;
 import android.os.Environment;
 import android.text.format.DateFormat;
 
-import cn.jmessage.android.uikit.SimpleChatApplication;
+import cn.jmessage.android.uikit.ChattingApplication;
 
 import java.io.File;
 import java.util.Calendar;
@@ -25,7 +25,7 @@ public class FileHelper {
     }
 
     public static String createAvatarPath(String userName) {
-        String dir = SimpleChatApplication.PICTURE_DIR;
+        String dir = ChattingApplication.PICTURE_DIR;
         File destDir = new File(dir);
         if (!destDir.exists()) {
             destDir.mkdirs();

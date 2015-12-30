@@ -34,7 +34,7 @@
 
 
     <application
-        android:name="cn.jmessage.android.uikit.SimpleChatApplication"
+        android:name=".ChattingApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
