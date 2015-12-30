@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 
 
 public class DialogCreator {

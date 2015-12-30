@@ -44,7 +44,7 @@ import cn.jmessage.android.uikit.tools.HandleResponseCode;
 import cn.jmessage.android.uikit.tools.TimeFormat;
 import cn.jmessage.android.uikit.chatting.CircleImageView;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -115,14 +115,10 @@ public class MsgListAdapter extends BaseAdapter {
     private float mDensity;
     private int mWidth;
 
-    public MsgListAdapter(Context context, String targetId, String appKey) {
+    public MsgListAdapter(Context context, String targetId) {
         initData(context);
         this.mTargetId = targetId;
-        if (appKey != null) {
-            this.mConv = JMessageClient.getSingleConversation(mTargetId, appKey);
-        } else {
-            this.mConv = JMessageClient.getSingleConversation(mTargetId);
-        }
+        this.mConv = JMessageClient.getSingleConversation(mTargetId);
         this.mMsgList = mConv.getMessagesFromNewest(0, mOffset);
         reverse(mMsgList);
         mStart = mOffset;

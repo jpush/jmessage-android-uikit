@@ -7,36 +7,6 @@
 
     <include layout="@layout/menu_title_bar" />
 
-    <LinearLayout
-        android:id="@+id/cross_app_chat_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:clickable="true"
-        android:background="@drawable/list_item_bg">
-
-        <cn.jmessage.android.uikit.chatting.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/head_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/cross_app_chat"
-            android:textColor="#000000"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#d3d3d3" />
 
     <LinearLayout
         android:id="@+id/sing_chat_ll"

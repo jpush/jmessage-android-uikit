@@ -19,7 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -83,24 +83,9 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
         initReceiver();
         Intent intent = getIntent();
         mIsSingle = intent.getBooleanExtra("isSingle", false);
-        String appKey = intent.getStringExtra("appKey");
         UserConfig userConfig = UserConfig.getInstance();
         mTargetId = userConfig.getTargetId();
-        if (appKey != null) {
-            JMessageClient.getUserInfo(mTargetId, appKey, new GetUserInfoCallback() {
-                @Override
-                public void gotResult(int status, String desc, UserInfo userInfo) {
-                    if (status == 0){
-                        mChatView.setChatTitle(userInfo.getUserName());
-                    }
-                }
-            });
-            mConv = JMessageClient.getSingleConversation(mTargetId, appKey);
-            if (mConv == null) {
-                mConv = Conversation.createSingleConversation(mTargetId, appKey);
-            }
-            mChatAdapter = new MsgListAdapter(mContext, mTargetId, appKey);
-        } else if (mIsSingle) {
+        if (mIsSingle) {
             JMessageClient.getUserInfo(mTargetId, new GetUserInfoCallback() {
                 @Override
                 public void gotResult(int status, String desc, UserInfo userInfo) {
@@ -114,7 +99,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             if (mConv == null) {
                 mConv = Conversation.createSingleConversation(mTargetId);
             }
-            mChatAdapter = new MsgListAdapter(mContext, mTargetId, null);
+            mChatAdapter = new MsgListAdapter(mContext, mTargetId);
         } else {
             mGroupId = userConfig.getGroupId();
             Log.d(TAG, "GroupId : " + mGroupId);

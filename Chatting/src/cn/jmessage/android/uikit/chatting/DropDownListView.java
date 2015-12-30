@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 import cn.jmessage.android.uikit.SimpleChatApplication;
 
 

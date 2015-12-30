@@ -35,7 +35,6 @@ public class SimpleChatApplication extends Application {
         super.onCreate();
         Log.i("JpushDemoApplication", "init");
         JMessageClient.init(getApplicationContext());
-        JMessageClient.swapEnvironment(getApplicationContext(), true);
         SharePreferenceManager.init(getApplicationContext(), JCHAT_CONFIGS);
         JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_DEFAULT);
     }

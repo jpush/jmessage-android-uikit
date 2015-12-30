@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 
 
 /**

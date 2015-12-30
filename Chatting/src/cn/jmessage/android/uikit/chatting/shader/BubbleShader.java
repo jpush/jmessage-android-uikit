@@ -9,7 +9,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 
 
 public class BubbleShader extends ShaderHelper {

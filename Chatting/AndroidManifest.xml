@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sample.application">
+    package="cn.jmessage.android.uikit">
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -112,7 +112,7 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="426251cac0146ce0a08ca38f" />
+            android:value="5fbb6030a7c7b853dc199ea0" />
 
 
 

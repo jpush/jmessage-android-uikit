@@ -3,7 +3,7 @@ package cn.jmessage.android.uikit;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.sample.application.R;
+import cn.jmessage.android.uikit.R;
 
 
 public class AboutActivity extends Activity {
