@@ -37,11 +37,7 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-<<<<<<< 4694c06d787ac8b88c1d10695dbb8750c48284c8
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-=======
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
->>>>>>> first commit
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
