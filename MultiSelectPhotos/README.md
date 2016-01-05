@@ -23,7 +23,7 @@ IM SDK UI 组件
 setResult的方式将所选的图片路径返回. 可以参考从PickPictureActivity进入BrowserViewPagerActivity的方式,以及从
 BrowserViewPagerActivity得到所选的图片后返回PickPictureActivity的方式.
 
-- 使用的开源项目:
+####使用的开源项目:
 
 - PhotoView [github地址](https://github.com/chrisbanes/PhotoView) 根据手势缩放图片
 
