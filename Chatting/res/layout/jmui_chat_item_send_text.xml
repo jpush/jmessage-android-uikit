@@ -21,7 +21,7 @@
         android:layout_toLeftOf="@+id/avatar_iv"
         android:layout_below="@+id/send_time_txt"
         android:layout_marginRight="3dp"
-        android:background="@drawable/msg_send_bg"
+        android:background="@drawable/jmui_msg_send_bg"
         android:paddingLeft="10dp"
         android:paddingRight="15dp" />
 
@@ -32,7 +32,7 @@
         android:layout_toLeftOf="@+id/msg_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="3dp"
-        android:src="@drawable/sending_img" />
+        android:src="@drawable/jmui_sending_img" />
 
     <ImageButton
         android:id="@+id/fail_resend_ib"
@@ -41,7 +41,7 @@
         android:layout_toLeftOf="@id/msg_content"
         android:layout_marginRight="5dp"
         android:layout_centerVertical="true"
-        android:background="@drawable/send_error"
+        android:background="@drawable/jmui_send_error"
         android:clickable="true"
         android:scaleType="fitCenter"
         android:visibility="invisible" />

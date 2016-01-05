@@ -354,18 +354,18 @@ public class MsgListAdapter extends BaseAdapter {
         switch (msg.getContentType()) {
             case image:
                 return getItemViewType(position) == TYPE_SEND_IMAGE ? mInflater
-                        .inflate(R.layout.chat_item_send_image, null) : mInflater
-                        .inflate(R.layout.chat_item_receive_image, null);
+                        .inflate(R.layout.jmui_chat_item_send_image, null) : mInflater
+                        .inflate(R.layout.jmui_chat_item_receive_image, null);
             case voice:
                 return getItemViewType(position) == TYPE_SEND_VOICE ? mInflater
-                        .inflate(R.layout.chat_item_send_voice, null) : mInflater
-                        .inflate(R.layout.chat_item_receive_voice, null);
+                        .inflate(R.layout.jmui_chat_item_send_voice, null) : mInflater
+                        .inflate(R.layout.jmui_chat_item_receive_voice, null);
             case text:
                 return getItemViewType(position) == TYPE_SEND_TXT ? mInflater
-                        .inflate(R.layout.chat_item_send_text, null) : mInflater
-                        .inflate(R.layout.chat_item_receive_text, null);
+                        .inflate(R.layout.jmui_chat_item_send_text, null) : mInflater
+                        .inflate(R.layout.jmui_chat_item_receive_text, null);
             default:
-                return mInflater.inflate(R.layout.chat_item_group_change, null);
+                return mInflater.inflate(R.layout.jmui_chat_item_group_change, null);
         }
     }
 
@@ -530,13 +530,13 @@ public class MsgListAdapter extends BaseAdapter {
                         if (status == 0) {
                             holder.headIcon.setImageBitmap(bitmap);
                         }else {
-                            holder.headIcon.setImageResource(R.drawable.head_icon);
+                            holder.headIcon.setImageResource(R.drawable.jmui_head_icon);
                             HandleResponseCode.onHandle(mContext, status, false);
                         }
                     }
                 });
             }else {
-              holder.headIcon.setImageResource(R.drawable.head_icon);
+              holder.headIcon.setImageResource(R.drawable.jmui_head_icon);
           }
 
             //TODO 点击头像事件
@@ -632,7 +632,7 @@ public class MsgListAdapter extends BaseAdapter {
         holder.txtContent.setOnLongClickListener(longClickListener);
         // 检查发送状态，发送方有重发机制
         if (msg.getDirect() == MessageDirect.send) {
-            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
+            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.jmui_rotate);
             LinearInterpolator lin = new LinearInterpolator();
             sendingAnim.setInterpolator(lin);
             switch (msg.getStatus()) {
@@ -755,7 +755,7 @@ public class MsgListAdapter extends BaseAdapter {
 
             switch (msg.getStatus()) {
                 case receive_fail:
-                    holder.picture.setImageResource(R.drawable.fetch_failed);
+                    holder.picture.setImageResource(R.drawable.jmui_fetch_failed);
                     break;
                 default:
             }
@@ -766,11 +766,11 @@ public class MsgListAdapter extends BaseAdapter {
                 Picasso.with(mContext).load(new File(path))
                         .into(holder.picture);
             } catch (NullPointerException e) {
-                Picasso.with(mContext).load(R.drawable.picture_not_found)
+                Picasso.with(mContext).load(R.drawable.jmui_picture_not_found)
                         .into(holder.picture);
             }
 
-            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
+            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.jmui_rotate);
             LinearInterpolator lin = new LinearInterpolator();
             sendingAnim.setInterpolator(lin);
             //检查状态
@@ -1010,8 +1010,8 @@ public class MsgListAdapter extends BaseAdapter {
         holder.txtContent.setWidth((int) (width * mDensity));
         holder.txtContent.setOnLongClickListener(longClickListener);
         if (msgDirect == MessageDirect.send) {
-            holder.voice.setImageResource(R.drawable.send_3);
-            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
+            holder.voice.setImageResource(R.drawable.jmui_send_3);
+            final Animation sendingAnim = AnimationUtils.loadAnimation(mContext, R.anim.jmui_rotate);
             LinearInterpolator lin = new LinearInterpolator();
             sendingAnim.setInterpolator(lin);
             switch (msg.getStatus()) {
@@ -1053,7 +1053,7 @@ public class MsgListAdapter extends BaseAdapter {
                         holder.displayName.setText(msg.getFromUser().getNickname());
                     }
                 }
-                holder.voice.setImageResource(R.drawable.receive_3);
+                holder.voice.setImageResource(R.drawable.jmui_receive_3);
                 // 收到语音，设置未读
                 if (msg.getContent().getBooleanExtra("isReaded") == null
                         || !msg.getContent().getBooleanExtra("isReaded")) {
@@ -1074,7 +1074,7 @@ public class MsgListAdapter extends BaseAdapter {
                 }
                 break;
             case receive_fail:
-                holder.voice.setImageResource(R.drawable.receive_3);
+                holder.voice.setImageResource(R.drawable.jmui_receive_3);
                 // 接收失败，从服务器上下载
                 content.downloadVoiceFile(msg,
                         new DownloadCompletionCallback() {
@@ -1109,16 +1109,16 @@ public class MsgListAdapter extends BaseAdapter {
                 // 播放中点击了正在播放的Item 则暂停播放
                 if (mp.isPlaying() && mPosition == position) {
                     if (msgDirect == MessageDirect.send) {
-                        holder.voice.setImageResource(R.anim.voice_send);
+                        holder.voice.setImageResource(R.anim.jmui_voice_send);
                     } else {
-                        holder.voice.setImageResource(R.anim.voice_receive);
+                        holder.voice.setImageResource(R.anim.jmui_voice_receive);
                     }
                     mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
                     pauseVoice();
                     mVoiceAnimation.stop();
                     // 开始播放录音
                 } else if (msgDirect == MessageDirect.send) {
-                    holder.voice.setImageResource(R.anim.voice_send);
+                    holder.voice.setImageResource(R.anim.jmui_voice_send);
                     mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
 
                     // 继续播放之前暂停的录音
@@ -1147,7 +1147,7 @@ public class MsgListAdapter extends BaseAdapter {
                                 playVoice(position, holder, false);
                                 // 否则直接播放选中的语音
                             } else {
-                                holder.voice.setImageResource(R.anim.voice_receive);
+                                holder.voice.setImageResource(R.anim.jmui_voice_receive);
                                 mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
                                 playVoice(position, holder, false);
                             }
@@ -1208,7 +1208,7 @@ public class MsgListAdapter extends BaseAdapter {
                 mVoiceAnimation.stop();
                 mVoiceAnimation = null;
             }
-            holder.voice.setImageResource(R.anim.voice_receive);
+            holder.voice.setImageResource(R.anim.jmui_voice_receive);
             mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
         }
         try {
@@ -1238,9 +1238,9 @@ public class MsgListAdapter extends BaseAdapter {
                     mp.reset();
                     mSetData = false;
                     if (isSender) {
-                        holder.voice.setImageResource(R.drawable.send_3);
+                        holder.voice.setImageResource(R.drawable.jmui_send_3);
                     } else {
-                        holder.voice.setImageResource(R.drawable.receive_3);
+                        holder.voice.setImageResource(R.drawable.jmui_receive_3);
                     }
                     if (autoPlay) {
                         int curCount = mIndexList.indexOf(position);

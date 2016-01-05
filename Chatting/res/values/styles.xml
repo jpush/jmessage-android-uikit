@@ -33,7 +33,7 @@
         <item name="android:layout_height">@dimen/item_head_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:src">@drawable/head_icon</item>
+        <item name="android:src">@drawable/jmui_head_icon</item>
         <item name="android:scaleType">fitXY</item>
     </style>
 
@@ -43,7 +43,7 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginTop">5dp</item>
-        <item name="android:src">@drawable/head_icon</item>
+        <item name="android:src">@drawable/jmui_head_icon</item>
         <item name="android:scaleType">fitXY</item>
     </style>
 
@@ -80,7 +80,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowBackground">@drawable/round_background</item>
+        <item name="android:windowBackground">@drawable/jmui_round_background</item>
     </style>
 
     <style name="chat_content_date_style">

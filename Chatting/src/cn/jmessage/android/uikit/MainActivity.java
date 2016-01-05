@@ -12,18 +12,20 @@ import android.widget.LinearLayout;
 import cn.jmessage.android.uikit.chatting.ChatActivity;
 import cn.jmessage.android.uikit.utils.DialogCreator;
 import cn.jmessage.android.uikit.utils.HandleResponseCode;
+import cn.jmessage.android.uikit.utils.SharePreferenceManager;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
 
 /**
- * Chatting入口Activity, 可以选择单聊或群聊,并且设置聊天相关的用户信息(通过Intent的方式)
+ * Chatting入口Activity, 初始化JMessage-sdk, 可以选择单聊或群聊,并且设置聊天相关的用户信息(通过Intent的方式)
  */
 
 public class MainActivity extends Activity {
 
     private static final String TARGET_ID = "targetId";
     private static final String GROUP_ID = "groupId";
+    private static final String JCHAT_CONFIGS = "JChat_configs";
     private String mTargetId;
     private long mGroupId;
 
@@ -31,9 +33,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.jmui_activity_main);
+        //初始化JMessage-sdk
         JMessageClient.init(this);
+        //设置Notification的模式
         JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_NO_NOTIFICATION);
+        //初始化SharePreference
+        SharePreferenceManager.init(this, JCHAT_CONFIGS);
         LinearLayout mSingleChatLl;
         LinearLayout mGroupChatLl;
         Button mAboutBtn;
@@ -45,7 +51,7 @@ public class MainActivity extends Activity {
         mGroupChatLl.setOnClickListener(listener);
         mAboutBtn.setOnClickListener(listener);
 
-        //设置用户信息聊天对象及群聊Id
+        //设置用户信息聊天对象及群聊Id, 此处使用了此AppKey下提前注册的两个用户和一个群组,关于注册用户在ReadMe中有提到
         String myName = "user001";
         String myPassword = "1111";
         mTargetId = "user002";

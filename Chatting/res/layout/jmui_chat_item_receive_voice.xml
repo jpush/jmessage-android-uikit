@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="@drawable/receive_msg"
+                android:background="@drawable/jmui_receive_msg"
                 android:maxWidth="220dp"
                  />
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
-                android:background="@anim/voice_receive" />
+                android:background="@anim/jmui_voice_receive" />
            
            </RelativeLayout>
 
@@ -78,7 +78,7 @@
     android:layout_toRightOf="@id/voice_length_tv"
     android:layout_marginTop="22dp"
     android:layout_marginLeft="5dp"
-    android:background="@drawable/voice_unread"/>
+    android:background="@drawable/jmui_voice_unread"/>
 
 
     </RelativeLayout>

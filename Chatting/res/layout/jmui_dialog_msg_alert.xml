@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:background="@drawable/dialog_default_style"
+    android:background="@drawable/jmui_dialog_default_style"
     android:orientation="vertical">
 
     <Button
@@ -11,7 +11,7 @@
         style="@style/dialog_msg_alert_txt_style"
         android:textColor="#3F81DF"
         android:clickable="false"
-        android:background="@drawable/dialog_top_btn_bg"
+        android:background="@drawable/jmui_dialog_top_btn_bg"
         />
 
     <View
@@ -23,7 +23,7 @@
         android:id="@+id/copy_msg_btn"
         style="@style/dialog_msg_alert_txt_style"
         android:text="@string/copy"
-        android:background="@drawable/list_item_bg"
+        android:background="@drawable/jmui_list_item_bg"
         />
 
 
@@ -37,7 +37,7 @@
         android:id="@+id/forward_msg_btn"
         android:text="@string/forward_msg"
         style="@style/dialog_msg_alert_txt_style"
-        android:background="@drawable/list_item_bg"
+        android:background="@drawable/jmui_list_item_bg"
         />
 
     <View
@@ -50,7 +50,7 @@
     <Button
         android:id="@+id/delete_msg_btn"
         style="@style/dialog_msg_alert_txt_style"
-        android:background="@drawable/dialog_bottom_btn_bg"
+        android:background="@drawable/jmui_dialog_bottom_btn_bg"
         android:text="@string/delete"/>
 
 

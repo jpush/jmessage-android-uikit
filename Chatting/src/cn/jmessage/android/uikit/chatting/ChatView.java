@@ -234,7 +234,7 @@ public class ChatView extends RelativeLayout {
 
     //如果是文字输入
     public void isKeyBoard() {
-        mSwitchIb.setBackgroundResource(R.drawable.voice);
+        mSwitchIb.setBackgroundResource(R.drawable.jmui_voice);
         mChatInputEt.setVisibility(View.VISIBLE);
         mVoiceBtn.setVisibility(View.GONE);
         if (mChatInputEt.getText().length() > 0) {
@@ -249,7 +249,7 @@ public class ChatView extends RelativeLayout {
     //语音输入
     public void notKeyBoard(Conversation conv, MsgListAdapter adapter) {
         mChatInputEt.setVisibility(View.GONE);
-        mSwitchIb.setBackgroundResource(R.drawable.keyboard);
+        mSwitchIb.setBackgroundResource(R.drawable.jmui_keyboard);
         mVoiceBtn.setVisibility(View.VISIBLE);
         mVoiceBtn.initConv(conv, adapter);
         mSendMsgBtn.setVisibility(View.GONE);

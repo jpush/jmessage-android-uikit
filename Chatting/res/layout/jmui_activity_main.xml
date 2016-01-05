@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="#ffffff">
 
-    <include layout="@layout/menu_title_bar" />
+    <include layout="@layout/jmui_menu_title_bar" />
 
 
     <LinearLayout
@@ -16,13 +16,13 @@
         android:orientation="horizontal"
         android:padding="5dp"
         android:clickable="true"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/jmui_list_item_bg">
 
         <cn.jmessage.android.uikit.chatting.CircleImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/head_icon" />
+            android:src="@drawable/jmui_head_icon" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,13 +48,13 @@
         android:orientation="horizontal"
         android:padding="5dp"
         android:clickable="true"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/jmui_list_item_bg">
 
         <cn.jmessage.android.uikit.chatting.CircleImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/group" />
+            android:src="@drawable/jmui_group" />
 
         <TextView
             android:layout_width="wrap_content"

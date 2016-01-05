@@ -106,7 +106,7 @@ public class DropDownListView extends ListView implements OnScrollListener {
         }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        headerLayout = (RelativeLayout) inflater.inflate(R.layout.drop_down_list_header, this, false);
+        headerLayout = (RelativeLayout) inflater.inflate(R.layout.jmui_drop_down_list_header, this, false);
         headerProgressBar = (ProgressBar) headerLayout.findViewById(R.id.drop_down_list_header_progress_bar);
         addHeaderView(headerLayout);
 

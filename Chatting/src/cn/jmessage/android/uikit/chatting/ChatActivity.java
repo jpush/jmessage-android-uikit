@@ -72,8 +72,9 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //注册接收消息(成为订阅者), 注册后可以直接重写onEvent方法接收消息(参考下面的onEvent方法)
         JMessageClient.registerEventReceiver(this);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.jmui_activity_chat);
         mChatView = (ChatView) findViewById(R.id.chat_view);
         mChatView.initModule();
         mContext = this;
@@ -301,6 +302,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
      */
     @Override
     protected void onDestroy() {
+        //取消订阅
         JMessageClient.unRegisterEventReceiver(this);
         unregisterReceiver(mReceiver);
         mChatAdapter.releaseMediaPlayer();

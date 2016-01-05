@@ -3,14 +3,12 @@ package cn.jmessage.android.uikit;
 import android.app.Activity;
 import android.os.Bundle;
 
-import cn.jmessage.android.uikit.R;
-
 
 public class AboutActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.jmui_activity_about);
     }
 }

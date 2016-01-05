@@ -33,7 +33,7 @@
                 app:siArrowPosition="right"
                 android:layout_gravity="center"
                 app:siRadius="5dp"
-                android:src="@drawable/fetch_failed"/>
+                android:src="@drawable/jmui_fetch_failed"/>
 
             <TextView
                 android:id="@+id/progress_tv"
@@ -53,7 +53,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/msg_fl"
-            android:src="@drawable/sending_img"/>
+            android:src="@drawable/jmui_sending_img"/>
 
         <ImageButton
             android:id="@+id/fail_resend_ib"
@@ -64,7 +64,7 @@
             android:layout_toLeftOf="@id/msg_fl"
             android:clickable="true"
             android:scaleType="fitCenter"
-            android:background="@drawable/send_error"
+            android:background="@drawable/jmui_send_error"
             android:visibility="gone" />
     </RelativeLayout>
 

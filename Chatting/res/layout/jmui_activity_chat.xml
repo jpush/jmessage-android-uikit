@@ -18,8 +18,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/back_btn"
-            android:background="@drawable/back_btn_bg" />
+            android:src="@drawable/jmui_back_btn"
+            android:background="@drawable/jmui_back_btn_bg" />
 
         <TextView
             android:id="@+id/title"
@@ -81,7 +81,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/voice"/>
+            android:background="@drawable/jmui_voice"/>
 
 
         <RelativeLayout
@@ -95,10 +95,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/chat_input_bg"
+                android:background="@drawable/jmui_chat_input_bg"
                 android:gravity="start"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/text_cursor_bg"
+                android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
                 android:padding="5dp"
                 android:textColor="#000000"
                 android:inputType="textMultiLine"/>
@@ -110,7 +110,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/voice_bg"
+                android:background="@drawable/jmui_voice_bg"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/record_voice_hint"
@@ -132,7 +132,7 @@
                 android:id="@+id/send_msg_btn"
                 android:layout_width="45dp"
                 android:layout_height="30dp"
-                android:background="@drawable/register_btn_bg"
+                android:background="@drawable/jmui_register_btn_bg"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/send"
                 android:textColor="@android:color/white"
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@drawable/more_menu"
+                android:background="@drawable/jmui_more_menu"
                 android:focusable="true" />
         </FrameLayout>
 
@@ -182,7 +182,7 @@
                         android:id="@+id/pick_from_local_btn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/pick_picture" />
+                        android:background="@drawable/jmui_pick_picture" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -203,7 +203,7 @@
                         android:id="@+id/pick_from_camera_btn"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/take_photo" />
+                        android:background="@drawable/jmui_take_photo" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical|center_horizontal"
-                        android:background="@drawable/video" />
+                        android:background="@drawable/jmui_video" />
 
                     <TextView
                         android:layout_width="wrap_content"

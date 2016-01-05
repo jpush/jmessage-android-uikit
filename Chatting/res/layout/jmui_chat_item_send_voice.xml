@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="3dp"
-                android:background="@drawable/msg_send_bg"
+                android:background="@drawable/jmui_msg_send_bg"
                 android:maxWidth="220dp" />
 
             <ImageView
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="20dp"
-                android:background="@anim/voice_send" />
+                android:background="@anim/jmui_voice_send" />
         </FrameLayout>
 
         <TextView
@@ -61,7 +61,7 @@
             android:layout_toLeftOf="@id/voice_length_tv"
             android:clickable="true"
             android:scaleType="fitCenter"
-            android:background="@drawable/send_error"
+            android:background="@drawable/jmui_send_error"
             android:visibility="gone" />
 
         <ImageView
@@ -71,7 +71,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="3dp"
             android:layout_toLeftOf="@id/voice_length_tv"
-            android:src="@drawable/sending_img" />
+            android:src="@drawable/jmui_sending_img" />
 
     </RelativeLayout>
 
