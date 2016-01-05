@@ -36,7 +36,6 @@ IM SDK UI 组件
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
 
     <!-- JMessage Demo required for record audio-->
