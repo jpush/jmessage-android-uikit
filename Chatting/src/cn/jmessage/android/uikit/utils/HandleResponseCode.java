@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.tools;
+package cn.jmessage.android.uikit.utils;
 
 import android.content.Context;
 import android.view.Gravity;

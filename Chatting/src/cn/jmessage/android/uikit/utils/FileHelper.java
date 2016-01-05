@@ -1,9 +1,7 @@
-package cn.jmessage.android.uikit.tools;
+package cn.jmessage.android.uikit.utils;
 
 import android.os.Environment;
 import android.text.format.DateFormat;
-
-import cn.jmessage.android.uikit.ChattingApplication;
 
 import java.io.File;
 import java.util.Calendar;
@@ -13,6 +11,8 @@ import java.util.Locale;
  * Created by Ken on 2015/11/13.
  */
 public class FileHelper {
+
+    public static final String PICTURE_DIR = "sdcard/JChatDemo/pictures/";
 
     private static FileHelper mInstance = new FileHelper();
 
@@ -25,7 +25,7 @@ public class FileHelper {
     }
 
     public static String createAvatarPath(String userName) {
-        String dir = ChattingApplication.PICTURE_DIR;
+        String dir = PICTURE_DIR;
         File destDir = new File(dir);
         if (!destDir.exists()) {
             destDir.mkdirs();

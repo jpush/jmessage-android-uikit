@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.chatting;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,6 +31,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import cn.jmessage.android.uikit.R;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.content.CustomContent;
 import cn.jpush.im.android.api.content.EventNotificationContent;
@@ -38,11 +40,10 @@ import cn.jpush.im.android.api.enums.MessageStatus;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
-import cn.jmessage.android.uikit.tools.DialogCreator;
-import cn.jmessage.android.uikit.tools.FileHelper;
-import cn.jmessage.android.uikit.tools.HandleResponseCode;
-import cn.jmessage.android.uikit.tools.TimeFormat;
-import cn.jmessage.android.uikit.chatting.CircleImageView;
+import cn.jmessage.android.uikit.utils.DialogCreator;
+import cn.jmessage.android.uikit.utils.FileHelper;
+import cn.jmessage.android.uikit.utils.HandleResponseCode;
+import cn.jmessage.android.uikit.utils.TimeFormat;
 
 import com.squareup.picasso.Picasso;
 import java.io.File;
@@ -71,7 +72,7 @@ import cn.jpush.im.api.BasicCallback;
 public class MsgListAdapter extends BaseAdapter {
 
     private static final String TAG = "MsgListAdapter";
-
+    public static final int PAGE_MESSAGE_COUNT = 18;
     private Context mContext;
     private String mTargetId;
     private Conversation mConv;
@@ -105,7 +106,7 @@ public class MsgListAdapter extends BaseAdapter {
     //当前第0项消息的位置
     private int mStart;
     //上一页的消息数
-    private int mOffset = ChattingApplication.PAGE_MESSAGE_COUNT;
+    private int mOffset = PAGE_MESSAGE_COUNT;
     private boolean mHasLastPage = false;
     private Dialog mDialog;
     //发送图片消息的队列
@@ -182,7 +183,7 @@ public class MsgListAdapter extends BaseAdapter {
 
     public void dropDownToRefresh() {
         if (mConv != null) {
-            List<Message> msgList = mConv.getMessagesFromNewest(mStart, ChattingApplication.PAGE_MESSAGE_COUNT);
+            List<Message> msgList = mConv.getMessagesFromNewest(mStart, PAGE_MESSAGE_COUNT);
             if (msgList != null) {
                 for (Message msg : msgList) {
                     mMsgList.add(0, msg);

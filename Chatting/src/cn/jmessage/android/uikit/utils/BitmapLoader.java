@@ -1,10 +1,8 @@
-package cn.jmessage.android.uikit.tools;
+package cn.jmessage.android.uikit.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-import cn.jmessage.android.uikit.ChattingApplication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +15,8 @@ import java.util.List;
  * Created by Ken on 2015/2/9.
  */
 public class BitmapLoader {
+
+    public static final String PICTURE_DIR = "sdcard/JChatDemo/pictures/";
 
     public static Bitmap getBitmapFromFile(String path, int width, int height) {
         BitmapFactory.Options opts = null;
@@ -57,11 +57,11 @@ public class BitmapLoader {
         FileOutputStream fileOutput = null;
         File imgFile;
         try {
-            File desDir = new File(ChattingApplication.PICTURE_DIR);
+            File desDir = new File(PICTURE_DIR);
             if (!desDir.exists()) {
                 desDir.mkdirs();
             }
-            imgFile = new File(ChattingApplication.PICTURE_DIR, userName + ".png");
+            imgFile = new File(PICTURE_DIR, userName + ".png");
             imgFile.createNewFile();
             fileOutput = new FileOutputStream(imgFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutput);

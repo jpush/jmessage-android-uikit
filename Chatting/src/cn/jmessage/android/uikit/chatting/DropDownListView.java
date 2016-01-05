@@ -1,4 +1,9 @@
 package cn.jmessage.android.uikit.chatting;
+/**
+ * DropDownListView
+ *
+ * @author Trinea 2013-6-1
+ */
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,13 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import cn.jmessage.android.uikit.R;
-import cn.jmessage.android.uikit.ChattingApplication;
 
 
 public class DropDownListView extends ListView implements OnScrollListener {
 
     private boolean isDropDownStyle = true;
     private Context context;
+    public static final int PAGE_MESSAGE_COUNT = 18;
 
     /**
      * header layout view
@@ -57,7 +62,7 @@ public class DropDownListView extends ListView implements OnScrollListener {
     private float actionDownPointY;
 
     private float actionMovePointY;
-    private int mOffset = ChattingApplication.PAGE_MESSAGE_COUNT;
+    private int mOffset = PAGE_MESSAGE_COUNT;
 
     public DropDownListView(Context context) {
         super(context);
@@ -171,7 +176,7 @@ public class DropDownListView extends ListView implements OnScrollListener {
         if (isDropDownStyle) {
             if (currentScrollState == SCROLL_STATE_TOUCH_SCROLL && currentHeaderStatus != HEADER_STATUS_LOADING) {
                 if (firstVisibleItem == 0 && actionMovePointY - actionDownPointY > 0
-                        && mOffset == ChattingApplication.PAGE_MESSAGE_COUNT) {
+                        && mOffset == PAGE_MESSAGE_COUNT) {
                     onDropDown();
                 }
 
@@ -182,7 +187,7 @@ public class DropDownListView extends ListView implements OnScrollListener {
                  * first item(header layout) is visible and header status is not HEADER_STATUS_LOADING, then hide first
                  * item, set second item visible and set hasReachedTop true.
                  */
-                if (mOffset == ChattingApplication.PAGE_MESSAGE_COUNT){
+                if (mOffset == PAGE_MESSAGE_COUNT){
                     onDropDown();
                 }
                 hasReachedTop = true;
