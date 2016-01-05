@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.photoview;
+package cn.jmessage.android.uikit.browser.photoview;
 
 import android.os.Build.VERSION;
 import android.view.View;

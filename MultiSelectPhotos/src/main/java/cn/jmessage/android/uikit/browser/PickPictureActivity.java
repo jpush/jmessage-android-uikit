@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.browser;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,7 +11,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import cn.jmessage.android.uikit.browser.PickPictureView;
+
+import cn.jmessage.android.uikit.R;
 
 public class PickPictureActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
 
@@ -34,7 +35,7 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_pick_picture_detail);
+        setContentView(R.layout.jmui_activity_pick_picture_detail);
         Intent intent = this.getIntent();
         mPickPictureView = (PickPictureView) findViewById(R.id.pick_picture_view);
         mPickPictureView.initModule(intent.getStringExtra("albumName"));

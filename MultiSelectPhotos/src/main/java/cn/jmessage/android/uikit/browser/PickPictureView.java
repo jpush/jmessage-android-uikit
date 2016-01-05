@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import cn.jmessage.android.uikit.PickPictureAdapter;
 import cn.jmessage.android.uikit.R;
 
 public class PickPictureView extends LinearLayout {

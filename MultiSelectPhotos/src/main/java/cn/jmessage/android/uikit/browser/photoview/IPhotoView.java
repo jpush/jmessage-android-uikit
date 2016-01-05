@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package cn.jmessage.android.uikit.photoview;
+package cn.jmessage.android.uikit.browser.photoview;
 
 import android.graphics.RectF;
 import android.view.View;

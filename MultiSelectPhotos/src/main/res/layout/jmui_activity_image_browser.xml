@@ -16,8 +16,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:src="@mipmap/back_btn"
-            android:background="@drawable/back_btn_bg" />
+            android:src="@mipmap/jmui_back_btn"
+            android:background="@drawable/jmui_back_btn_bg" />
 
         <TextView
             android:id="@+id/number_tv"
@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:padding="5dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/send_picture_btn_bg"
+            android:background="@drawable/jmui_send_picture_btn_bg"
             android:text="@string/send"/>
     </RelativeLayout>
     
@@ -64,7 +64,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/load_origin_image"
         android:textColor="#ffffff"
-        android:background="@drawable/download_image_btn_bg"
+        android:background="@drawable/jmui_download_image_btn_bg"
         android:visibility="gone"/>
 
    </FrameLayout>

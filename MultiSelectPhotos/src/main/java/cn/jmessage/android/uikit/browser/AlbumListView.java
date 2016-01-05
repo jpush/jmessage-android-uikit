@@ -6,7 +6,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import cn.jmessage.android.uikit.AlbumListAdapter;
 import cn.jmessage.android.uikit.R;
 
 public class AlbumListView extends LinearLayout {

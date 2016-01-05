@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package cn.jmessage.android.uikit.photoview;
+package cn.jmessage.android.uikit.browser.photoview;
 
 import android.annotation.TargetApi;
 import android.content.Context;

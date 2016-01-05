@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.browser;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,8 +19,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jmessage.android.uikit.browser.MyImageView;
-import cn.jmessage.android.uikit.browser.NativeImageLoader;
+import cn.jmessage.android.uikit.R;
 
 public class PickPictureAdapter extends BaseAdapter {
     /**
@@ -67,7 +66,7 @@ public class PickPictureAdapter extends BaseAdapter {
         String path = mList.get(position);
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.pick_picture_detail_grid_item, null);
+            convertView = mInflater.inflate(R.layout.jmui_pick_picture_detail_grid_item, null);
             viewHolder = new ViewHolder();
             viewHolder.mImageView = (MyImageView) convertView.findViewById(R.id.child_image);
             viewHolder.mCheckBox = (CheckBox) convertView.findViewById(R.id.child_checkbox);
@@ -75,7 +74,7 @@ public class PickPictureAdapter extends BaseAdapter {
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.mImageView.setImageResource(R.mipmap.picture_not_found);
+            viewHolder.mImageView.setImageResource(R.mipmap.jmui_picture_not_found);
         }
         viewHolder.mImageView.setTag(path);
         //增加选中checkbox面积
@@ -156,7 +155,7 @@ public class PickPictureAdapter extends BaseAdapter {
         if (bitmap != null) {
             viewHolder.mImageView.setImageBitmap(bitmap);
         } else {
-            viewHolder.mImageView.setImageResource(R.mipmap.picture_not_found);
+            viewHolder.mImageView.setImageResource(R.mipmap.jmui_picture_not_found);
         }
 
         return convertView;

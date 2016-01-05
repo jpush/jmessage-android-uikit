@@ -14,7 +14,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/picture_not_found"
+        android:src="@mipmap/jmui_picture_not_found"
         />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:background="@mipmap/arrow"/>
+        android:background="@mipmap/jmui_arrow"/>
 
     </RelativeLayout>
 

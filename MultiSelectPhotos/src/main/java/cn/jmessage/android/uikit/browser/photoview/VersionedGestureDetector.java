@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.photoview;
+package cn.jmessage.android.uikit.browser.photoview;
 
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.

@@ -139,7 +139,7 @@ curl --insecure -X POST -v https://api.im.jpush.cn/v1/groups -H "Content-Type: a
 
 - android-shape-imageview [github地址](https://github.com/siyamed/android-shape-imageview) 自定义ImageView的形状
 
-- PhotoView [github地址](https://github.com/chrisbanes/PhotoView) 手势缩放图片
+- PhotoView [github地址](https://github.com/chrisbanes/PhotoView) 根据手势缩放图片
 
 - DropDownListView [github地址](https://github.com/Trinea/android-common) 下拉刷新ListView
 

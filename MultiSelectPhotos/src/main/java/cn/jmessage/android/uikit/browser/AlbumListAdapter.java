@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.browser;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,9 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import java.util.List;
 
-import cn.jmessage.android.uikit.browser.ImageBean;
-import cn.jmessage.android.uikit.browser.MyImageView;
-import cn.jmessage.android.uikit.browser.NativeImageLoader;
+import cn.jmessage.android.uikit.R;
 
 public class AlbumListAdapter extends BaseAdapter{
 
@@ -57,7 +55,7 @@ public class AlbumListAdapter extends BaseAdapter{
         String path = mImageBean.getTopImagePath();
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.pick_picture_total_list_item, null);
+            convertView = mInflater.inflate(R.layout.jmui_album_list_item, null);
             viewHolder.mImageView = (MyImageView) convertView.findViewById(R.id.group_image);
             viewHolder.mTextViewTitle = (TextView) convertView.findViewById(R.id.group_title);
             viewHolder.mTextViewCounts = (TextView) convertView.findViewById(R.id.group_count);
@@ -74,7 +72,7 @@ public class AlbumListAdapter extends BaseAdapter{
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.mImageView.setImageResource(R.mipmap.picture_not_found);
+            viewHolder.mImageView.setImageResource(R.mipmap.jmui_picture_not_found);
         }
 
         viewHolder.mTextViewTitle.setText(mImageBean.getFolderName());
@@ -99,7 +97,7 @@ public class AlbumListAdapter extends BaseAdapter{
         if (bitmap != null) {
             viewHolder.mImageView.setImageBitmap(bitmap);
         }else {
-            viewHolder.mImageView.setImageResource(R.mipmap.picture_not_found);
+            viewHolder.mImageView.setImageResource(R.mipmap.jmui_picture_not_found);
         }
         return convertView;
     }

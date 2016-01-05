@@ -9,7 +9,7 @@
         android:id="@+id/child_image"
         android:layout_width="fill_parent"
         android:layout_height="100dip"
-        android:src="@mipmap/picture_not_found"
+        android:src="@mipmap/jmui_picture_not_found"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -23,7 +23,7 @@
             android:id="@+id/child_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/pictures_selected_bg"
+            android:background="@drawable/jmui_pictures_selected_bg"
             android:button="@null"/>
 
     </LinearLayout>

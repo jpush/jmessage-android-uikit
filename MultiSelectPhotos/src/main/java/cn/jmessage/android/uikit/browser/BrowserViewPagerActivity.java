@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.browser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,10 +17,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import cn.jmessage.android.uikit.browser.BitmapLoader;
-import cn.jmessage.android.uikit.browser.BrowserView;
-import cn.jmessage.android.uikit.browser.NativeImageLoader;
-import cn.jmessage.android.uikit.photoview.PhotoView;
+import cn.jmessage.android.uikit.R;
+import cn.jmessage.android.uikit.browser.photoview.PhotoView;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -56,7 +54,7 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
         super.onCreate(savedInstanceState);
 
         mContext = this;
-        setContentView(R.layout.activity_image_browser);
+        setContentView(R.layout.jmui_activity_image_browser);
         mBrowserView = (BrowserView) findViewById(R.id.image_browser_view);
         mBrowserView.initModule();
 
@@ -86,18 +84,18 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
                         if (bitmap != null) {
                             photoView.setImageBitmap(bitmap);
                         } else {
-                            photoView.setImageResource(R.mipmap.picture_not_found);
+                            photoView.setImageResource(R.mipmap.jmui_picture_not_found);
                         }
                     } else {
                         Bitmap bitmap = NativeImageLoader.getInstance().getBitmapFromMemCache(path);
                         if (bitmap != null) {
                             photoView.setImageBitmap(bitmap);
                         } else {
-                            photoView.setImageResource(R.mipmap.picture_not_found);
+                            photoView.setImageResource(R.mipmap.jmui_picture_not_found);
                         }
                     }
                 } else {
-                    photoView.setImageResource(R.mipmap.picture_not_found);
+                    photoView.setImageResource(R.mipmap.jmui_picture_not_found);
                 }
                 container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 return photoView;
@@ -237,6 +235,9 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
         super.onDestroy();
     }
 
+    /**
+     * 返回时将所选的图片路径(此处通过一个int数组记录所选的图片)返回到上一个Activity
+     */
     @Override
     public void onBackPressed() {
         int pathArray[] = new int[mPathList.size()];

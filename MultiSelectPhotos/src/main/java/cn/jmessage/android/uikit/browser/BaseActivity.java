@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.browser;
 
 import android.app.Activity;
 import android.os.Bundle;

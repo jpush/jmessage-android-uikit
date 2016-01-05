@@ -15,18 +15,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/noTitle">
-        <activity android:name="cn.jmessage.android.uikit.groupchatdetail.GroupDetailActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="cn.jmessage.android.uikit.BrowserViewPagerActivity"
-            android:theme="@style/noTitle"/>
-        <activity android:name="cn.jmessage.android.uikit.PickPictureActivity"
-            android:theme="@style/noTitle"/>
+        <activity android:name=".browser.AlbumListActivity"/>
+        <activity android:name=".browser.BrowserViewPagerActivity" />
+        <activity android:name=".browser.PickPictureActivity" />
     </application>
 
 </manifest>
