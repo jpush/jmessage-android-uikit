@@ -119,7 +119,7 @@ IM SDK UI 组件
 - 复制资源文件到你的项目, 你可以自定义界面的样式
 
 - 在XML文件中将引用路径修改为你当前的路径
-![如图]()
+![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot6.png)
 
 - 配置用户信息, 在MainActivity这个入口Activity中配置用户信息(包括登录用户, 聊天用户及群聊id), 可以使用Intent传递到ChatActivity. 你可以调用JMessageClient.register(username, password, callback)来注册用户, 也可以使用curl的方式注册用户:
 
