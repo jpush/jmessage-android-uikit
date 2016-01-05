@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -10,6 +10,10 @@ import cn.jpush.im.android.api.JMessageClient;
 
 /**
  * Created by Ken on 2015/3/13.
+ */
+
+/**
+ * 主要用于一些初始化的动作
  */
 public class BaseActivity extends Activity {
     private static final String TAG = "BaseActivity";
@@ -26,8 +30,8 @@ public class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mHandler = new BaseHandler();
+        //初始化JMessage-sdk
         JMessageClient.init(this);
-        JMessageClient.registerEventReceiver(this);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         mDensity = dm.density;

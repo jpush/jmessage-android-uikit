@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jmessage.android.uicomponents.R;
-import cn.jmessage.android.uikit.groupchatdetail.CircleImageView;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.model.UserInfo;
 
@@ -79,7 +78,7 @@ public class AllMembersAdapter extends BaseAdapter implements MembersInChatActiv
         final ViewHolder viewHolder;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.all_member_item, null);
+            convertView = inflater.inflate(R.layout.jmui_all_member_item, null);
             viewHolder = new ViewHolder((CircleImageView) convertView.findViewById(R.id.icon_iv),
                     (TextView) convertView.findViewById(R.id.name),
                     (CheckBox) convertView.findViewById(R.id.check_box_cb));
@@ -115,13 +114,13 @@ public class AllMembersAdapter extends BaseAdapter implements MembersInChatActiv
                     if (status == 0) {
                         viewHolder.icon.setImageBitmap(bitmap);
                     } else {
-                        viewHolder.icon.setImageResource(R.drawable.head_icon);
+                        viewHolder.icon.setImageResource(R.drawable.jmui_head_icon);
                         HandleResponseCode.onHandle(mContext, status, false);
                     }
                 }
             });
         } else {
-            viewHolder.icon.setImageResource(R.drawable.head_icon);
+            viewHolder.icon.setImageResource(R.drawable.jmui_head_icon);
         }
         String displayName = userInfo.getNickname();
         if (TextUtils.isEmpty(displayName)) {

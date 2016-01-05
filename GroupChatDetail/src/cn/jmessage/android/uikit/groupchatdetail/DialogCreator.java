@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,7 +18,7 @@ import cn.jmessage.android.uicomponents.R;
 public class DialogCreator {
     public static Dialog createLoadingDialog(Context context, String msg) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.loading_view, null);
+        View v = inflater.inflate(R.layout.jmui_loading_view, null);
         RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dialog_view);
         ImageView mLoadImg = (ImageView) v.findViewById(R.id.loading_img);
         TextView mLoadText = (TextView) v.findViewById(R.id.loading_txt);
@@ -36,7 +36,7 @@ public class DialogCreator {
     public static Dialog createExitGroupDialog(Context context, View.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_base_with_button, null);
+        View v = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
         builder.setView(v);
         Dialog dialog = builder.create();
         TextView title = (TextView) v.findViewById(R.id.title);
@@ -55,7 +55,7 @@ public class DialogCreator {
                                                   boolean isSingle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dialog_base_with_button, null);
+        View view = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
         builder.setView(view);
         TextView title = (TextView) view.findViewById(R.id.title);
         if (isSingle) {

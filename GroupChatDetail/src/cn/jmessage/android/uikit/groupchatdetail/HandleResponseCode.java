@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -17,7 +17,7 @@ public class HandleResponseCode {
     public static void onHandle(Context context, int status, boolean isCenter){
         Toast toast = new Toast(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.toast_default_style, null);
+        View view = inflater.inflate(R.layout.jmui_toast_default_style, null);
         TextView content = (TextView) view.findViewById(R.id.toast_content_tv);
         switch (status){
             case 0:

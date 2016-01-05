@@ -5,7 +5,7 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:background="@drawable/dialog_default_bg"
+    android:background="@drawable/jmui_dialog_default_bg"
     android:orientation="vertical">
 
 
@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="@string/cancel"
             android:textColor="#28282a"
-            android:background="@drawable/dialog_bottom_left_btn"
+            android:background="@drawable/jmui_dialog_bottom_left_btn"
             />
 
         <Button
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:text="@string/commit"
             android:textColor="#28282a"
-            android:background="@drawable/dialog_bottom_right_btn"
+            android:background="@drawable/jmui_dialog_bottom_right_btn"
             />
 
     </LinearLayout>

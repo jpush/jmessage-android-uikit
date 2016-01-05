@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cn.jmessage.android.uicomponents.R;
-import cn.jmessage.android.uikit.GroupMemberGridAdapter;
 
 public class ChatDetailView extends LinearLayout{
 

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:background="@drawable/dialog_default_bg">
+    android:background="@drawable/jmui_dialog_default_bg">
 
     <TextView
         android:id="@+id/dialog_name"
@@ -40,7 +40,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:cursorVisible="true"
-        android:textCursorDrawable="@drawable/text_cursor_bg"
+        android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
         style="@style/default_input_style_with_bg"
         />
 
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:text="取消"
             android:textColor="#808080"
-            android:background="@drawable/dialog_bottom_left_btn"
+            android:background="@drawable/jmui_dialog_bottom_left_btn"
             />
 
         <Button
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:text="确定"
             android:textColor="#808080"
-            android:background="@drawable/dialog_bottom_right_btn"
+            android:background="@drawable/jmui_dialog_bottom_right_btn"
             />
     </LinearLayout>
 

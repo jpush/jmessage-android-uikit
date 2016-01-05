@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jmessage.android.uicomponents.R;
-import cn.jmessage.android.uikit.groupchatdetail.BitmapLoader;
-import cn.jmessage.android.uikit.groupchatdetail.CircleImageView;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
@@ -24,7 +22,7 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
-public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.RefreshMemberListener {
+public class GroupMemberGridAdapter extends BaseAdapter implements GroupDetailActivity.RefreshMemberListener {
 
     private static final String TAG = "GroupMemberGridAdapter";
 
@@ -134,7 +132,7 @@ public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.group_grid_view_item, null);
+            convertView = mInflater.inflate(R.layout.jmui_group_grid_view_item, null);
             holder = new ViewHolder((CircleImageView) convertView.findViewById(R.id.grid_avatar),
                     (TextView) convertView.findViewById(R.id.grid_name));
             convertView.setTag(holder);
@@ -161,14 +159,14 @@ public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.
                                 if (status == 0) {
                                     holder.icon.setImageBitmap(bitmap);
                                 } else {
-                                    holder.icon.setImageResource(R.drawable.head_icon);
+                                    holder.icon.setImageResource(R.drawable.jmui_head_icon);
                                     HandleResponseCode.onHandle(mContext, status, false);
                                 }
                             }
                         });
                     }
                 } else {
-                    holder.icon.setImageResource(R.drawable.head_icon);
+                    holder.icon.setImageResource(R.drawable.jmui_head_icon);
                 }
 
                 if (TextUtils.isEmpty(userInfo.getNickname())) {
@@ -181,14 +179,14 @@ public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.name.setVisibility(View.VISIBLE);
             } else if (position == mCurrentNum) {
-                holder.icon.setImageResource(R.drawable.chat_detail_add);
+                holder.icon.setImageResource(R.drawable.jmui_chat_detail_add);
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.name.setVisibility(View.INVISIBLE);
 
                 //设置删除群成员按钮
             } else if (position == mCurrentNum + 1) {
                 if (mIsCreator && mCurrentNum > 1) {
-                    holder.icon.setImageResource(R.drawable.chat_detail_del);
+                    holder.icon.setImageResource(R.drawable.jmui_chat_detail_del);
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.name.setVisibility(View.INVISIBLE);
                 } else {
@@ -225,7 +223,7 @@ public class GroupMemberGridAdapter extends BaseAdapter implements MainActivity.
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.name.setVisibility(View.VISIBLE);
             } else {
-                holder.icon.setImageResource(R.drawable.chat_detail_add);
+                holder.icon.setImageResource(R.drawable.jmui_chat_detail_add);
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.name.setVisibility(View.INVISIBLE);
             }

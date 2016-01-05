@@ -16,8 +16,8 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/back_btn"
-            android:background="@drawable/back_btn_bg" />
+            android:src="@drawable/jmui_back_btn"
+            android:background="@drawable/jmui_back_btn_bg" />
 
         <TextView
             android:id="@+id/members_in_chat"
@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:padding="5dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/send_picture_btn_bg"
+            android:background="@drawable/jmui_send_picture_btn_bg"
             android:text="@string/add"
             android:textColor="#ffffff"
             android:textSize="20sp"/>
@@ -59,20 +59,20 @@
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/search"
+            android:src="@drawable/jmui_search"
             android:background="#d4d4d4" />
 
         <EditText
             android:id="@+id/search_et"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textCursorDrawable="@drawable/text_cursor_bg"
+            android:textCursorDrawable="@drawable/jmui_text_cursor_bg"
             android:textColorHint="@color/gray"
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:hint="@string/search"
             android:textColor="#555555"
-            android:background="@drawable/default_input_bg"/>
+            android:background="@drawable/jmui_default_input_bg"/>
 
     </LinearLayout>
 

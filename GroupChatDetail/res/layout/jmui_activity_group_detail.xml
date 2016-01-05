@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <include layout="@layout/menu_title_bar"/>
+            <include layout="@layout/jmui_menu_title_bar"/>
 
             <cn.jmessage.android.uikit.groupchatdetail.GroupGridView
                 android:id="@+id/chat_detail_group_gv"
@@ -47,6 +47,7 @@
                     android:id="@+id/members_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:text="@string/combine_title"
                     android:textColor="#555555"
                     android:textSize="18sp" />
@@ -178,7 +179,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/chat_detail_btn_bg"
+                    android:background="@drawable/jmui_chat_detail_btn_bg"
                     android:textSize="18sp"
                     android:text="@string/group_exit_btn"
                     android:textColor="#ffffff" />

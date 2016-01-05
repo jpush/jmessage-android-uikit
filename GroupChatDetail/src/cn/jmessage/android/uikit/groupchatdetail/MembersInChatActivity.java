@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,7 +59,7 @@ public class MembersInChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.activity_all_members);
+        setContentView(R.layout.jmui_activity_all_members);
         mListView = (ListView) findViewById(R.id.members_list_view);
         mReturnBtn = (ImageButton) findViewById(R.id.return_btn);
         mTitle = (TextView) findViewById(R.id.number_tv);
@@ -234,7 +234,7 @@ public class MembersInChatActivity extends Activity {
     private void addMemberToGroup() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.dialog_add_friend_to_conv_list, null);
+                .inflate(R.layout.jmui_dialog_add_friend_to_conv_list, null);
         builder.setView(view);
         final Dialog dialog = builder.create();
         dialog.show();

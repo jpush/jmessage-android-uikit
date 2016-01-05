@@ -10,7 +10,7 @@
         <item name="android:padding">5dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@drawable/list_item_bg</item>
+        <item name="android:background">@drawable/jmui_list_item_bg</item>
         <item name="android:clickable">true</item>
     </style>
 
@@ -41,7 +41,7 @@
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:background">@drawable/arrow</item>
+        <item name="android:background">@drawable/jmui_arrow</item>
     </style>
 
     <style name="LoadingDialog">
@@ -62,14 +62,14 @@
         <item name="android:maxLines">2</item>
         <item name="android:maxLength">64</item>
         <item name="android:focusable">true</item>
-        <item name="android:background">@drawable/default_input_bg</item>
+        <item name="android:background">@drawable/jmui_default_input_bg</item>
     </style>
 
     <style name="change_group_name_style" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@drawable/dialog_default_bg</item>
+        <item name="android:windowBackground">@drawable/jmui_dialog_default_bg</item>
     </style>
 
 </resources>
