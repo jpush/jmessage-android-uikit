@@ -27,5 +27,5 @@ BrowserViewPagerActivity得到所选的图片后返回PickPictureActivity的方�
 
 - PhotoView [github地址](https://github.com/chrisbanes/PhotoView) 根据手势缩放图片
 
-- NativeImageLoader [blog](http://blog.csdn.net/xiaanming/article/details/18730223) 扫描手机中的图片
+- NativeImageLoader [blog地址](http://blog.csdn.net/xiaanming/article/details/18730223) 扫描手机中的图片
 
