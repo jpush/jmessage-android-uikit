@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.browser;
+package cn.jmessage.android.uikit.multiselectphotos;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,7 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import cn.jmessage.android.uikit.R;
-import cn.jmessage.android.uikit.browser.photoview.PhotoView;
+import cn.jmessage.android.uikit.multiselectphotos.photoview.PhotoView;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

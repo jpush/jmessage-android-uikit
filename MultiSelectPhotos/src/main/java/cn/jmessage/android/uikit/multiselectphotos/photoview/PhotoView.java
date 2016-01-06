@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package cn.jmessage.android.uikit.browser.photoview;
+package cn.jmessage.android.uikit.multiselectphotos.photoview;
 
-import cn.jmessage.android.uikit.browser.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import cn.jmessage.android.uikit.browser.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import cn.jmessage.android.uikit.browser.photoview.PhotoViewAttacher.OnViewTapListener;
+import cn.jmessage.android.uikit.multiselectphotos.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import cn.jmessage.android.uikit.multiselectphotos.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import cn.jmessage.android.uikit.multiselectphotos.photoview.PhotoViewAttacher.OnViewTapListener;
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;

@@ -26,6 +26,7 @@ import cn.jmessage.android.uicomponents.R;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
@@ -53,7 +54,6 @@ public class MembersInChatActivity extends Activity {
     private long mGroupId;
     private boolean mIsDeleteMode;
     private boolean mIsCreator;
-    private RefreshMemberListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,25 +68,23 @@ public class MembersInChatActivity extends Activity {
 
         mGroupId = getIntent().getLongExtra(GROUP_ID, 0);
         mIsDeleteMode = getIntent().getBooleanExtra(DELETE_MODE, false);
-        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
-            @Override
-            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-                if (status == 0) {
-                    mMemberInfoList = groupInfo.getGroupMembers();
-                    String groupOwnerId = groupInfo.getGroupOwner();
-                    if (groupOwnerId.equals(JMessageClient.getMyInfo().getUserName())) {
-                        mIsCreator = true;
+        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
+        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+        if (null != groupInfo) {
+            initData(groupInfo);
+        } else {
+            JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
+                @Override
+                public void gotResult(int status, String desc, GroupInfo groupInfo) {
+                    if (status == 0) {
+                        initData(groupInfo);
+                    } else {
+                        HandleResponseCode.onHandle(mContext, status, false);
                     }
-                    mAdapter = new AllMembersAdapter(mContext, mMemberInfoList, mIsDeleteMode);
-                    setRMLListener(mAdapter);
-                    mListView.setAdapter(mAdapter);
-                    mListView.requestFocus();
-                    String title = mContext.getString(R.string.combine_title);
-                    mTitle.setText(String.format(title, mMemberInfoList.size()));
                 }
-            }
-        });
+            });
 
+        }
         if (mIsDeleteMode) {
             mRightBtn.setText(mContext.getString(R.string.delete));
         } else {
@@ -149,6 +147,19 @@ public class MembersInChatActivity extends Activity {
                 return true;
             }
         });
+    }
+
+    private void initData(GroupInfo groupInfo) {
+        mMemberInfoList = groupInfo.getGroupMembers();
+        String groupOwnerId = groupInfo.getGroupOwner();
+        if (groupOwnerId.equals(JMessageClient.getMyInfo().getUserName())) {
+            mIsCreator = true;
+        }
+        mAdapter = new AllMembersAdapter(mContext, mMemberInfoList, mIsDeleteMode);
+        mListView.setAdapter(mAdapter);
+        mListView.requestFocus();
+        String title = mContext.getString(R.string.combine_title);
+        mTitle.setText(String.format(title, mMemberInfoList.size()));
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
@@ -384,22 +395,12 @@ public class MembersInChatActivity extends Activity {
         mAdapter.updateListView(filterList);
     }
 
-    /**
-     * 此demo没有Conversation,所以每次都要调用getGroupInfo更新群成员信息
-     */
     private void refreshMemberList() {
-        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
-            @Override
-            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-                if (status == 0) {
-                    mMemberInfoList = groupInfo.getGroupMembers();
-                    mListener.onRefreshMemberList(mMemberInfoList);
-                    mTitle.setText("(" + mMemberInfoList.size() + ")");
-                } else {
-                    HandleResponseCode.onHandle(mContext, status, false);
-                }
-            }
-        });
+        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
+        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+        mMemberInfoList = groupInfo.getGroupMembers();
+        mAdapter.refreshMemberList(mMemberInfoList);
+        mTitle.setText("(" + mMemberInfoList.size() + ")");
     }
 
     @Override
@@ -409,13 +410,5 @@ public class MembersInChatActivity extends Activity {
         setResult(RESULT_CODE_ALL_MEMBER, intent);
         finish();
         super.onBackPressed();
-    }
-
-    public void setRMLListener(RefreshMemberListener listener) {
-        mListener = listener;
-    }
-
-    interface RefreshMemberListener {
-        public void onRefreshMemberList(List<UserInfo> memberList);
     }
 }

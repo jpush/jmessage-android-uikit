@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.browser;
+package cn.jmessage.android.uikit.multiselectphotos;
 /**
  * 本地图片加载器,采用的是异步解析本地图片，单例模式利用getInstance()获取NativeImageLoader实例
  * 调用loadNativeImage()方法加载本地图片，此类可作为一个加载本地图片的工具类

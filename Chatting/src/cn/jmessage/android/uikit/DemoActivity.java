@@ -21,7 +21,7 @@ import cn.jpush.im.api.BasicCallback;
  * Chatting入口Activity, 初始化JMessage-sdk, 可以选择单聊或群聊,并且设置聊天相关的用户信息(通过Intent的方式)
  */
 
-public class MainActivity extends Activity {
+public class DemoActivity extends Activity {
 
     private static final String TARGET_ID = "targetId";
     private static final String GROUP_ID = "groupId";
@@ -64,9 +64,9 @@ public class MainActivity extends Activity {
             public void gotResult(int status, String desc) {
                 loadingDialog.dismiss();
                 if (status == 0) {
-                    Log.d("MainActivity", "Login success");
+                    Log.d("DemoActivity", "Login success");
                 } else {
-                    HandleResponseCode.onHandle(MainActivity.this, status, false);
+                    HandleResponseCode.onHandle(DemoActivity.this, status, false);
                 }
             }
         });
@@ -80,17 +80,17 @@ public class MainActivity extends Activity {
                 case R.id.sing_chat_ll:
                     intent.putExtra("isSingle", true);
                     intent.putExtra(TARGET_ID, mTargetId);
-                    intent.setClass(MainActivity.this, ChatActivity.class);
+                    intent.setClass(DemoActivity.this, ChatActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.group_chat_ll:
                     intent.putExtra("isSingle", false);
                     intent.putExtra(GROUP_ID, mGroupId);
-                    intent.setClass(MainActivity.this, ChatActivity.class);
+                    intent.setClass(DemoActivity.this, ChatActivity.class);
                     startActivity(intent);
                     break;
                 case R.id.about_btn:
-                    intent.setClass(MainActivity.this, AboutActivity.class);
+                    intent.setClass(DemoActivity.this, AboutActivity.class);
                     startActivity(intent);
                     break;
             }

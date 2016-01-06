@@ -22,7 +22,7 @@ import cn.jpush.im.android.api.model.UserInfo;
 /**
  * Created by Ken on 2015/11/25.
  */
-public class AllMembersAdapter extends BaseAdapter implements MembersInChatActivity.RefreshMemberListener {
+public class AllMembersAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<UserInfo> mMemberList = new ArrayList<UserInfo>();
@@ -36,23 +36,7 @@ public class AllMembersAdapter extends BaseAdapter implements MembersInChatActiv
         this.mIsDeleteMode = isDeleteMode;
     }
 
-//    public void refreshMemberList(long groupId){
-//        JMessageClient.getGroupInfo(groupId, new GetGroupInfoCallback() {
-//            @Override
-//            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-//                if (status == 0) {
-//                    mMemberList = groupInfo.getGroupMembers();
-//                    notifyDataSetChanged();
-//                } else {
-//                    HandleResponseCode.onHandle(mContext, status, false);
-//                }
-//            }
-//        });
-//        mSelectMap.clear();
-//    }
-
-    @Override
-    public void onRefreshMemberList(List<UserInfo> memberList) {
+    public void refreshMemberList(List<UserInfo> memberList) {
         mMemberList = memberList;
         mSelectMap.clear();
         notifyDataSetChanged();

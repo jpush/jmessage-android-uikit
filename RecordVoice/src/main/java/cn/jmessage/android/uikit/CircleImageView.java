@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.recordvoice;
+package cn.jmessage.android.uikit;
 
 import android.content.Context;
 import android.graphics.Bitmap;

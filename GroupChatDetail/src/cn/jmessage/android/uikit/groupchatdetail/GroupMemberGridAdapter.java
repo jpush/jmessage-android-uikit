@@ -29,6 +29,7 @@ public class GroupMemberGridAdapter extends BaseAdapter implements GroupDetailAc
     private LayoutInflater mInflater;
     //群成员列表
     private List<UserInfo> mMemberList = new ArrayList<UserInfo>();
+    private static final int MAX_GRID_ITEM = 40;
     private boolean mIsCreator = false;
     //群成员个数
     private int mCurrentNum;
@@ -83,27 +84,15 @@ public class GroupMemberGridAdapter extends BaseAdapter implements GroupDetailAc
         Log.d(TAG, "Refreshed!");
     }
 
-    public void refreshMemberList(long groupId) {
-        //由于此demo没有Conversation,只能每次都从服务器更新群成员信息
-//        Conversation conv = JMessageClient.getGroupConversation(groupId);
-//        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
-        JMessageClient.getGroupInfo(groupId, new GetGroupInfoCallback() {
-            @Override
-            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-                if (status == 0) {
-                    mMemberList = groupInfo.getGroupMembers();
-                    if (mMemberList.size() > 40) {
-                        mCurrentNum = 39;
-                    } else {
-                        mCurrentNum = mMemberList.size();
-                    }
-                    mRestNum = mRestArray[mCurrentNum % 4];
-                    notifyDataSetChanged();
-                } else {
-                    HandleResponseCode.onHandle(mContext, status, false);
-                }
-            }
-        });
+    public void refreshMemberList(List<UserInfo> memberList) {
+        mMemberList = memberList;
+        if (mMemberList.size() > MAX_GRID_ITEM) {
+            mCurrentNum = MAX_GRID_ITEM - 1;
+        } else {
+            mCurrentNum = mMemberList.size();
+        }
+        mRestNum = mRestArray[mCurrentNum % 4];
+        notifyDataSetChanged();
     }
 
     @Override

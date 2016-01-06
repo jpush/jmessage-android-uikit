@@ -32,6 +32,7 @@ import cn.jpush.im.android.api.callback.GetUserInfoCallback;
 import cn.jpush.im.android.api.content.EventNotificationContent;
 import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
@@ -43,6 +44,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     private static final String GROUP_ID = "groupId";
     private static final String DELETE_MODE = "deleteMode";
     private static final String MY_USERNAME = "myUsername";
+    private static final int MAX_GRID_ITEM = 40;
     private static final int REQUEST_CODE_ALL_MEMBER = 100;
     private static final int ON_GROUP_EVENT = 101;
     private static final int GET_GROUP_INFO_SUCCESS = 102;
@@ -76,28 +78,43 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
         mChatDetailView.setGroupName(this.getString(R.string.chat_detail_title));
 
         Log.d(TAG, "GroupDetailActivity onCreated!");
-        //此demo默认获取到的群信息,可以调用JMessageClient.createGroup或者使用Rest API创建
+        //默认获取到的群信息,可以调用JMessageClient.createGroup或者使用Rest API创建
         mGroupId = getIntent().getLongExtra(GROUP_ID, 0);
         final String myName = getIntent().getStringExtra(MY_USERNAME);
-        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
-            @Override
-            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-                if (status == 0) {
-                    mMembersList = groupInfo.getGroupMembers();
-                    String owner = groupInfo.getGroupOwner();
-                    if (myName.equals(owner)) {
-                        mIsCreator = true;
-                    }
-                    mGroupName = groupInfo.getGroupName();
-                    if (!TextUtils.isEmpty(mGroupName)) {
-                        mChatDetailView.setGroupName(mGroupName);
-                    }
-                    mHandler.sendEmptyMessage(GET_GROUP_INFO_SUCCESS);
-                } else {
-                    HandleResponseCode.onHandle(mContext, status, false);
-                }
+        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
+        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+        if (groupInfo != null) {
+            mMembersList = groupInfo.getGroupMembers();
+            String owner = groupInfo.getGroupOwner();
+            if (myName.equals(owner)) {
+                mIsCreator = true;
             }
-        });
+            mGroupName = groupInfo.getGroupName();
+            if (!TextUtils.isEmpty(mGroupName)) {
+                mChatDetailView.setGroupName(mGroupName);
+            }
+            initAdapter();
+        } else {
+            JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
+                @Override
+                public void gotResult(int status, String desc, GroupInfo groupInfo) {
+                    if (status == 0) {
+                        mMembersList = groupInfo.getGroupMembers();
+                        String owner = groupInfo.getGroupOwner();
+                        if (myName.equals(owner)) {
+                            mIsCreator = true;
+                        }
+                        mGroupName = groupInfo.getGroupName();
+                        if (!TextUtils.isEmpty(mGroupName)) {
+                            mChatDetailView.setGroupName(mGroupName);
+                        }
+                        mHandler.sendEmptyMessage(GET_GROUP_INFO_SUCCESS);
+                    } else {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -244,17 +261,21 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
                 refreshMemberList();
                 break;
             case GET_GROUP_INFO_SUCCESS:
-                mAdapter = new GroupMemberGridAdapter(mContext, mMembersList, mIsCreator, mAvatarSize);
-                setRMLListener(mAdapter);
-                if (mMembersList.size() > 40) {
-                    mCurrentNum = 39;
-                } else {
-                    mCurrentNum = mMembersList.size();
-                }
-                mChatDetailView.setAdapter(mAdapter);
-                mChatDetailView.setMembersNum(mMembersList.size());
+                initAdapter();
                 break;
         }
+    }
+
+    private void initAdapter() {
+        mAdapter = new GroupMemberGridAdapter(mContext, mMembersList, mIsCreator, mAvatarSize);
+        setRMLListener(mAdapter);
+        if (mMembersList.size() > 40) {
+            mCurrentNum = 39;
+        } else {
+            mCurrentNum = mMembersList.size();
+        }
+        mChatDetailView.setAdapter(mAdapter);
+        mChatDetailView.setMembersNum(mMembersList.size());
     }
 
     @Override
@@ -433,23 +454,14 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /**
-     * 此demo没有Conversation,所以每次都要调用getGroupInfo更新群成员信息
-     */
     private void refreshMemberList() {
-        JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
-            @Override
-            public void gotResult(int status, String desc, GroupInfo groupInfo) {
-                if (status == 0) {
-                    mMembersList = groupInfo.getGroupMembers();
-                    mListener.onRefreshMemberList(mMembersList);
-                    mChatDetailView.setTitle(mMembersList.size());
-                    mChatDetailView.setMembersNum(mMembersList.size());
-                } else {
-                    HandleResponseCode.onHandle(mContext, status, false);
-                }
-            }
-        });
+        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
+        GroupInfo groupInfo = (GroupInfo)conv.getTargetInfo();
+        mMembersList = groupInfo.getGroupMembers();
+        mCurrentNum = mMembersList.size() > MAX_GRID_ITEM ? MAX_GRID_ITEM - 1 : mMembersList.size();
+        mAdapter.refreshMemberList(mMembersList);
+        mChatDetailView.setMembersNum(mMembersList.size());
+        mChatDetailView.setTitle(mMembersList.size());
     }
 
     public void setRMLListener(RefreshMemberListener listener) {

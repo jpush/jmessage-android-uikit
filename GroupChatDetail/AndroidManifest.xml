@@ -122,7 +122,7 @@
             android:name="JPUSH_APPKEY"
             android:value="b0585383bd5f451b7fc6014e" />
 
-        <activity android:name="cn.jmessage.android.uikit.MainActivity">
+        <activity android:name="cn.jmessage.android.uikit.DemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

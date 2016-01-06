@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jmessage.android.uikit.recordvoice.CircleImageView;
-
 public class ListAdapter extends BaseAdapter {
 
     private final static String TAG = "ListAdapter";

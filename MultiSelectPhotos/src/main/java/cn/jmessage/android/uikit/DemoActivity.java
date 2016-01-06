@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import cn.jmessage.android.uikit.browser.AlbumListActivity;
+import cn.jmessage.android.uikit.multiselectphotos.AlbumListActivity;
 
-public class MainActivity extends Activity {
+public class DemoActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, AlbumListActivity.class);
+                intent.setClass(DemoActivity.this, AlbumListActivity.class);
                 startActivity(intent);
             }
         });

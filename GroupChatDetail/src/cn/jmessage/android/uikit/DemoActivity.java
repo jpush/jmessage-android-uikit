@@ -14,15 +14,17 @@ import cn.jmessage.android.uikit.groupchatdetail.GroupDetailActivity;
 import cn.jmessage.android.uikit.groupchatdetail.HandleResponseCode;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.api.BasicCallback;
 
 /**
  * 入口Activity,主要是配置用户信息和群组Id(通过Intent传递到GroupDetailActivity)
  */
 
-public class MainActivity extends BaseActivity {
+public class DemoActivity extends BaseActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "DemoActivity";
     private static final String GROUP_ID = "groupId";
     private static final String MY_USERNAME = "myUsername";
 
@@ -50,7 +52,7 @@ public class MainActivity extends BaseActivity {
                     Log.d(TAG, "Login success");
 
                 } else {
-                    HandleResponseCode.onHandle(MainActivity.this, status, false);
+                    HandleResponseCode.onHandle(DemoActivity.this, status, false);
                 }
             }
         });
@@ -58,11 +60,19 @@ public class MainActivity extends BaseActivity {
         mGroupDetailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //创建会话,模拟从会话跳转到群聊详情
+                Conversation conv = JMessageClient.getGroupConversation(groupId);
+                if (null == conv) {
+                    conv = Conversation.createGroupConversation(groupId);
+                }
+                //由于群组是在服务端创建,所以在进入群聊详情之前要先拿一次GroupInfo,这样sdk会在后台拿GroupInfo,
+                //因为conv是本地创建的会话.在实际运用中不必如此(实际运用中,都是先创建会话,再加人)
+                GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
                 Intent intent = new Intent();
                 //传递groupId, username
                 intent.putExtra(GROUP_ID, groupId);
                 intent.putExtra(MY_USERNAME, myName);
-                intent.setClass(MainActivity.this, GroupDetailActivity.class);
+                intent.setClass(DemoActivity.this, GroupDetailActivity.class);
                 startActivity(intent);
             }
         });

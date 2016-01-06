@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import cn.jmessage.android.uikit.recordvoice.RecordVoiceButton;
 
-public class MainActivity extends Activity {
+public class DemoActivity extends Activity implements RecordVoiceButton.OnRecordVoiceListener {
 
     private ListView mListView;
     private RecordVoiceButton mRecordBtn;
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 
         mAdapter = new ListAdapter(this);
         mListView.setAdapter(mAdapter);
-        mRecordBtn.initAdapter(mAdapter);
+        mRecordBtn.setRecordListener(this);
         mAdapter.initMediaPlayer();
         initReceiver();
     }
@@ -38,6 +38,17 @@ public class MainActivity extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(mReceiver, filter);
+    }
+
+    /**
+     * 录音完成时调用
+     * @param duration 时长
+     * @param path 录音文件路径
+     */
+    @Override
+    public void onRecordFinished(int duration, String path) {
+        VoiceMessage voiceMessage = new VoiceMessage(duration, path);
+        mAdapter.addToMsgList(voiceMessage);
     }
 
     private class MyReceiver extends BroadcastReceiver {

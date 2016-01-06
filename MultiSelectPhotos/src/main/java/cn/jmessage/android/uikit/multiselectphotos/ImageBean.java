@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.browser;
+package cn.jmessage.android.uikit.multiselectphotos;
 
 /**
  * GridView的每个item的数据对象

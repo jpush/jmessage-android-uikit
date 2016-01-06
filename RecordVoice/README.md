@@ -5,8 +5,8 @@ IM SDK UI 组件
 
 ###用法
 
-- 复制recordvoice文件夹下的文件到你的项目（尤其是RecordVoiceButton，是必需的）
-- 在XML中加入添加引用
+- 复制RecordVoiceButton到你的项目
+- 在XML中加入添加引用,比如:
 ```
     <cn.jmessage.android.uikit.recordvoice.RecordVoiceButton
             android:id="@+id/voice_btn"
@@ -24,10 +24,30 @@ IM SDK UI 组件
 ```
 注意将引用路径修改为你当前的路径
 
-- 初始化RecordVoiceButton后,要使RecordVoiceButton持有adapter对象的引用,即调用方法mRecordBtn.initAdapter(mAdapter);
-这样可以在录音完成后,将录音消息添加到消息列表,即在RecordVoiceButton的finishRecord()方法中将语音消息添加到Adapter,如:
+- 在Activity中要实现RecordVoiceButton的接口:OnRecordVoiceListener,然后初始化RecordVoiceButton,如下所示:
 ```
-    VoiceMessage voiceMessage = new VoiceMessage(duration, myRecAudioFile.getAbsolutePath());
-    mAdapter.addToMsgList(voiceMessage);
+    RecordVoiceButton mRecordBtn = (RecordVoiceButton) findViewById(R.id.voice_btn);
+ 
+```
 
+之后setListener:
+```
+    mRecordBtn.setRecordListener(this);
+    
+```
+
+最后实现onRecordFinished方法:
+
+```
+    /**
+     * 录音完成时调用
+     * @param duration 时长
+     * @param path 录音文件路径
+     */
+    @Override
+    public void onRecordFinished(int duration, String path) {
+        VoiceMessage voiceMessage = new VoiceMessage(duration, path);
+        mAdapter.addToMsgList(voiceMessage);
+    }
+    
 ```

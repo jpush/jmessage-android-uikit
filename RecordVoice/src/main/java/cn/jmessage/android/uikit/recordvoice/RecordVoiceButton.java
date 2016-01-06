@@ -25,16 +25,12 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import cn.jmessage.android.uikit.ListAdapter;
 import cn.jmessage.android.uikit.R;
-import cn.jmessage.android.uikit.VoiceMessage;
 
 
 public class RecordVoiceButton extends Button {
 
     private File myRecAudioFile;
-    private ListAdapter mAdapter;
     private static final int MIN_INTERVAL_TIME = 1000;// 1s
     private final static int CANCEL_RECORD = 5;
     private final static int START_RECORD = 7;
@@ -65,6 +61,7 @@ public class RecordVoiceButton extends Button {
     private boolean isTimerCanceled = false;
     private boolean mTimeUp = false;
     private final MyHandler myHandler = new MyHandler(this);
+    private OnRecordVoiceListener mListener;
 
     public RecordVoiceButton(Context context) {
         super(context);
@@ -87,9 +84,6 @@ public class RecordVoiceButton extends Button {
         mVolumeHandler = new ShowVolumeHandler(this);
     }
 
-    public void initAdapter(ListAdapter adapter) {
-        this.mAdapter = adapter;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -240,8 +234,7 @@ public class RecordVoiceButton extends Button {
                     } else if (duration > 60) {
                         duration = 60;
                     }
-                    VoiceMessage voiceMessage = new VoiceMessage(duration, myRecAudioFile.getAbsolutePath());
-                    mAdapter.addToMsgList(voiceMessage);
+                    mListener.onRecordFinished(duration, myRecAudioFile.getAbsolutePath());
                 } else {
                     Toast.makeText(mContext, mContext.getString(R.string.record_voice_permission_request),
                             Toast.LENGTH_SHORT).show();
@@ -476,5 +469,18 @@ public class RecordVoiceButton extends Button {
                 }
             }
         }
+    }
+
+    public void setRecordListener(OnRecordVoiceListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnRecordVoiceListener {
+        /**
+         * 录音完成时调用
+         * @param duration 时长
+         * @param path 录音文件路径
+         */
+        public void onRecordFinished(int duration, String path);
     }
 }

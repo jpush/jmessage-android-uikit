@@ -1,4 +1,4 @@
-<cn.jmessage.android.uikit.browser.PickPictureView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.jmessage.android.uikit.multiselectphotos.PickPictureView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pick_picture_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -51,4 +51,4 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dip"/>
 
-</cn.jmessage.android.uikit.browser.PickPictureView>
+</cn.jmessage.android.uikit.multiselectphotos.PickPictureView>
