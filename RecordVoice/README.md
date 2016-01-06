@@ -1,21 +1,14 @@
 # jmessage-android-ui-components
 IM SDK UI 组件
 
-####一个聊天工具中常用的录音组件
+一个聊天工具中常用的录音组件
 
-#####用法
+###用法
 
 - 复制recordvoice文件夹下的文件到你的项目（尤其是RecordVoiceButton，是必需的）
 - 在XML中加入添加引用
-- 
-
-This demo is for recording voice. Copy the files in the recordvoice folder(especially the file
-
-RecordVoiceButton, is needed), and add usage in your
-
-XML file, like this:
-
-        <cn.jmessage.android.uicomponents.recordvoice.RecordVoiceButton
+```
+    <cn.jmessage.android.uikit.recordvoice.RecordVoiceButton
             android:id="@+id/voice_btn"
             android:layout_width="match_parent"
             android:layout_height="34dp"
@@ -28,5 +21,13 @@ XML file, like this:
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
-Don't forget change the package name. That's all.
+```
+注意将引用路径修改为你当前的路径
 
+- 初始化RecordVoiceButton后,要使RecordVoiceButton持有adapter对象的引用,即调用方法mRecordBtn.initAdapter(mAdapter);
+这样可以在录音完成后,将录音消息添加到消息列表,即在RecordVoiceButton的finishRecord()方法中将语音消息添加到Adapter,如:
+```
+    VoiceMessage voiceMessage = new VoiceMessage(duration, myRecAudioFile.getAbsolutePath());
+    mAdapter.addToMsgList(voiceMessage);
+
+```
