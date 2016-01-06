@@ -46,7 +46,7 @@
             android:id="@+id/voice_btn"
             android:layout_width="match_parent"
             android:layout_height="34dp"
-            android:background="@drawable/voice_bg"
+            android:background="@drawable/jmui_voice_bg"
             android:gravity="center"
             android:padding="5dp"
             android:layout_marginLeft="20dp"

@@ -131,7 +131,7 @@ public class ListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.chat_item_send_voice, null);
+            convertView = mInflater.inflate(R.layout.jmui_chat_item_send_voice, null);
             holder = new ViewHolder();
             holder.headIcon = (CircleImageView) convertView.findViewById(R.id.avatar_iv);
             holder.txtContent = (TextView) convertView.findViewById(R.id.msg_content);
@@ -142,7 +142,7 @@ public class ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.headIcon.setImageResource(R.drawable.head_icon);
+        holder.headIcon.setImageResource(R.drawable.jmui_head_icon);
         final VoiceMessage msg = mMsgList.get(position);
         int length = msg.getDuration();
         String voiceLength = length + mContext.getString(R.string.symbol_second);
@@ -150,7 +150,7 @@ public class ListAdapter extends BaseAdapter {
         final String path = msg.getPath();
         //控制语音长度显示，长度增幅随语音长度逐渐缩小
         int width = (int) (-0.04 * length * length + 4.526 * length + 75.214);
-        holder.voice.setImageResource(R.drawable.send_3);
+        holder.voice.setImageResource(R.drawable.jmui_send_3);
         holder.txtContent.setWidth((int) (width * mDensity));
         holder.txtContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,14 +165,14 @@ public class ListAdapter extends BaseAdapter {
                     }
                     // 播放中点击了正在播放的Item 则暂停播放
                     if (mp.isPlaying() && mPosition == position) {
-                        holder.voice.setImageResource(R.drawable.voice_send);
+                        holder.voice.setImageResource(R.drawable.jmui_voice_send);
                         mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
                         pauseVoice();
                         mVoiceAnimation.stop();
                     // 开始播放录音
                     } else {
                         try {
-                            holder.voice.setImageResource(R.drawable.voice_send);
+                            holder.voice.setImageResource(R.drawable.jmui_voice_send);
                             mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
 
                             // 继续播放之前暂停的录音
@@ -231,7 +231,7 @@ public class ListAdapter extends BaseAdapter {
                         mp.reset();
                         mSetData = false;
                         // 播放完毕，恢复初始状态
-                        holder.voice.setImageResource(R.drawable.send_3);
+                        holder.voice.setImageResource(R.drawable.jmui_send_3);
                     }
                 });
             }

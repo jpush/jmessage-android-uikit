@@ -11,7 +11,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowBackground">@drawable/round_background</item>
+        <item name="android:windowBackground">@drawable/jmui_round_background</item>
     </style>
 
     <style name="chat_item_sender_avatar_style">
@@ -19,7 +19,7 @@
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:src">@drawable/head_icon</item>
+        <item name="android:src">@drawable/jmui_head_icon</item>
         <item name="android:scaleType">fitXY</item>
     </style>
 

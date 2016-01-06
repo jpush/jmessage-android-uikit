@@ -47,8 +47,8 @@ public class RecordVoiceButton extends Button {
 
     private Dialog recordIndicator;
 
-    private static int[] res = {R.drawable.mic_1, R.drawable.mic_2,
-            R.drawable.mic_3, R.drawable.mic_4, R.drawable.mic_5, R.drawable.cancel_record};
+    private static int[] res = {R.drawable.jmui_mic_1, R.drawable.jmui_mic_2,
+            R.drawable.jmui_mic_3, R.drawable.jmui_mic_4, R.drawable.jmui_mic_5, R.drawable.jmui_cancel_record};
 
     private ImageView mVolumeIv;
     private TextView mRecordHintTv;
@@ -202,7 +202,7 @@ public class RecordVoiceButton extends Button {
         }
         Log.i("FileCreate", "Create file success file path: " + myRecAudioFile.getAbsolutePath());
         recordIndicator = new Dialog(getContext(), R.style.record_voice_dialog);
-        recordIndicator.setContentView(R.layout.dialog_record_voice);
+        recordIndicator.setContentView(R.layout.jmui_dialog_record_voice);
         mVolumeIv = (ImageView) recordIndicator.findViewById(R.id.volume_hint_iv);
         mRecordHintTv = (TextView) recordIndicator.findViewById(R.id.record_voice_tv);
         mRecordHintTv.setText(mContext.getString(R.string.move_to_cancel_hint));

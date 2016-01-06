@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.jmui_activity_main);
 
         mListView = (ListView) findViewById(R.id.list_view);
         mRecordBtn = (RecordVoiceButton) findViewById(R.id.voice_btn);
