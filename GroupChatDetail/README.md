@@ -147,7 +147,7 @@ application配置项
 - 在XML文件中将引用路径修改为你当前的路径, 如图:
   ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot6.png)
 
-5、配置用户信息, 在MainActivity中设置登录用户和群组id,然后传递到GroupDetailActivity.
+- 配置用户信息, 在MainActivity中设置登录用户和群组id,然后传递到GroupDetailActivity.
 
 你可以调用JMessageClient.register(username, password, callback)
 
