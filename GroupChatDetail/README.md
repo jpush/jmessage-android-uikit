@@ -149,7 +149,7 @@ application配置项
 
 - 配置用户信息, 在MainActivity中设置登录用户和群组id,然后传递到GroupDetailActivity.
 
--关于注册用户和创建群组
+- 关于注册用户和创建群组
 
 你可以调用JMessageClient.register(username, password, callback)来注册用户, 也可以使用curl的方式注册用户:
 
