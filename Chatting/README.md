@@ -32,9 +32,11 @@ IM SDK UI 组件
     <!-- JMessage Demo required for record audio-->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    
-    <!--以下放在application下 -->
-    <service
+```
+   以下放在application下 
+```
+            <!--以下放在application下 -->
+            <service
                 android:name="cn.jpush.android.service.PushService"
                 android:enabled="true"
                 android:exported="false"
