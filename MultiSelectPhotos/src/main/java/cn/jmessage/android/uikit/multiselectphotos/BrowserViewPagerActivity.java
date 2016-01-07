@@ -240,7 +240,7 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
     }
 
     /**
-     * 返回时将所选的图片路径(此处通过一个int数组记录所选的图片)返回到上一个Activity
+     * 返回时将所选的图片路径(此处通过一个int数组记录所选的图片)返回PickPictureActivity,更新选中的图片
      */
     @Override
     public void onBackPressed() {
@@ -260,6 +260,7 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //点击返回时将选中的图片路径返回PickPictureActivity,更新选中的图片
             case R.id.return_btn:
                 int pathArray[] = new int[mPathList.size()];
                 for (int i = 0; i < pathArray.length; i++) {
@@ -340,6 +341,7 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
                         activity.mProgressDialog.dismiss();
                         break;
                     case SEND_PICTURE:
+                        //发送图片时将要发送的图片路径List放在intent中,通过setResult返回PickPictureActivity
                         Intent intent = new Intent();
                         intent.putStringArrayListExtra(PICTURE_PATH, activity.mPickedPath);
                         activity.setResult(RESULT_CODE_BROWSER_PICTURE, intent);

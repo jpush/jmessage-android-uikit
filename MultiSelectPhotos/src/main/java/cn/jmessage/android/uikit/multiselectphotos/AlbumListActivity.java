@@ -113,6 +113,7 @@ public class AlbumListActivity extends BaseActivity implements AdapterView.OnIte
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
+        //得到从PickPictureActivity返回的Intent,通过setResult返回上一个Activity
         if (resultCode == RESULT_CODE_SELECT_PICTURE) {
             setResult(RESULT_CODE_SELECT_PICTURE, data);
             finish();

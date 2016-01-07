@@ -69,6 +69,7 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
                 }
                 mAdapter.refresh(selectedArray);
             }
+            //得到从BrowserViewPagerActivity返回的Intent,通过setResult返回上一个Activity
         } else if (resultCode == RESULT_CODE_BROWSER_PICTURE) {
             setResult(RESULT_CODE_SELECT_PICTURE, data);
             finish();
@@ -131,6 +132,7 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
             if (activity != null) {
                 switch (msg.what) {
                     case SEND_PICTURE:
+                        //发送图片时将要发送的图片路径List放在intent中,通过setResult返回AlbumListActivity
                         Intent intent = new Intent();
                         intent.putStringArrayListExtra(PICTURE_PATH, (ArrayList<String>) activity.mPickedList);
                         activity.setResult(RESULT_CODE_SELECT_PICTURE, intent);

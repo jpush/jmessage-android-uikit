@@ -17,11 +17,23 @@ IM SDK UI 组件
 ```
 修改为你当前的路径
 
-- Tips
-
-在实际运用中, 进入选择图片的AlbumListActivity时可以通过startActivityForResult()的方式来进入,这样可以在选择完图片后使用
-setResult的方式将所选的图片路径返回. 可以参考从PickPictureActivity进入BrowserViewPagerActivity的方式,以及从
-BrowserViewPagerActivity得到所选的图片后返回PickPictureActivity的方式.
+- 进入选择图片的AlbumListActivity时通过startActivityForResult()的方式来进入,重写onActivityResult()方法,如:
+```
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //得到从选择图片返回的Intent
+        if (resultCode == RESULT_CODE_SELECT_PICTURE) {
+            //得到图片路径
+            ArrayList<String> pathList = data.getStringArrayListExtra(PICTURE_PATH);
+            for (String path : pathList) {
+                Log.d("DemoActivity", "path : " + path);
+            }
+        }
+    }
+    
+```
+这样就能得到发送图片时所选中的图片路径
 
 ####使用的开源项目:
 
