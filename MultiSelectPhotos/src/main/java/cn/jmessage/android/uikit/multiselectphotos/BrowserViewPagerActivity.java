@@ -33,16 +33,20 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
     private ProgressDialog mProgressDialog;
     //存放所有图片的路径
     private List<String> mPathList = new ArrayList<String>();
+    private ArrayList<String> mPickedPath = new ArrayList<String>();
     private int mPosition;
     private Context mContext;
     private final MyHandler myHandler = new MyHandler(this);
+    private static final String PICTURE_PATH = "picturePath";
     private final static int DOWNLOAD_ORIGIN_IMAGE_SUCCEED = 1;
     private final static int DOWNLOAD_PROGRESS = 2;
     private final static int DOWNLOAD_COMPLETED = 3;
     private final static int SEND_PICTURE = 5;
     private final static int DOWNLOAD_ORIGIN_PROGRESS = 6;
     private final static int DOWNLOAD_ORIGIN_COMPLETED = 7;
-    private static final int RESULT_CODE_SELECT_PICTURE = 10;
+    public static final int RESULT_CODE_SELECT_PICTURE = 8;
+    public static final int RESULT_CODE_BROWSER_PICTURE = 13;
+
 
     /**
      * 用来存储图片的选中情况
@@ -273,9 +277,13 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
                 //TODO 发送图片
                 mProgressDialog = new ProgressDialog(mContext);
                 mProgressDialog.setMessage(mContext.getString(R.string.sending_hint));
+                for (int i = 0; i < mSelectMap.size(); i++) {
+                    mPickedPath.add(mPathList.get(mSelectMap.keyAt(i)));
+                }
                 mProgressDialog.setCanceledOnTouchOutside(false);
                 mProgressDialog.show();
                 mPosition = mBrowserView.getCurrentItem();
+                myHandler.sendEmptyMessageDelayed(SEND_PICTURE, 1000);
                 break;
         }
     }
@@ -333,6 +341,11 @@ public class BrowserViewPagerActivity extends BaseActivity implements OnClickLis
                         break;
                     case SEND_PICTURE:
                         Intent intent = new Intent();
+                        intent.putStringArrayListExtra(PICTURE_PATH, activity.mPickedPath);
+                        activity.setResult(RESULT_CODE_BROWSER_PICTURE, intent);
+                        if (activity.mProgressDialog != null) {
+                            activity.mProgressDialog.dismiss();
+                        }
                         activity.finish();
                         break;
                     //显示下载原图进度

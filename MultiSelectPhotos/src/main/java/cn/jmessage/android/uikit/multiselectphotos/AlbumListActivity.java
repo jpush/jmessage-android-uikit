@@ -1,5 +1,6 @@
 package cn.jmessage.android.uikit.multiselectphotos;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -28,6 +29,8 @@ import cn.jmessage.android.uikit.R;
 
 public class AlbumListActivity extends BaseActivity implements AdapterView.OnItemClickListener{
 
+    public static final int REQUEST_CODE_SELECT_PICTURE = 6;
+    public static final int RESULT_CODE_SELECT_PICTURE = 8;
     private AlbumListView mAlbumView;
     private AlbumListAdapter adapter;
     private HashMap<String, List<String>> mGruopMap = new HashMap<String, List<String>>();
@@ -105,13 +108,25 @@ public class AlbumListActivity extends BaseActivity implements AdapterView.OnIte
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+        if (resultCode == RESULT_CODE_SELECT_PICTURE) {
+            setResult(RESULT_CODE_SELECT_PICTURE, data);
+            finish();
+        }
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         List<String> childList = mGruopMap.get(list.get(position).getFolderName());
         Intent intent = new Intent();
         intent.setClass(AlbumListActivity.this, PickPictureActivity.class);
         intent.putExtra("albumName", list.get(position).getFolderName());
         intent.putStringArrayListExtra("data", (ArrayList<String>) childList);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
     }
 
     private static class MyHandler extends Handler {

@@ -28,8 +28,11 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
     private static final int SEND_PICTURE = 200;
     private final MyHandler myHandler = new MyHandler(this);
     private int mIndex = 0;
-    private static final int RESULT_CODE_SELECT_PICTURE = 10;
+    public static final int RESULT_CODE_SELECT_PICTURE = 8;
+    public static final int RESULT_CODE_BROWSER_PICTURE = 13;
     private static final int REQUEST_CODE_BROWSER_PICTURE = 11;
+    private static final String PICTURE_PATH = "picturePath";
+    private OnSelectedListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,9 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
                 }
                 mAdapter.refresh(selectedArray);
             }
-
+        } else if (resultCode == RESULT_CODE_BROWSER_PICTURE) {
+            setResult(RESULT_CODE_SELECT_PICTURE, data);
+            finish();
         }
     }
 
@@ -126,12 +131,27 @@ public class PickPictureActivity extends BaseActivity implements OnClickListener
             if (activity != null) {
                 switch (msg.what) {
                     case SEND_PICTURE:
+                        Intent intent = new Intent();
+                        intent.putStringArrayListExtra(PICTURE_PATH, (ArrayList<String>) activity.mPickedList);
+                        activity.setResult(RESULT_CODE_SELECT_PICTURE, intent);
                         if (activity.mDialog != null) {
                             activity.mDialog.dismiss();
                         }
+                        activity.finish();
                         break;
                 }
             }
         }
+    }
+
+    public void setOnSelectedListener(OnSelectedListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnSelectedListener {
+        /**
+         * 选择完图片,点击发送时得到选中的图片路径
+         */
+        public void onSelectedPictures(List<String> list);
     }
 }
