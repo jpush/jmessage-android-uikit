@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import java.io.File;
+
 import cn.jmessage.android.uikit.recordvoice.RecordVoiceButton;
 
 public class DemoActivity extends Activity implements RecordVoiceButton.OnRecordVoiceListener {
@@ -28,6 +30,10 @@ public class DemoActivity extends Activity implements RecordVoiceButton.OnRecord
         mAdapter = new ListAdapter(this);
         mListView.setAdapter(mAdapter);
         mRecordBtn.setRecordListener(this);
+        //设置录音文件存放位置
+        File rootDir = this.getFilesDir();
+        String fileDir = rootDir.getAbsolutePath() + "/voice";
+        mRecordBtn.setFilePath(fileDir);
         mAdapter.initMediaPlayer();
         initReceiver();
     }

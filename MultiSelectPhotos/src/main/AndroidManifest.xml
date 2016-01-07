@@ -15,7 +15,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/noTitle">
-        <activity android:name=".DemoActivity">
+        <activity android:name=".DemoActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

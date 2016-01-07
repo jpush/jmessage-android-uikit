@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.utils;
+package cn.jmessage.android.uikit.chatting.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

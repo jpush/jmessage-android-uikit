@@ -10,9 +10,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import cn.jmessage.android.uikit.chatting.ChatActivity;
-import cn.jmessage.android.uikit.utils.DialogCreator;
-import cn.jmessage.android.uikit.utils.HandleResponseCode;
-import cn.jmessage.android.uikit.utils.SharePreferenceManager;
+import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
+import cn.jmessage.android.uikit.chatting.utils.HandleResponseCode;
+import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;

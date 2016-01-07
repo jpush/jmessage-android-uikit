@@ -37,12 +37,12 @@ public class DemoActivity extends BaseActivity {
         setContentView(R.layout.jmui_activity_main);
         mGroupDetailBtn = (Button) findViewById(R.id.group_detail_btn);
 
-        mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.loading));
+        mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.logging));
         mLoadingDialog.show();
         //设置用户信息及群聊Id, 此处使用了此AppKey下提前注册的用户和群组,关于注册用户在ReadMe中有提到
         final String myName = "user001";
         String myPassword = "1111";
-        final long groupId = 10049741;
+        final long groupId = 10053517;
         //登录
         JMessageClient.login(myName, myPassword, new BasicCallback() {
             @Override

@@ -36,6 +36,15 @@ IM SDK UI 组件
     
 ```
 
+并且设置录音文件的存放位置, 比如:
+```
+        //设置录音文件存放位置
+        File rootDir = this.getFilesDir();
+        String fileDir = rootDir.getAbsolutePath() + "/voice";
+        mRecordBtn.setFilePath(fileDir);
+        
+```
+
 最后实现onRecordFinished方法:
 
 ```

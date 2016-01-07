@@ -62,6 +62,7 @@ public class RecordVoiceButton extends Button {
     private boolean mTimeUp = false;
     private final MyHandler myHandler = new MyHandler(this);
     private OnRecordVoiceListener mListener;
+    private String mFilePath;
 
     public RecordVoiceButton(Context context) {
         super(context);
@@ -178,16 +179,18 @@ public class RecordVoiceButton extends Button {
         return timer;
     }
 
-    private void initDialogAndStartRecord() {
-        //存放录音文件目录
-        File rootDir = mContext.getFilesDir();
-        String fileDir = rootDir.getAbsolutePath() + "/voice";
-        File destDir = new File(fileDir);
-        if (!destDir.exists()) {
-            destDir.mkdirs();
+    //设置存放录音文件目录
+    public void setFilePath(String path) {
+        mFilePath = path;
+        File fileDir = new File(mFilePath);
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
         }
+    }
+
+    private void initDialogAndStartRecord() {
         //录音文件的命名格式
-        myRecAudioFile = new File(fileDir,
+        myRecAudioFile = new File(mFilePath,
                 new DateFormat().format("yyyyMMdd_hhmmss", Calendar.getInstance(Locale.CHINA)) + ".amr");
         if (myRecAudioFile == null) {
             cancelTimer();

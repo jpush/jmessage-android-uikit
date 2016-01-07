@@ -24,9 +24,9 @@ import cn.jmessage.android.uikit.R;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-import cn.jmessage.android.uikit.utils.BitmapLoader;
-import cn.jmessage.android.uikit.utils.FileHelper;
-import cn.jmessage.android.uikit.utils.SharePreferenceManager;
+import cn.jmessage.android.uikit.chatting.utils.BitmapLoader;
+import cn.jmessage.android.uikit.chatting.utils.FileHelper;
+import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;

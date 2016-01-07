@@ -61,7 +61,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     // 当前GridView群成员项数
     private int mCurrentNum;
     private boolean mIsCreator;
-    private RefreshMemberListener mListener;
 
 
     @Override
@@ -121,6 +120,9 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
+            case R.id.return_btn:
+                finish();
+                break;
             //显示所有群成员
             case R.id.all_member_ll:
                 intent.putExtra(GROUP_ID, mGroupId);
@@ -268,7 +270,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void initAdapter() {
         mAdapter = new GroupMemberGridAdapter(mContext, mMembersList, mIsCreator, mAvatarSize);
-        setRMLListener(mAdapter);
         if (mMembersList.size() > 40) {
             mCurrentNum = 39;
         } else {
@@ -464,11 +465,4 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
         mChatDetailView.setTitle(mMembersList.size());
     }
 
-    public void setRMLListener(RefreshMemberListener listener) {
-        mListener = listener;
-    }
-
-    interface RefreshMemberListener {
-        public void onRefreshMemberList(List<UserInfo> memberList);
-    }
 }

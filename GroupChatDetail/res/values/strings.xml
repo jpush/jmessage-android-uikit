@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">GroupChatDetail</string>
+    <string name="logging">登录中</string>
     <string name="chat_detail_title">聊天详情</string>
     <string name="combine_title">(%s)</string>
     <string name="group_name_hit">群聊名称</string>

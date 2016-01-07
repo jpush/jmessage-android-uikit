@@ -22,7 +22,7 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
-public class GroupMemberGridAdapter extends BaseAdapter implements GroupDetailActivity.RefreshMemberListener {
+public class GroupMemberGridAdapter extends BaseAdapter {
 
     private static final String TAG = "GroupMemberGridAdapter";
 
@@ -69,19 +69,6 @@ public class GroupMemberGridAdapter extends BaseAdapter implements GroupDetailAc
             mCurrentNum = mMemberList.size();
         }
         mRestNum = mRestArray[mCurrentNum % 4];
-    }
-
-    @Override
-    public void onRefreshMemberList(List<UserInfo> memberList) {
-        mMemberList = memberList;
-        if (mMemberList.size() > 40) {
-            mCurrentNum = 39;
-        } else {
-            mCurrentNum = mMemberList.size();
-        }
-        mRestNum = mRestArray[mCurrentNum % 4];
-        notifyDataSetChanged();
-        Log.d(TAG, "Refreshed!");
     }
 
     public void refreshMemberList(List<UserInfo> memberList) {

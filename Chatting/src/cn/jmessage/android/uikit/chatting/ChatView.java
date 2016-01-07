@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import cn.jmessage.android.uikit.R;
 
-import cn.jmessage.android.uikit.utils.SharePreferenceManager;
+import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 
 import cn.jpush.im.android.api.model.Conversation;
 

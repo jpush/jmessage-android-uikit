@@ -17,8 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.jmessage.android.uikit.R;
-import cn.jmessage.android.uikit.utils.FileHelper;
-import cn.jmessage.android.uikit.utils.HandleResponseCode;
+import cn.jmessage.android.uikit.chatting.utils.FileHelper;
+import cn.jmessage.android.uikit.chatting.utils.HandleResponseCode;
 
 import java.io.File;
 import java.io.FileInputStream;

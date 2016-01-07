@@ -1,4 +1,4 @@
-package cn.jmessage.android.uikit.utils;
+package cn.jmessage.android.uikit.chatting.utils;
 
 import android.os.Environment;
 import android.text.format.DateFormat;

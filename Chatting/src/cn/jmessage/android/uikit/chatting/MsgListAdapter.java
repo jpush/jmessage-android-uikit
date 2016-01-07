@@ -40,10 +40,10 @@ import cn.jpush.im.android.api.enums.MessageStatus;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
 
-import cn.jmessage.android.uikit.utils.DialogCreator;
-import cn.jmessage.android.uikit.utils.FileHelper;
-import cn.jmessage.android.uikit.utils.HandleResponseCode;
-import cn.jmessage.android.uikit.utils.TimeFormat;
+import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
+import cn.jmessage.android.uikit.chatting.utils.FileHelper;
+import cn.jmessage.android.uikit.chatting.utils.HandleResponseCode;
+import cn.jmessage.android.uikit.chatting.utils.TimeFormat;
 
 import com.squareup.picasso.Picasso;
 import java.io.File;
