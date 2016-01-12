@@ -7,7 +7,7 @@ IM SDK UI 组件
 
 ####方法一：使用jmessage-uikit-chatting-1.0.0.jar：
 
-- 将jmessage-uikit-chatting-1.0.0.jar及相关libs复制到你的libs文件夹下
+- 将[jmessage-uikit-chatting-1.0.0.jar](https://github.com/jpush/jmessage-android-uikit/releases/download/1.0.0/jmessage-uikit-chatting-1.0.0.jar)及相关libs复制到你的libs文件夹下
 - 配置AndroidManifest，将所需的权限及Receiver, Service等拷贝到你的AndroidManifest中:
 ```
 <permission
