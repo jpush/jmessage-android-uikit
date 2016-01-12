@@ -1,13 +1,14 @@
 # jmessage-android-ui-components
 IM SDK UI 组件
 
-简单的聊天组件, 实现了单聊和群聊功能. 
+简单的聊天组件, 实现了单聊和群聊功能.
 
-###用法:
+###将聊天功能集成到你的项目（Android Studio平台）:
 
-- 复制chatting文件夹下的文件到你的项目(utils中的可以根据自己需求修改).
+####方法一：使用jmessage-uikit-chatting-1.0.0.jar：
 
-- 配置AndroidManifest, 将所需的权限及Receiver, Service等拷贝到你的AndroidManifest中:
+- 将jmessage-uikit-chatting-1.0.0.jar及相关libs复制到你的libs文件夹下
+- 配置AndroidManifest，将所需的权限及Receiver, Service等拷贝到你的AndroidManifest中:
 ```
 <permission
         android:name="${applicationId}.permission.JPUSH_MESSAGE"
@@ -116,14 +117,64 @@ IM SDK UI 组件
 别忘了配置applicationId或者替换为你的包名, AppKey也要替换为你在极光控制台上注册的应用所对应的AppKey.
 配置applicationId需要在build.gradle的defaultConfig中声明:
 ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot3.png)
+注意，AndroidManifest中的package字段值与build.gradle中的ApplicationId需要保持一致。在<application>下需要注册ChatActivity
+```
+<activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"
+            android:theme="@style/noTitle"
+            android:windowSoftInputMode="adjustResize"/>
+            
+```
+- 将你的项目结构修改为与Chatting相似，即src与res、libs、AndroidMainfest同级，并且在build.gradle中的android节点下加入以下代码：
+```
+sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            manifest.srcFile 'AndroidManifest.xml'
+            jniLibs.srcDirs = ['libs']
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+    
+```
+这样就可以兼容Android Studio和Eclipse。
 
+- 复制相关资源文件到你的项目中（注意不要漏了某些文件）
+- 在你的入口Activity（或者Application与启动Activity，总之先于ChatActivity启动的类中）做相关初始化操作:
+```
+        //初始化JMessage-sdk
+        JMessageClient.init(this);
+        //设置Notification的模式
+        JMessageClient.setNotificationMode(JMessageClient.NOTI_MODE_NO_NOTIFICATION);
+        //初始化SharePreference
+        SharePreferenceManager.init(this, JCHAT_CONFIGS);
+        
+```
+- 进入聊天界面：（完整代码可以参考Chatting中的DemoActivity）
+```
+    //单聊
+    intent.putExtra(TARGET_ID, mTargetId);
+    //群聊
+    //intent.putExtra(GROUP_ID, mGroupId);
+    intent.setClass(DemoActivity.this, ChatActivity.class);
+    startActivity(intent);
+```
+其中的Key或者其它代码都可以自行修改（下载Chatting，并作为module导入Android Studio，编辑完成后执行build.gradle中的jarMyLib任务，然后在生成的build/libs中即可得到jar包）
+
+####方法二：使用Chatting源代码：
+- 复制chatting文件夹下的文件到你的项目.
+
+- 配置AndroidManifest, 将所需的权限及Receiver, Service等拷贝到你的AndroidManifest中，同上
+- 配置build.gradle，同上
+- 初始化相关操作，同上
 - 复制资源文件到你的项目, 你可以自定义界面的样式
-
-- 在XML文件中将引用路径修改为你当前的路径(红色方框部分)
-![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot6.png)
-
-- 配置用户信息, 在MainActivity这个入口Activity中配置用户信息(包括登录用户, 聊天用户及群聊id), 可以使用Intent传递到ChatActivity. 你可以调用JMessageClient.register(username, password, callback)来注册用户, 也可以使用curl的方式注册用户:
-
+- 在XML文件中将引用路径修改为你当前的路径(红色方框部分) ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot6.png)
+- 配置用户信息, 在MainActivity这个入口Activity中配置用户信息(包括登录用户, 聊天用户及群聊id), 可以使用Intent传递到ChatActivity. 
+- 关于注册：你可以调用JMessageClient.register(username, password, callback)来注册用户, 也可以使用curl的方式注册用户:
 ```
 
 curl --insecure -X POST -v https://api.im.jpush.cn/v1/users -H "Content-Type: application/json" -u "your AppKey:your master secret" -d '[{"username":"user003", "password": "1111"}]'
