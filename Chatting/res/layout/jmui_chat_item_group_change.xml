@@ -6,14 +6,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/send_time_txt"
-        style="@style/chat_text_date_style"
+        android:id="@+id/jmui_send_time_txt"
+        style="@style/jmui_chat_text_date_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
     <TextView
-        android:id="@+id/group_content"
+        android:id="@+id/jmui_group_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

@@ -26,6 +26,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
 import cn.jmessage.android.uikit.R;
+import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -72,12 +73,17 @@ public abstract class ShaderHelper {
 
     public void init(Context context, AttributeSet attrs, int defStyle) {
         if(attrs != null){
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ShaderImageView, defStyle, 0);
-            borderColor = typedArray.getColor(R.styleable.ShaderImageView_siBorderColor, borderColor);
-            borderWidth = typedArray.getDimensionPixelSize(R.styleable.ShaderImageView_siBorderWidth, borderWidth);
-            borderAlpha = typedArray.getFloat(R.styleable.ShaderImageView_siBorderAlpha, borderAlpha);
-            square = typedArray.getBoolean(R.styleable.ShaderImageView_siSquare, square);
-            typedArray.recycle();
+            int[] declareStyleableArray = IdHelper.getResourceDeclareStyleableIntArray(context, "ShaderImageView");
+            if (declareStyleableArray != null && declareStyleableArray.length > 0) {
+                TypedArray typedArray = context.obtainStyledAttributes(attrs, declareStyleableArray, defStyle, 0);
+                //第一个参数是该属性在R文件中生成的数组的下标(按照字母顺序排列),而不是在attrs文件中声明的顺序.下同
+                square = typedArray.getBoolean(8, square);
+                borderColor = typedArray.getColor(2, borderColor);
+                borderWidth = typedArray.getDimensionPixelSize(4, borderWidth);
+                borderAlpha = typedArray.getFloat(1, borderAlpha);
+                typedArray.recycle();
+            }
+
         }
 
         borderPaint.setColor(borderColor);

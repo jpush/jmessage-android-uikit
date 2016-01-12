@@ -9,7 +9,7 @@
     <item>
         <shape >
             <corners android:radius="@dimen/default_btn_radius"/>
-            <solid android:color="@color/jpush_blue"/>
+            <solid android:color="@color/jmui_jpush_blue"/>
         </shape>
     </item>
 

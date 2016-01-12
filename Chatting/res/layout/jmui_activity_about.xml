@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="@color/gray"
-        android:text="@string/about_content"
+        android:text="@string/jmui_about_content"
         android:padding="10dp"/>
 
 </LinearLayout>

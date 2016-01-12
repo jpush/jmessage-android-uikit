@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
-    style="@style/record_voice_dialog"
+    style="@style/jmui_record_voice_dialog"
     android:orientation="vertical">
 
     <FrameLayout
@@ -11,14 +11,14 @@
         android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/volume_hint_iv"
+        android:id="@+id/jmui_volume_hint_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.95"
         android:src="@drawable/jmui_mic_2"/>
 
         <TextView
-            android:id="@+id/record_voice_tv"
+            android:id="@+id/jmui_record_voice_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"

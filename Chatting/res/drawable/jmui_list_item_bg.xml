@@ -3,7 +3,7 @@
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/item_click_bg_color" />
+            <solid android:color="@color/jmui_item_click_bg_color" />
         </shape>
     </item>
     <item>

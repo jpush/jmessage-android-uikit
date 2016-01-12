@@ -18,8 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import cn.jmessage.android.uikit.R;
-
+import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 
 import cn.jpush.im.android.api.model.Conversation;
@@ -62,18 +61,18 @@ public class ChatView extends RelativeLayout {
 
 
     public void initModule() {
-        mTitle = (TextView) findViewById(R.id.title);
-        mReturnIb = (ImageButton) findViewById(R.id.return_btn);
-        mChatListView = (DropDownListView) findViewById(R.id.chat_list);
-        mVoiceBtn = (RecordVoiceButton) findViewById(R.id.voice_btn);
-        mChatInputEt = (EditText) findViewById(R.id.chat_input_et);
-        mSwitchIb = (ImageButton) findViewById(R.id.switch_voice_ib);
-        mAddFileIb = (ImageButton) findViewById(R.id.add_file_btn);
-        mTakePhotoIb = (ImageButton) findViewById(R.id.pick_from_camera_btn);
-        mPickPictureIb = (ImageButton) findViewById(R.id.pick_from_local_btn);
-        mSendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
-        mBackground = (LinearLayout) findViewById(R.id.chat_background);
-        mMoreMenuTl = (TableLayout) findViewById(R.id.more_menu_tl);
+        mTitle = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_title"));
+        mReturnIb = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_return_btn"));
+        mChatListView = (DropDownListView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_list"));
+        mVoiceBtn = (RecordVoiceButton) findViewById(IdHelper.getViewID(mContext, "jmui_voice_btn"));
+        mChatInputEt = (EditText) findViewById(IdHelper.getViewID(mContext, "jmui_chat_input_et"));
+        mSwitchIb = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_switch_voice_ib"));
+        mAddFileIb = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_add_file_btn"));
+        mTakePhotoIb = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_pick_from_camera_btn"));
+        mPickPictureIb = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_pick_from_local_btn"));
+        mSendMsgBtn = (Button) findViewById(IdHelper.getViewID(mContext, "jmui_send_msg_btn"));
+        mBackground = (LinearLayout) findViewById(IdHelper.getViewID(mContext, "jmui_chat_background"));
+        mMoreMenuTl = (TableLayout) findViewById(IdHelper.getViewID(mContext, "jmui_more_menu_tl"));
         mBackground.requestFocus();
         mChatInputEt.addTextChangedListener(watcher);
         mChatInputEt.setOnFocusChangeListener(listener);
@@ -234,7 +233,7 @@ public class ChatView extends RelativeLayout {
 
     //如果是文字输入
     public void isKeyBoard() {
-        mSwitchIb.setBackgroundResource(R.drawable.jmui_voice);
+        mSwitchIb.setBackgroundResource(IdHelper.getDrawable(mContext, "jmui_voice"));
         mChatInputEt.setVisibility(View.VISIBLE);
         mVoiceBtn.setVisibility(View.GONE);
         if (mChatInputEt.getText().length() > 0) {
@@ -249,7 +248,7 @@ public class ChatView extends RelativeLayout {
     //语音输入
     public void notKeyBoard(Conversation conv, MsgListAdapter adapter) {
         mChatInputEt.setVisibility(View.GONE);
-        mSwitchIb.setBackgroundResource(R.drawable.jmui_keyboard);
+        mSwitchIb.setBackgroundResource(IdHelper.getDrawable(mContext, "jmui_keyboard"));
         mVoiceBtn.setVisibility(View.VISIBLE);
         mVoiceBtn.initConv(conv, adapter);
         mSendMsgBtn.setVisibility(View.GONE);

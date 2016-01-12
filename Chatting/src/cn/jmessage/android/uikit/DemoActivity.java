@@ -43,9 +43,9 @@ public class DemoActivity extends Activity {
         LinearLayout mSingleChatLl;
         LinearLayout mGroupChatLl;
         Button mAboutBtn;
-        mSingleChatLl = (LinearLayout) findViewById(R.id.sing_chat_ll);
-        mGroupChatLl = (LinearLayout) findViewById(R.id.group_chat_ll);
-        mAboutBtn = (Button) findViewById(R.id.about_btn);
+        mSingleChatLl = (LinearLayout) findViewById(R.id.jmui_single_chat_ll);
+        mGroupChatLl = (LinearLayout) findViewById(R.id.jmui_group_chat_ll);
+        mAboutBtn = (Button) findViewById(R.id.jmui_about_btn);
 
         mSingleChatLl.setOnClickListener(listener);
         mGroupChatLl.setOnClickListener(listener);
@@ -57,7 +57,7 @@ public class DemoActivity extends Activity {
         mTargetId = "user002";
         mGroupId = 10049741;
 
-        final Dialog loadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.login));
+        final Dialog loadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_login));
         loadingDialog.show();
         JMessageClient.login(myName, myPassword, new BasicCallback() {
             @Override
@@ -77,19 +77,19 @@ public class DemoActivity extends Activity {
         public void onClick(View v) {
             Intent intent = new Intent();
             switch (v.getId()) {
-                case R.id.sing_chat_ll:
+                case R.id.jmui_single_chat_ll:
                     intent.putExtra("isSingle", true);
                     intent.putExtra(TARGET_ID, mTargetId);
                     intent.setClass(DemoActivity.this, ChatActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.group_chat_ll:
+                case R.id.jmui_group_chat_ll:
                     intent.putExtra("isSingle", false);
                     intent.putExtra(GROUP_ID, mGroupId);
                     intent.setClass(DemoActivity.this, ChatActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.about_btn:
+                case R.id.jmui_about_btn:
                     intent.setClass(DemoActivity.this, AboutActivity.class);
                     startActivity(intent);
                     break;

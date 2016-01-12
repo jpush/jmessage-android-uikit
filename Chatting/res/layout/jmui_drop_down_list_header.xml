@@ -7,8 +7,8 @@
     android:paddingTop="@dimen/drop_down_list_header_padding_top" >
 
     <ProgressBar
-        android:id="@+id/drop_down_list_header_progress_bar"
-        style="@style/drop_down_list_header_progress_bar_style"
+        android:id="@+id/jmui_drop_down_list_header_progress_bar"
+        style="@style/jmui_drop_down_list_header_progress_bar_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -12,20 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.jmessage.android.uikit.R;
-
 
 public class DialogCreator {
     public static Dialog createLoadingDialog(Context context, String msg) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.jmui_loading_view, null);
-        RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dialog_view);
-        ImageView mLoadImg = (ImageView) v.findViewById(R.id.loading_img);
-        TextView mLoadText = (TextView) v.findViewById(R.id.loading_txt);
+        View v = inflater.inflate(IdHelper.getLayout(context, "jmui_loading_view"), null);
+        RelativeLayout layout = (RelativeLayout) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_view"));
+        ImageView mLoadImg = (ImageView) v.findViewById(IdHelper.getViewID(context, "jmui_loading_img"));
+        TextView mLoadText = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_loading_txt"));
         AnimationDrawable mDrawable = (AnimationDrawable) mLoadImg.getDrawable();
         mDrawable.start();
         mLoadText.setText(msg);
-        final Dialog loadingDialog = new Dialog(context, R.style.LoadingDialog);
+        final Dialog loadingDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_LoadingDialog"));
         loadingDialog.setCancelable(true);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -36,17 +34,14 @@ public class DialogCreator {
     public static Dialog createLongPressMessageDialog(Context context, String title, boolean hide,
                                                       View.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.jmui_dialog_msg_alert, null);
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context, "jmui_dialog_msg_alert"), null);
         builder.setView(view);
-        Button copyBtn = (Button) view
-                .findViewById(R.id.copy_msg_btn);
-        Button forwardBtn = (Button) view
-                .findViewById(R.id.forward_msg_btn);
-        View line1 = view.findViewById(R.id.forward_split_line);
-        View line2 = view.findViewById(R.id.delete_split_line);
-        Button deleteBtn = (Button) view.findViewById(R.id.delete_msg_btn);
-        final TextView titleTv = (TextView) view
-                .findViewById(R.id.dialog_title);
+        Button copyBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_copy_msg_btn"));
+        Button forwardBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_forward_msg_btn"));
+        View line1 = view.findViewById(IdHelper.getViewID(context, "jmui_forward_split_line"));
+        View line2 = view.findViewById(IdHelper.getViewID(context, "jmui_delete_split_line"));
+        Button deleteBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_delete_msg_btn"));
+        final TextView titleTv = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_dialog_title"));
         if (hide) {
             copyBtn.setVisibility(View.GONE);
             forwardBtn.setVisibility(View.GONE);
@@ -65,11 +60,11 @@ public class DialogCreator {
 
     public static Dialog createResendDialog(Context context, View.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(
-                R.layout.jmui_dialog_base_with_button, null);
+        View view = LayoutInflater.from(context).inflate(IdHelper.getLayout(context,
+                "jmui_dialog_base_with_button"), null);
         builder.setView(view);
-        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        Button resendBtn = (Button) view.findViewById(R.id.commit_btn);
+        Button cancelBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        Button resendBtn = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
         final Dialog dialog = builder.create();
         cancelBtn.setOnClickListener(listener);
         resendBtn.setOnClickListener(listener);

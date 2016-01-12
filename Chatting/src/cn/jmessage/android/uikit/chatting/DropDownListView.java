@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import cn.jmessage.android.uikit.R;
+import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 
 
 public class DropDownListView extends ListView implements OnScrollListener {
@@ -106,8 +106,10 @@ public class DropDownListView extends ListView implements OnScrollListener {
         }
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        headerLayout = (RelativeLayout) inflater.inflate(R.layout.jmui_drop_down_list_header, this, false);
-        headerProgressBar = (ProgressBar) headerLayout.findViewById(R.id.drop_down_list_header_progress_bar);
+        headerLayout = (RelativeLayout) inflater.inflate(IdHelper.getLayout(context, "jmui_drop_down_list_header"),
+                this, false);
+        headerProgressBar = (ProgressBar) headerLayout.findViewById(IdHelper.getViewID(context,
+                "jmui_drop_down_list_header_progress_bar"));
         addHeaderView(headerLayout);
 
         measureHeaderLayout(headerLayout);
@@ -359,8 +361,11 @@ public class DropDownListView extends ListView implements OnScrollListener {
      * @param attrs
      */
     private void getAttrs(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.drop_down_list_attr);
-        isDropDownStyle = ta.getBoolean(R.styleable.drop_down_list_attr_isDropDownStyle, false);
-        ta.recycle();
+        int[] dropDownAttrArray = IdHelper.getResourceDeclareStyleableIntArray(context, "drop_down_list_attr");
+        if (dropDownAttrArray != null) {
+            TypedArray ta = context.obtainStyledAttributes(attrs, dropDownAttrArray);
+            isDropDownStyle = ta.getBoolean(1, true);
+            ta.recycle();
+        }
     }
 }

@@ -68,3 +68,17 @@ task copyApk(type: Copy, dependsOn: 'build') {
     //include('JMessageDemo-release-unsigned.apk')
     //rename('JMessageDemo-release.apk', 'jchat-1.0.0.apk')
 }
+
+task jarMyLib(type: Jar, dependsOn: ['build']) {
+    archiveName = 'jmessage-uikit-chatting-1.0.0.jar'
+    from('build/intermediates/classes/release')
+    destinationDir = file('build/libs')
+    exclude('cn/jmessage/android/uikit/DemoActivity.class')
+    exclude('cn/jmessage/android/uikit/DemoActivity\$*.class')
+    exclude('cn/jmessage/android/uikit/AboutActivity.class')
+    exclude('cn/jmessage/android/uikit/AboutActivity\$*.class')
+    exclude('cn/jmessage/android/uikit/BuildConfig.class')
+    exclude('cn/jmessage/android/uikit/BuildConfig\$*.class')
+    exclude('**/R.class')
+    exclude('**/R\$*.class')
+}

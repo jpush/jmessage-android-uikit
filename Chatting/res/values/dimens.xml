@@ -34,5 +34,6 @@
     <dimen name="drop_down_list_header_padding_bottom">5dp</dimen>
     <dimen name="drop_down_list_header_release_min_distance">0dp</dimen>
     <dimen name="drop_down_list_header_progress_bar_height">36dp</dimen>
+    <dimen name="default_border_width">0dp</dimen>
 
 </resources>

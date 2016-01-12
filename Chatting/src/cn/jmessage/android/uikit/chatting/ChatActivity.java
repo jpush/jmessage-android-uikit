@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,13 +20,12 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import cn.jmessage.android.uikit.R;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
 
 import cn.jmessage.android.uikit.chatting.utils.BitmapLoader;
 import cn.jmessage.android.uikit.chatting.utils.FileHelper;
+import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
@@ -74,8 +74,8 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
         super.onCreate(savedInstanceState);
         //注册接收消息(成为订阅者), 注册后可以直接重写onEvent方法接收消息(参考下面的onEvent方法)
         JMessageClient.registerEventReceiver(this);
-        setContentView(R.layout.jmui_activity_chat);
-        mChatView = (ChatView) findViewById(R.id.chat_view);
+        setContentView(IdHelper.getLayout(this, "jmui_activity_chat"));
+        mChatView = (ChatView) findViewById(IdHelper.getViewID(this, "jmui_chat_view"));
         mChatView.initModule();
         mContext = this;
         this.mWindow = getWindow();
@@ -161,79 +161,71 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.return_btn:
-                finish();
-                break;
+        if (v.getId() == IdHelper.getViewID(mContext, "jmui_return_btn")) {
+            finish();
             // 切换输入
-            case R.id.switch_voice_ib:
-                mChatView.dismissMoreMenu();
-                isInputByKeyBoard = !isInputByKeyBoard;
-                //当前为语音输入，点击后切换为文字输入，弹出软键盘
-                if (isInputByKeyBoard) {
-                    mChatView.isKeyBoard();
-                    showSoftInputAndDismissMenu();
-                } else {
-                    //否则切换到语音输入
-                    mChatView.notKeyBoard(mConv, mChatAdapter);
-                    if (mShowSoftInput) {
-                        if (mImm != null) {
-                            mImm.hideSoftInputFromWindow(mChatView.getInputView().getWindowToken(), 0); //强制隐藏键盘
-                            mShowSoftInput = false;
-                        }
-                    } else if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
-                        mChatView.dismissMoreMenu();
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {
+            mChatView.dismissMoreMenu();
+            isInputByKeyBoard = !isInputByKeyBoard;
+            //当前为语音输入，点击后切换为文字输入，弹出软键盘
+            if (isInputByKeyBoard) {
+                mChatView.isKeyBoard();
+                showSoftInputAndDismissMenu();
+            } else {
+                //否则切换到语音输入
+                mChatView.notKeyBoard(mConv, mChatAdapter);
+                if (mShowSoftInput) {
+                    if (mImm != null) {
+                        mImm.hideSoftInputFromWindow(mChatView.getInputView().getWindowToken(), 0); //强制隐藏键盘
+                        mShowSoftInput = false;
                     }
-                    Log.i("ChatController", "setConversation success");
+                } else if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
+                    mChatView.dismissMoreMenu();
                 }
-                break;
+                Log.i("ChatController", "setConversation success");
+            }
             // 发送文本消息
-            case R.id.send_msg_btn:
-                String msgContent = mChatView.getChatInput();
-                mChatView.clearInput();
-                mChatView.setToBottom();
-                if (msgContent.equals("")) {
-                    return;
-                }
-                TextContent content = new TextContent(msgContent);
-                final Message msg = mConv.createSendMessage(content);
-                mChatAdapter.addMsgToList(msg);
-                JMessageClient.sendMessage(msg);
-                break;
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_send_msg_btn")) {
+            String msgContent = mChatView.getChatInput();
+            mChatView.clearInput();
+            mChatView.setToBottom();
+            if (msgContent.equals("")) {
+                return;
+            }
+            TextContent content = new TextContent(msgContent);
+            final Message msg = mConv.createSendMessage(content);
+            mChatAdapter.addMsgToList(msg);
+            JMessageClient.sendMessage(msg);
             // 点击添加按钮，弹出更多选项菜单
-            case R.id.add_file_btn:
-                //如果在语音输入时点击了添加按钮，则显示菜单并切换到输入框
-                if (!isInputByKeyBoard) {
-                    mChatView.isKeyBoard();
-                    isInputByKeyBoard = true;
-                    mChatView.showMoreMenu();
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_add_file_btn")) {
+            //如果在语音输入时点击了添加按钮，则显示菜单并切换到输入框
+            if (!isInputByKeyBoard) {
+                mChatView.isKeyBoard();
+                isInputByKeyBoard = true;
+                mChatView.showMoreMenu();
+            } else {
+                //如果弹出软键盘 则隐藏软键盘
+                if (mChatView.getMoreMenu().getVisibility() != View.VISIBLE) {
+                    dismissSoftInputAndShowMenu();
+                    mChatView.focusToInput(false);
+                    //如果弹出了更多选项菜单，则隐藏菜单并显示软键盘
                 } else {
-                    //如果弹出软键盘 则隐藏软键盘
-                    if (mChatView.getMoreMenu().getVisibility() != View.VISIBLE) {
-                        dismissSoftInputAndShowMenu();
-                        mChatView.focusToInput(false);
-                        //如果弹出了更多选项菜单，则隐藏菜单并显示软键盘
-                    } else {
-                        showSoftInputAndDismissMenu();
-                    }
+                    showSoftInputAndDismissMenu();
                 }
-                break;
-            // 拍照
-            case R.id.pick_from_camera_btn:
-                takePhoto();
-                if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
-                    mChatView.dismissMoreMenu();
-                }
-                break;
-            case R.id.pick_from_local_btn:
-                if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
-                    mChatView.dismissMoreMenu();
-                }
-                Intent intent = new Intent();
-                intent.putExtra(TARGET_ID, mTargetId);
-                //TODO 发送本地图片
+            }
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_camera_btn")) {
+            takePhoto();
+            if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
+                mChatView.dismissMoreMenu();
+            }
+        } else {
+            if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
+                mChatView.dismissMoreMenu();
+            }
+            Intent intent = new Intent();
+            intent.putExtra(TARGET_ID, mTargetId);
+            //TODO 发送本地图片
 //                mContext.startPickPictureTotalActivity(intent);
-                break;
         }
     }
 
@@ -245,12 +237,12 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             try {
                 startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
             } catch (ActivityNotFoundException anf) {
-                Toast.makeText(mContext, mContext.getString(R.string.camera_not_prepared),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
+                                "jmui_camera_not_prepared")), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mContext, mContext.getString(R.string.sdcard_not_exist_toast),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
+                            "jmui_sdcard_not_exist_toast")), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -516,7 +508,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
                         }
                     }
                 } else {
-                    long groupId = ((GroupInfo)msg.getTargetInfo()).getGroupID();
+                    long groupId = ((GroupInfo) msg.getTargetInfo()).getGroupID();
                     if (!mIsSingle && groupId == mGroupId) {
                         Message lastMsg = mChatAdapter.getLastMsg();
                         if (lastMsg == null || msg.getId() != lastMsg.getId()) {
@@ -549,18 +541,17 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                switch (view.getId()) {
-                    case R.id.chat_input_et:
-                        if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE && !mShowSoftInput) {
-                            showSoftInputAndDismissMenu();
-                            return false;
-                        }else {
-                            return false;
-                        }
+                if (view.getId() == IdHelper.getViewID(mContext, "jmui_chat_input_et")) {
+                    if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE && !mShowSoftInput) {
+                        showSoftInputAndDismissMenu();
+                        return false;
+                    } else {
+                        return false;
+                    }
                 }
-                if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE){
+                if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                     mChatView.dismissMoreMenu();
-                }else if (mShowSoftInput){
+                } else if (mShowSoftInput) {
                     View v = getCurrentFocus();
                     if (mImm != null && v != null) {
                         mImm.hideSoftInputFromWindow(v.getWindowToken(), 0);
