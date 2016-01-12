@@ -118,7 +118,7 @@ IM SDK UI 组件
 配置applicationId需要在build.gradle的defaultConfig中声明（注意将此处"io.jchat.android"更换为你的applicationId）:
 ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot3.png)
 注意，AndroidManifest中的package字段值与build.gradle中的ApplicationId需要保持一致。
-在<application>下需要注册ChatActivity
+在application下需要注册ChatActivity
 ```
 <activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"
             android:theme="@style/noTitle"
