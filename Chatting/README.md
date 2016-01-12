@@ -115,7 +115,7 @@ IM SDK UI 组件
     
 ```
 别忘了配置applicationId或者替换为你的包名, AppKey也要替换为你在极光控制台上注册的应用所对应的AppKey.
-配置applicationId需要在build.gradle的defaultConfig中声明:
+配置applicationId需要在build.gradle的defaultConfig中声明（注意将此处"io.jchat.android"更换为你的applicationId）:
 ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot3.png)
 注意，AndroidManifest中的package字段值与build.gradle中的ApplicationId需要保持一致。在<application>下需要注册ChatActivity
 ```
