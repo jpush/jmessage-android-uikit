@@ -10,7 +10,7 @@
 
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/jmui_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -25,21 +25,23 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/jmui_cancel_btn"
             android:layout_height="50dp"
             android:layout_width="0dip"
             android:layout_weight="1"
-            android:text="@string/cancel"
+            android:text="@string/jmui_cancel"
+            android:textSize="18sp"
             android:textColor="#28282a"
             android:background="@drawable/jmui_dialog_bottom_left_btn"
             />
 
         <Button
-            android:id="@+id/commit_btn"
+            android:id="@+id/jmui_commit_btn"
             android:layout_height="50dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/commit"
+            android:text="@string/jmui_commit"
+            android:textSize="18sp"
             android:textColor="#28282a"
             android:background="@drawable/jmui_dialog_bottom_right_btn"
             />

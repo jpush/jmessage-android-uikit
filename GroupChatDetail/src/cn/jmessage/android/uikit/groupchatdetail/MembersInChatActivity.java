@@ -22,7 +22,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jmessage.android.uicomponents.R;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
@@ -59,12 +58,12 @@ public class MembersInChatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.jmui_activity_all_members);
-        mListView = (ListView) findViewById(R.id.members_list_view);
-        mReturnBtn = (ImageButton) findViewById(R.id.return_btn);
-        mTitle = (TextView) findViewById(R.id.number_tv);
-        mRightBtn = (Button) findViewById(R.id.right_btn);
-        mSearchEt = (EditText) findViewById(R.id.search_et);
+        setContentView(IdHelper.getLayout(this, "jmui_activity_all_members"));
+        mListView = (ListView) findViewById(IdHelper.getViewID(mContext, "jmui_members_list_view"));
+        mReturnBtn = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_return_btn"));
+        mTitle = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_number_tv"));
+        mRightBtn = (Button) findViewById(IdHelper.getViewID(mContext, "jmui_right_btn"));
+        mSearchEt = (EditText) findViewById(IdHelper.getViewID(mContext, "jmui_search_et"));
 
         mGroupId = getIntent().getLongExtra(GROUP_ID, 0);
         mIsDeleteMode = getIntent().getBooleanExtra(DELETE_MODE, false);
@@ -86,9 +85,9 @@ public class MembersInChatActivity extends Activity {
 
         }
         if (mIsDeleteMode) {
-            mRightBtn.setText(mContext.getString(R.string.delete));
+            mRightBtn.setText(mContext.getString(IdHelper.getString(mContext, "jmui_delete")));
         } else {
-            mRightBtn.setText(this.getString(R.string.add));
+            mRightBtn.setText(this.getString(IdHelper.getString(mContext, "jmui_add")));
         }
 
         mReturnBtn.setOnClickListener(listener);
@@ -111,33 +110,26 @@ public class MembersInChatActivity extends Activity {
                     View.OnClickListener listener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            switch (v.getId()) {
-                                case R.id.cancel_btn:
-                                    mDialog.dismiss();
-                                    break;
-                                case R.id.commit_btn:
-                                    mDialog.dismiss();
-                                    mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                                            mContext.getString(R.string.deleting_hint));
-                                    mLoadingDialog.show();
-                                    List<String> list = new ArrayList<String>();
-                                    list.add(mMemberInfoList.get(position).getUserName());
-                                    JMessageClient.removeGroupMembers(mGroupId, list, new BasicCallback() {
-                                        @Override
-                                        public void gotResult(int status, String desc) {
-                                            mLoadingDialog.dismiss();
-                                            if (status == 0) {
-//                                                mAdapter.refreshMemberList(mGroupId);
-                                                refreshMemberList();
-//                                                mMemberInfoList = mAdapter.getMemberList();
-//                                                mTitle.setText("(" + mMemberInfoList.size() + ")");
-                                            } else {
-                                                HandleResponseCode.onHandle(mContext, status, false);
-                                            }
+                            if (v.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                                mDialog.dismiss();
+                            } else {
+                                mDialog.dismiss();
+                                mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
+                                        mContext.getString(IdHelper.getString(mContext, "jmui_deleting_hint")));
+                                mLoadingDialog.show();
+                                List<String> list = new ArrayList<String>();
+                                list.add(mMemberInfoList.get(position).getUserName());
+                                JMessageClient.removeGroupMembers(mGroupId, list, new BasicCallback() {
+                                    @Override
+                                    public void gotResult(int status, String desc) {
+                                        mLoadingDialog.dismiss();
+                                        if (status == 0) {
+                                            refreshMemberList();
+                                        } else {
+                                            HandleResponseCode.onHandle(mContext, status, false);
                                         }
-                                    });
-                                    break;
-
+                                    }
+                                });
                             }
                         }
                     };
@@ -155,33 +147,30 @@ public class MembersInChatActivity extends Activity {
         if (groupOwnerId.equals(JMessageClient.getMyInfo().getUserName())) {
             mIsCreator = true;
         }
-        mAdapter = new AllMembersAdapter(mContext, mMemberInfoList, mIsDeleteMode);
+        mAdapter = new AllMembersAdapter(mContext, mMemberInfoList, mIsDeleteMode, groupOwnerId);
         mListView.setAdapter(mAdapter);
         mListView.requestFocus();
-        String title = mContext.getString(R.string.combine_title);
+        String title = mContext.getString(IdHelper.getString(mContext, "jmui_combine_title"));
         mTitle.setText(String.format(title, mMemberInfoList.size()));
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.return_btn:
-                    Intent intent = new Intent();
-                    intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size());
-                    setResult(RESULT_CODE_ALL_MEMBER, intent);
-                    finish();
-                    break;
-                case R.id.right_btn:
-                    if (mIsDeleteMode) {
-                        List<String> deleteList = mAdapter.getSelectedList();
-                        if (deleteList.size() > 0) {
-                            showDeleteMemberDialog(deleteList);
-                        }
-                    } else {
-                        addMemberToGroup();
+            if (v.getId() == IdHelper.getViewID(mContext, "jmui_return_btn")) {
+                Intent intent = new Intent();
+                intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size());
+                setResult(RESULT_CODE_ALL_MEMBER, intent);
+                finish();
+            } else {
+                if (mIsDeleteMode) {
+                    List<String> deleteList = mAdapter.getSelectedList();
+                    if (deleteList.size() > 0) {
+                        showDeleteMemberDialog(deleteList);
                     }
-                    break;
+                } else {
+                    addMemberToGroup();
+                }
             }
         }
     };
@@ -209,31 +198,27 @@ public class MembersInChatActivity extends Activity {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.cancel_btn:
-                        mDialog.dismiss();
-                        break;
-                    case R.id.commit_btn:
-                        mDialog.dismiss();
-                        mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                                mContext.getString(R.string.deleting_hint));
-                        mLoadingDialog.show();
-                        JMessageClient.removeGroupMembers(mGroupId, list, new BasicCallback() {
-                            @Override
-                            public void gotResult(int status, String desc) {
-                                mLoadingDialog.dismiss();
-                                if (status == 0) {
-                                    Intent intent = new Intent();
-                                    intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size() - list.size());
-                                    setResult(RESULT_CODE_ALL_MEMBER, intent);
-                                    finish();
-                                } else {
-                                    HandleResponseCode.onHandle(mContext, status, false);
-                                }
+                if (v.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                    mDialog.dismiss();
+                } else {
+                    mDialog.dismiss();
+                    mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
+                            mContext.getString(IdHelper.getString(mContext, "jmui_deleting_hint")));
+                    mLoadingDialog.show();
+                    JMessageClient.removeGroupMembers(mGroupId, list, new BasicCallback() {
+                        @Override
+                        public void gotResult(int status, String desc) {
+                            mLoadingDialog.dismiss();
+                            if (status == 0) {
+                                Intent intent = new Intent();
+                                intent.putExtra(MEMBERS_COUNT, mMemberInfoList.size() - list.size());
+                                setResult(RESULT_CODE_ALL_MEMBER, intent);
+                                finish();
+                            } else {
+                                HandleResponseCode.onHandle(mContext, status, false);
                             }
-                        });
-                        break;
-
+                        }
+                    });
                 }
             }
         };
@@ -245,40 +230,36 @@ public class MembersInChatActivity extends Activity {
     private void addMemberToGroup() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.jmui_dialog_add_friend_to_conv_list, null);
+                .inflate(IdHelper.getLayout(mContext, "jmui_dialog_add_friend_to_conv_list"), null);
         builder.setView(view);
         final Dialog dialog = builder.create();
         dialog.show();
-        TextView title = (TextView) view.findViewById(R.id.dialog_name);
-        title.setText(mContext.getString(R.string.add_friend_to_group_title));
-        final EditText userNameEt = (EditText) view.findViewById(R.id.user_name_et);
-        final Button cancel = (Button) view.findViewById(R.id.cancel_btn);
-        final Button commit = (Button) view.findViewById(R.id.commit_btn);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(mContext, "jmui_dialog_name"));
+        title.setText(mContext.getString(IdHelper.getString(mContext, "jmui_add_friend_to_group_title")));
+        final EditText userNameEt = (EditText) view.findViewById(IdHelper.getViewID(mContext, "jmui_user_name_et"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_commit_btn"));
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.cancel_btn:
+                if (view.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                    dialog.cancel();
+                } else {
+                    final String targetId = userNameEt.getText().toString().trim();
+                    if (TextUtils.isEmpty(targetId)) {
+                        Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
+                                "jmui_username_not_null_toast")), Toast.LENGTH_SHORT).show();
+                        //检查群组中是否包含该用户
+                    } else if (checkIfNotContainUser(targetId)) {
+                        mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
+                                mContext.getString(IdHelper.getString(mContext, "jmui_searching_user")));
+                        mLoadingDialog.show();
+                        getUserInfo(targetId, dialog);
+                    } else {
                         dialog.cancel();
-                        break;
-                    case R.id.commit_btn:
-                        final String targetId = userNameEt.getText().toString().trim();
-                        if (TextUtils.isEmpty(targetId)) {
-                            Toast.makeText(mContext, mContext.getString(R.string.username_not_null_toast),
-                                    Toast.LENGTH_SHORT).show();
-                            break;
-                            //检查群组中是否包含该用户
-                        } else if (checkIfNotContainUser(targetId)) {
-                            mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                                    mContext.getString(R.string.searching_user));
-                            mLoadingDialog.show();
-                            getUserInfo(targetId, dialog);
-                        } else {
-                            dialog.cancel();
-                            Toast.makeText(mContext, mContext.getString(R.string.user_already_exist_toast),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+                        Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_user_already_exist_toast")),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
@@ -325,7 +306,7 @@ public class MembersInChatActivity extends Activity {
      */
     private void addAMember(final UserInfo userInfo) {
         mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                    mContext.getString(R.string.adding_hint));
+                    mContext.getString(IdHelper.getString(mContext, "jmui_adding_hint")));
         mLoadingDialog.show();
         ArrayList<String> list = new ArrayList<String>();
         list.add(userInfo.getUserName());

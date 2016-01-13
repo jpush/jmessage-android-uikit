@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="@string/combine_title"
+                    android:text="@string/jmui_combine_title"
                     android:textColor="#555555"
                     android:textSize="18sp" />
 
@@ -64,7 +64,7 @@
 
                 <TextView
                     style="@style/ChatDetailItemHit"
-                    android:text="@string/group_name_hit" />
+                    android:text="@string/jmui_group_name_hit" />
 
                 <TextView
                     android:id="@+id/jmui_chat_detail_group_name"
@@ -88,7 +88,7 @@
 
                 <TextView
                     style="@style/ChatDetailItemHit"
-                    android:text="@string/group_people_num_hit" />
+                    android:text="@string/jmui_group_people_num_hit" />
 
                 <TextView
                     android:id="@+id/jmui_chat_detail_group_num"
@@ -111,7 +111,7 @@
 
                 <TextView
                     style="@style/ChatDetailItemHit"
-                    android:text="@string/group_my_name_hit" />
+                    android:text="@string/jmui_group_my_name_hit" />
 
                 <TextView
                     android:id="@+id/jmui_chat_detail_my_name"
@@ -134,7 +134,7 @@
 
                 <TextView
                     style="@style/ChatDetailItemHit"
-                    android:text="@string/group_chat_history_hit" />
+                    android:text="@string/jmui_group_chat_history_hit" />
 
                 <TextView style="@style/ChatDetailItemContent" />
 
@@ -153,7 +153,7 @@
 
                 <TextView
                     style="@style/ChatDetailItemHit"
-                    android:text="@string/group_clear_history_hit" />
+                    android:text="@string/jmui_group_clear_history_hit" />
 
                 <TextView style="@style/ChatDetailItemContent" />
 
@@ -179,7 +179,7 @@
                     android:layout_height="50dp"
                     android:background="@drawable/jmui_chat_detail_btn_bg"
                     android:textSize="18sp"
-                    android:text="@string/group_exit_btn"
+                    android:text="@string/jmui_group_exit_btn"
                     android:textColor="#ffffff" />
             </LinearLayout>
         </LinearLayout>

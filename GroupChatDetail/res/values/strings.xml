@@ -28,6 +28,8 @@
     <string name="jmui_username_not_null_toast">用户名不能为空</string>
     <string name="jmui_user_add_self_toast">不能添加自己为好友</string>
     <string name="jmui_searching_user">正在查找</string>
+    <string name="jmui_add_friend">添加好友</string>
+    <string name="jmui_add_friend_hint">输入你要添加的好友用户名</string>
     <string name="jmui_add_friend_to_group_title">添加好友到群组</string>
     <string name="jmui_adding_hint">正在添加</string>
     <string name="jmui_group_name_not_null_toast">名称不能为空</string>

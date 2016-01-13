@@ -7,21 +7,20 @@
     android:background="@drawable/jmui_dialog_default_bg">
 
     <TextView
-        android:id="@+id/dialog_name"
+        android:id="@+id/jmui_dialog_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
-        android:text="添加好友"
+        android:text="@string/jmui_add_friend"
         android:textSize="18sp"
         android:textColor="@color/green"
         />
 
     <View
-        android:id="@+id/divide_view"
+        android:id="@+id/jmui_divide_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/dialog_name"
         android:layout_margin="10dp"
         android:background="#d4d4d4" />
 
@@ -30,10 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@color/gray"
-        android:text="输入你要添加的好友用户名"/>
+        android:text="@string/jmui_add_friend_hint"/>
 
     <EditText
-        android:id="@+id/user_name_et"
+        android:id="@+id/jmui_user_name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -48,25 +47,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/nick_name_hint"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/cancel_btn"
+            android:id="@+id/jmui_cancel_btn"
             android:layout_height="50dp"
             android:layout_width="0dip"
             android:layout_weight="1"
-            android:text="取消"
+            android:text="@string/jmui_cancel"
             android:textColor="#808080"
             android:background="@drawable/jmui_dialog_bottom_left_btn"
             />
 
         <Button
-            android:id="@+id/commit_btn"
+            android:id="@+id/jmui_commit_btn"
             android:layout_height="50dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="确定"
+            android:text="@string/jmui_confirm"
             android:textColor="#808080"
             android:background="@drawable/jmui_dialog_bottom_right_btn"
             />

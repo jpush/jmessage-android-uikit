@@ -24,7 +24,6 @@ public class ChatDetailView extends LinearLayout{
 	private ImageButton mReturnBtn;
 	private TextView mTitle;
     private TextView mMembersNum;
-	private ImageButton mMenuBtn;
 	private Button mDelGroupBtn;
 	private TextView mGroupName;
 	private TextView mGroupNum;
@@ -49,7 +48,6 @@ public class ChatDetailView extends LinearLayout{
 		mReturnBtn = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_return_btn"));
 		mTitle = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_title"));
         mMembersNum = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_members_num"));
-		mMenuBtn = (ImageButton) findViewById(IdHelper.getViewID(mContext, "jmui_right_btn"));
 		mDelGroupBtn = (Button) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_del_group"));
 		mGroupName = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_group_name"));
 		mGroupNum = (TextView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_group_num"));
@@ -58,7 +56,6 @@ public class ChatDetailView extends LinearLayout{
 		mGridView = (GroupGridView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_group_gv"));
 
 		mTitle.setText(mContext.getString(IdHelper.getString(mContext, "jmui_chat_detail_title")));
-		mMenuBtn.setVisibility(View.GONE);
 		//自定义GridView点击背景为透明色
 		mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 	}

@@ -37,7 +37,7 @@ public class DemoActivity extends BaseActivity {
         setContentView(R.layout.jmui_activity_main);
         mGroupDetailBtn = (Button) findViewById(R.id.group_detail_btn);
 
-        mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.logging));
+        mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_logging));
         mLoadingDialog.show();
         //设置用户信息及群聊Id, 此处使用了此AppKey下提前注册的用户和群组,关于注册用户在ReadMe中有提到
         final String myName = "user001";

@@ -26,13 +26,16 @@ public class AllMembersAdapter extends BaseAdapter {
     private Context mContext;
     private List<UserInfo> mMemberList = new ArrayList<UserInfo>();
     private boolean mIsDeleteMode;
+    private String mGroupOwnerId;
     private List<String> mSelectedList = new ArrayList<String>();
     private SparseBooleanArray mSelectMap = new SparseBooleanArray();
 
-    public AllMembersAdapter(Context context, List<UserInfo> memberList, boolean isDeleteMode) {
+    public AllMembersAdapter(Context context, List<UserInfo> memberList, boolean isDeleteMode,
+                             String groupOwnerId) {
         this.mContext = context;
         this.mMemberList = memberList;
         this.mIsDeleteMode = isDeleteMode;
+        mGroupOwnerId = groupOwnerId;
     }
 
     public void refreshMemberList(List<UserInfo> memberList) {
@@ -71,7 +74,7 @@ public class AllMembersAdapter extends BaseAdapter {
         }
 
         final UserInfo userInfo = mMemberList.get(position);
-        if (mIsDeleteMode && position > 0) {
+        if (mIsDeleteMode && !userInfo.getUserName().equals(mGroupOwnerId)) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override

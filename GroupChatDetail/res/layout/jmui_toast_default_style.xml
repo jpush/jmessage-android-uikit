@@ -5,7 +5,7 @@
     android:background="@drawable/jmui_toast_default_bg">
 
     <TextView
-        android:id="@+id/toast_content_tv"
+        android:id="@+id/jmui_toast_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"

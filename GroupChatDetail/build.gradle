@@ -35,3 +35,15 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 }
+
+task jarMyLib(type: Jar, dependsOn: ['build']) {
+    archiveName = 'jmessage-uikit-groupchatdetail-1.0.0.jar'
+    from('build/intermediates/classes/release')
+    destinationDir = file('build/libs')
+    exclude('cn/jmessage/android/uikit/DemoActivity.class')
+    exclude('cn/jmessage/android/uikit/DemoActivity\$*.class')
+    exclude('cn/jmessage/android/uikit/BuildConfig.class')
+    exclude('cn/jmessage/android/uikit/BuildConfig\$*.class')
+    exclude('**/R.class')
+    exclude('**/R\$*.class')
+}
