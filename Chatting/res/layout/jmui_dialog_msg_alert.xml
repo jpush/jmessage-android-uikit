@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:background="@drawable/jmui_dialog_default_style"
+    android:background="@drawable/jmui_dialog_default_bg"
     android:orientation="vertical">
 
     <Button

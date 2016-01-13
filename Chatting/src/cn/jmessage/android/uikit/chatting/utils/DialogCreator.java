@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 public class DialogCreator {
     public static Dialog createLoadingDialog(Context context, String msg) {
+        Dialog loadingDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_loading_dialog_style"));
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(IdHelper.getLayout(context, "jmui_loading_view"), null);
         RelativeLayout layout = (RelativeLayout) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_view"));
@@ -23,12 +24,27 @@ public class DialogCreator {
         AnimationDrawable mDrawable = (AnimationDrawable) mLoadImg.getDrawable();
         mDrawable.start();
         mLoadText.setText(msg);
-        final Dialog loadingDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_LoadingDialog"));
         loadingDialog.setCancelable(true);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
         return loadingDialog;
+    }
+
+    public static Dialog createBaseCustomDialog(Context context, String title, String text,
+                                                View.OnClickListener onClickListener) {
+        Dialog baseDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View v = inflater.inflate(IdHelper.getLayout(context, "jmui_dialog_base"), null);
+        TextView titleTv = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_title_tv"));
+        TextView textTv = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_text_tv"));
+        Button confirmBtn = (Button) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_confirm_btn"));
+        titleTv.setText(title);
+        textTv.setText(text);
+        confirmBtn.setOnClickListener(onClickListener);
+        baseDialog.setContentView(v);
+        baseDialog.setCancelable(true);
+        return baseDialog;
     }
 
     public static Dialog createLongPressMessageDialog(Context context, String title, boolean hide,

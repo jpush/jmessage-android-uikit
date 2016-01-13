@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,8 +67,8 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
     InputMethodManager mImm;
     private MyReceiver mReceiver;
     private Context mContext;
-    private boolean mIsSingle;
     private long mGroupId;
+    private boolean mIsSingle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +87,9 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
         mChatView.setOnKbdStateListener(this);
         initReceiver();
         Intent intent = getIntent();
-        mIsSingle = intent.getBooleanExtra("isSingle", false);
         mTargetId = intent.getStringExtra(TARGET_ID);
-        if (mIsSingle) {
+        if (!TextUtils.isEmpty(mTargetId)) {
+            mIsSingle = true;
             JMessageClient.getUserInfo(mTargetId, new GetUserInfoCallback() {
                 @Override
                 public void gotResult(int status, String desc, UserInfo userInfo) {
@@ -104,6 +105,7 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             }
             mChatAdapter = new MsgListAdapter(mContext, mTargetId);
         } else {
+            mIsSingle = false;
             mGroupId = intent.getLongExtra(GROUP_ID, 0);
             Log.d(TAG, "GroupId : " + mGroupId);
             JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {

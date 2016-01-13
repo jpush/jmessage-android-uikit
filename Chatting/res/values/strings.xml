@@ -57,6 +57,8 @@
     <string name="jmui_month">月</string>
     <string name="jmui_day">日</string>
 
+    <string name="jmui_user_logout_dialog_title">下线提示</string>
+    <string name="jmui_user_logout_dialog_message">您的账号已经在另一台设备上登录，您被迫下线</string>
     <string name="jmui_server_abnormal_toast">服务器返回异常，请重试</string>
     <string name="jmui_connect_failed_toast">连接服务器失败，请稍后重试</string>
     <string name="jmui_server_return_error_toast">服务器返回格式错误</string>
