@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="noTitle" parent="android:Theme.Holo">
+    <style name="noTitle">
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -44,7 +44,7 @@
         <item name="android:background">@drawable/jmui_arrow</item>
     </style>
 
-    <style name="LoadingDialog">
+    <style name="jmui_loading_dialog_style" >
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -54,6 +54,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
 
     <style name="default_input_style_with_bg">
         <item name="android:padding">5dp</item>

@@ -1,6 +1,7 @@
 package cn.jmessage.android.uikit.chatting;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +26,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
+import cn.jmessage.android.uikit.R;
 import cn.jmessage.android.uikit.chatting.utils.BitmapLoader;
+import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
 import cn.jmessage.android.uikit.chatting.utils.FileHelper;
 import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
@@ -35,6 +39,7 @@ import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.content.TextContent;
 import cn.jpush.im.android.api.enums.ConversationType;
 import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.event.UserLogoutEvent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.Message;
@@ -44,7 +49,7 @@ import cn.jpush.im.android.api.model.UserInfo;
 /**
  * 一个简单的聊天界面,可以发送文字,语音及拍照发送图片功能
  */
-public class ChatActivity extends Activity implements View.OnClickListener, View.OnTouchListener,
+public class ChatActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener,
         ChatView.OnSizeChangedListener, ChatView.OnKeyBoardChangeListener {
 
     private static final String TAG = "ChatActivity";
@@ -69,16 +74,17 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
     private Context mContext;
     private long mGroupId;
     private boolean mIsSingle;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //注册接收消息(成为订阅者), 注册后可以直接重写onEvent方法接收消息(参考下面的onEvent方法)
-        JMessageClient.registerEventReceiver(this);
         setContentView(IdHelper.getLayout(this, "jmui_activity_chat"));
         mChatView = (ChatView) findViewById(IdHelper.getViewID(this, "jmui_chat_view"));
         mChatView.initModule();
         mContext = this;
+        //注册接收消息(成为订阅者), 注册后可以直接重写onEvent方法接收消息
+        JMessageClient.registerEventReceiver(this);
         this.mWindow = getWindow();
         this.mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         mChatView.setListeners(this);
@@ -523,6 +529,26 @@ public class ChatActivity extends Activity implements View.OnClickListener, View
             }
         });
     }
+
+    /**
+     * 收到被踢下线事件
+     * @param event 登出事件
+     */
+    public void onEventMainThread(UserLogoutEvent event) {
+        String title = mContext.getString(R.string.jmui_user_logout_dialog_title);
+        String msg = mContext.getString(R.string.jmui_user_logout_dialog_message);
+        mDialog = DialogCreator.createBaseCustomDialog(mContext, title, msg, onClickListener);
+        mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        mDialog.show();
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mDialog.dismiss();
+            finish();
+        }
+    };
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {

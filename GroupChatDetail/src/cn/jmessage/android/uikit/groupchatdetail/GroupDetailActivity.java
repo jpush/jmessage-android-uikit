@@ -25,7 +25,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jmessage.android.uicomponents.R;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
 import cn.jpush.im.android.api.callback.GetUserInfoCallback;
@@ -66,15 +65,15 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.jmui_activity_group_detail);
+        setContentView(IdHelper.getLayout(this, "jmui_activity_group_detail"));
         //订阅接收消息 这里主要是添加或删除群成员的event
         JMessageClient.registerEventReceiver(this);
         mContext = this;
-        mChatDetailView = (ChatDetailView) findViewById(R.id.chat_detail_view);
+        mChatDetailView = (ChatDetailView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_view"));
         mChatDetailView.initModule();
         mChatDetailView.setListeners(this);
         mChatDetailView.setItemListener(this);
-        mChatDetailView.setGroupName(this.getString(R.string.chat_detail_title));
+        mChatDetailView.setGroupName(this.getString(IdHelper.getString(mContext, "jmui_chat_detail_title")));
 
         Log.d(TAG, "GroupDetailActivity onCreated!");
         //默认获取到的群信息,可以调用JMessageClient.createGroup或者使用Rest API创建
@@ -119,52 +118,42 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()) {
-            case R.id.return_btn:
-                finish();
-                break;
+        if (v.getId() == IdHelper.getViewID(mContext, "jmui_return_btn")) {
+            finish();
             //显示所有群成员
-            case R.id.all_member_ll:
-                intent.putExtra(GROUP_ID, mGroupId);
-                intent.putExtra(DELETE_MODE, false);
-                intent.setClass(mContext, MembersInChatActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_ALL_MEMBER);
-                break;
-
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_all_member_ll")) {
+            intent.putExtra(GROUP_ID, mGroupId);
+            intent.putExtra(DELETE_MODE, false);
+            intent.setClass(mContext, MembersInChatActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_ALL_MEMBER);
             // 设置群组名称
-            case R.id.group_name_ll:
-                showGroupNameSettingDialog(mGroupId, mGroupName);
-                break;
-
-            case R.id.chat_detail_del_group:
-                View.OnClickListener listener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch (view.getId()) {
-                            case R.id.cancel_btn:
-                                mDialog.cancel();
-                                break;
-                            case R.id.commit_btn:
-                                //TODO exit group
-                                mDialog.cancel();
-                                break;
-                        }
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_group_name_ll")) {
+            showGroupNameSettingDialog(mGroupId, mGroupName);
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_chat_detail_del_group")) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (view.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                        mDialog.cancel();
+                    } else {
+                        //TODO exit group
+                        mDialog.cancel();
                     }
-                };
-                mDialog = DialogCreator.createExitGroupDialog(mContext, listener);
-                mDialog.show();
-                break;
+                }
+            };
+            mDialog = DialogCreator.createExitGroupDialog(mContext, listener);
+            mDialog.show();
         }
     }
 
     //设置群聊名称
     public void showGroupNameSettingDialog(final long groupID, String groupName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.jmui_dialog_reset_password, null);
+        View view = LayoutInflater.from(this).inflate(IdHelper.getLayout(mContext, "jmui_dialog_reset_password"), null);
         builder.setView(view);
-        TextView title = (TextView) view.findViewById(R.id.title_tv);
-        title.setText(mContext.getString(R.string.group_name_hit));
-        final EditText pwdEt = (EditText) view.findViewById(R.id.password_et);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(mContext, "jmui_title_tv"));
+        title.setText(mContext.getString(IdHelper.getString(mContext, "jmui_group_name_hit")));
+        final EditText pwdEt = (EditText) view.findViewById(IdHelper.getViewID(mContext, "jmui_password_et"));
         pwdEt.addTextChangedListener(new TextWatcher() {
             private CharSequence temp = "";
             private int editStart;
@@ -195,46 +184,43 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
         });
         pwdEt.setInputType(InputType.TYPE_CLASS_TEXT);
         pwdEt.setHint(groupName);
-        pwdEt.setHintTextColor(getResources().getColor(R.color.gray));
-        final Button cancel = (Button) view.findViewById(R.id.cancel_btn);
-        final Button commit = (Button) view.findViewById(R.id.commit_btn);
+        pwdEt.setHintTextColor(IdHelper.getColor(mContext, "gray"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_commit_btn"));
         final Dialog dialog = builder.create();
         dialog.show();
         dialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.cancel_btn:
-                        dialog.cancel();
-                        break;
-                    case R.id.commit_btn:
-                        final String newName = pwdEt.getText().toString().trim();
-                        if (newName.equals("")) {
-                            Toast.makeText(mContext, mContext.getString(R.string.group_name_not_null_toast),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            dismissSoftInput();
-                            dialog.dismiss();
-                            mProgressDialog = new ProgressDialog(mContext);
-                            mProgressDialog.setMessage(mContext.getString(R.string.modifying_hint));
-                            mProgressDialog.show();
-                            JMessageClient.updateGroupName(groupID, newName, new BasicCallback() {
-                                @Override
-                                public void gotResult(final int status, final String desc) {
-                                    mProgressDialog.dismiss();
-                                    if (status == 0) {
-                                        mChatDetailView.updateGroupName(newName);
-                                        Toast.makeText(mContext, mContext.getString(R.string.modify_success_toast),
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Log.i(TAG, "desc :" + desc);
-                                        HandleResponseCode.onHandle(mContext, status, false);
-                                    }
+                if (view.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                    dialog.cancel();
+                } else {
+                    final String newName = pwdEt.getText().toString().trim();
+                    if (newName.equals("")) {
+                        Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_group_name_not_null_toast")),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        dismissSoftInput();
+                        dialog.dismiss();
+                        mProgressDialog = new ProgressDialog(mContext);
+                        mProgressDialog.setMessage(mContext.getString(IdHelper.getString(mContext, "jmui_modifying_hint")));
+                        mProgressDialog.show();
+                        JMessageClient.updateGroupName(groupID, newName, new BasicCallback() {
+                            @Override
+                            public void gotResult(final int status, final String desc) {
+                                mProgressDialog.dismiss();
+                                if (status == 0) {
+                                    mChatDetailView.updateGroupName(newName);
+                                    Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_modify_success_toast")),
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.i(TAG, "desc :" + desc);
+                                    HandleResponseCode.onHandle(mContext, status, false);
                                 }
-                            });
-                        }
-                        break;
+                            }
+                        });
+                    }
                 }
             }
         };
@@ -305,41 +291,35 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     private void addMemberToGroup() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.jmui_dialog_add_friend_to_conv_list, null);
+                .inflate(IdHelper.getLayout(mContext, "jmui_dialog_add_friend_to_conv_list"), null);
         builder.setView(view);
-        TextView title = (TextView) view.findViewById(R.id.dialog_name);
-        title.setText(mContext.getString(R.string.add_friend_to_group_title));
-        final EditText userNameEt = (EditText) view.findViewById(R.id.user_name_et);
-        final Button cancel = (Button) view.findViewById(R.id.cancel_btn);
-        final Button commit = (Button) view.findViewById(R.id.commit_btn);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(mContext, "jmui_dialog_name"));
+        title.setText(mContext.getString(IdHelper.getString(mContext, "jmui_add_friend_to_group_title")));
+        final EditText userNameEt = (EditText) view.findViewById(IdHelper.getViewID(mContext, "jmui_user_name_et"));
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(mContext, "jmui_commit_btn"));
         final Dialog dialog = builder.create();
         dialog.show();
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.cancel_btn:
+                if (view.getId() == IdHelper.getViewID(mContext, "jmui_cancel_btn")) {
+                    final String targetId = userNameEt.getText().toString().trim();
+                    Log.i(TAG, "targetID " + targetId);
+                    if (TextUtils.isEmpty(targetId)) {
+                        Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_username_not_null_toast")),
+                                Toast.LENGTH_SHORT).show();
+                        //检查群组中是否包含该用户
+                    } else if (checkIfNotContainUser(targetId)) {
+                        mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
+                                mContext.getString(IdHelper.getString(mContext, "jmui_searching_user")));
+                        mLoadingDialog.show();
+                        getUserInfo(targetId, dialog);
+                    } else {
                         dialog.cancel();
-                        break;
-                    case R.id.commit_btn:
-                        final String targetId = userNameEt.getText().toString().trim();
-                        Log.i(TAG, "targetID " + targetId);
-                        if (TextUtils.isEmpty(targetId)) {
-                            Toast.makeText(mContext, mContext.getString(R.string.username_not_null_toast),
-                                    Toast.LENGTH_SHORT).show();
-                            break;
-                            //检查群组中是否包含该用户
-                        } else if (checkIfNotContainUser(targetId)) {
-                            mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                                    mContext.getString(R.string.searching_user));
-                            mLoadingDialog.show();
-                            getUserInfo(targetId, dialog);
-                        } else {
-                            dialog.cancel();
-                            Toast.makeText(mContext, mContext.getString(R.string.user_already_exist_toast),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+                        Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_user_already_exist_toast")),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
@@ -386,7 +366,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
      */
     private void addAMember(final UserInfo userInfo) {
         mLoadingDialog = DialogCreator.createLoadingDialog(mContext,
-                mContext.getString(R.string.adding_hint));
+                mContext.getString(IdHelper.getString(mContext, "jmui_adding_hint")));
         mLoadingDialog.show();
         ArrayList<String> list = new ArrayList<>();
         list.add(userInfo.getUserName());

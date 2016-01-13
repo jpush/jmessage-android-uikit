@@ -11,7 +11,7 @@
 
         <!-- 联系人信息 -->
         <cn.jmessage.android.uikit.groupchatdetail.CircleImageView
-            android:id="@+id/icon_iv"
+            android:id="@+id/jmui_icon_iv"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
@@ -23,11 +23,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_toRightOf="@+id/icon_iv"
-            android:layout_toLeftOf="@+id/check_box_cb">
+            android:layout_toRightOf="@+id/jmui_icon_iv"
+            android:layout_toLeftOf="@+id/jmui_check_box_cb">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/jmui_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -39,7 +39,7 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/check_box_cb"
+            android:id="@+id/jmui_check_box_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

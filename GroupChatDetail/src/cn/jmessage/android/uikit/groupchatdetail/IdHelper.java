@@ -1,6 +1,7 @@
-package cn.jmessage.android.uikit.chatting.utils;
+package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.content.Context;
+
 import java.lang.reflect.Field;
 
 public class IdHelper {
@@ -57,5 +58,9 @@ public class IdHelper {
     public static int getAnim(Context context, String animName) {
         return context.getResources().getIdentifier(animName, "anim",
                 context.getApplicationContext().getPackageName());
+    }
+
+    public static int getColor(Context context, String colorName) {
+        return context.getResources().getIdentifier(colorName, "color", context.getPackageName());
     }
 }

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jmessage.android.uicomponents.R;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.model.UserInfo;
 
@@ -62,10 +61,10 @@ public class AllMembersAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.jmui_all_member_item, null);
-            viewHolder = new ViewHolder((CircleImageView) convertView.findViewById(R.id.icon_iv),
-                    (TextView) convertView.findViewById(R.id.name),
-                    (CheckBox) convertView.findViewById(R.id.check_box_cb));
+            convertView = inflater.inflate(IdHelper.getLayout(mContext, "jmui_all_member_item"), null);
+            viewHolder = new ViewHolder((CircleImageView) convertView.findViewById(IdHelper.getViewID(mContext, "jmui_icon_iv")),
+                    (TextView) convertView.findViewById(IdHelper.getViewID(mContext, "jmui_name")),
+                    (CheckBox) convertView.findViewById(IdHelper.getViewID(mContext, "jmui_check_box_cb")));
             convertView.setTag(viewHolder);
         } else {
            viewHolder = (ViewHolder)convertView.getTag();
@@ -98,13 +97,13 @@ public class AllMembersAdapter extends BaseAdapter {
                     if (status == 0) {
                         viewHolder.icon.setImageBitmap(bitmap);
                     } else {
-                        viewHolder.icon.setImageResource(R.drawable.jmui_head_icon);
+                        viewHolder.icon.setImageResource(IdHelper.getDrawable(mContext, "jmui_head_icon"));
                         HandleResponseCode.onHandle(mContext, status, false);
                     }
                 }
             });
         } else {
-            viewHolder.icon.setImageResource(R.drawable.jmui_head_icon);
+            viewHolder.icon.setImageResource(IdHelper.getDrawable(mContext, "jmui_head_icon"));
         }
         String displayName = userInfo.getNickname();
         if (TextUtils.isEmpty(displayName)) {

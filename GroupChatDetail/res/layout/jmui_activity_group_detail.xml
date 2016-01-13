@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.jmessage.android.uikit.groupchatdetail.ChatDetailView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/chat_detail_view"
+    android:id="@+id/jmui_chat_detail_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
     <ScrollView
-        android:id="@+id/chat_detail_sv"
+        android:id="@+id/jmui_chat_detail_sv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadingEdge="vertical"
@@ -20,7 +20,7 @@
             <include layout="@layout/jmui_menu_title_bar"/>
 
             <cn.jmessage.android.uikit.groupchatdetail.GroupGridView
-                android:id="@+id/chat_detail_group_gv"
+                android:id="@+id/jmui_chat_detail_group_gv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -33,18 +33,17 @@
             </cn.jmessage.android.uikit.groupchatdetail.GroupGridView>
 
             <View
-                android:id="@+id/all_member_split_line1"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="5dp"
                 android:background="#d3d3d3" />
 
             <LinearLayout
-                android:id="@+id/all_member_ll"
+                android:id="@+id/jmui_all_member_ll"
                 style="@style/ChatDetailItem">
 
                 <TextView
-                    android:id="@+id/members_num"
+                    android:id="@+id/jmui_members_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -55,13 +54,12 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/all_member_split_line2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#d3d3d3" />
 
             <LinearLayout
-                android:id="@+id/group_name_ll"
+                android:id="@+id/jmui_group_name_ll"
                 style="@style/ChatDetailItem" >
 
                 <TextView
@@ -69,11 +67,11 @@
                     android:text="@string/group_name_hit" />
 
                 <TextView
-                    android:id="@+id/chat_detail_group_name"
+                    android:id="@+id/jmui_chat_detail_group_name"
                     style="@style/ChatDetailItemContent"/>
 
                 <ImageView
-                    android:id="@+id/arrow_iv"
+                    android:id="@+id/jmui_arrow_iv"
                     style="@style/ChatDetailArrow"/>
             </LinearLayout>
 
@@ -84,7 +82,7 @@
                 android:background="#d3d3d3" />
 
             <LinearLayout
-                android:id="@+id/group_num_ll"
+                android:id="@+id/jmui_group_num_ll"
                 style="@style/ChatDetailItem"
                 android:visibility="gone">
 
@@ -93,7 +91,7 @@
                     android:text="@string/group_people_num_hit" />
 
                 <TextView
-                    android:id="@+id/chat_detail_group_num"
+                    android:id="@+id/jmui_chat_detail_group_num"
                     style="@style/ChatDetailItemContent"
                     android:text="40人" />
 
@@ -107,7 +105,7 @@
                 android:background="#d3d3d3" />
 
             <LinearLayout
-                android:id="@+id/group_my_name_ll"
+                android:id="@+id/jmui_group_my_name_ll"
                 style="@style/ChatDetailItem"
                 android:visibility="gone">
 
@@ -116,7 +114,7 @@
                     android:text="@string/group_my_name_hit" />
 
                 <TextView
-                    android:id="@+id/chat_detail_my_name"
+                    android:id="@+id/jmui_chat_detail_my_name"
                     style="@style/ChatDetailItemContent"
                     android:text="minsd" />
 
@@ -130,7 +128,7 @@
                 android:visibility="gone"/>
 
             <LinearLayout
-                android:id="@+id/group_chat_record_ll"
+                android:id="@+id/jmui_group_chat_record_ll"
                 style="@style/ChatDetailItem"
                 android:visibility="gone">
 
@@ -150,7 +148,7 @@
                 android:background="#d3d3d3" />
 
             <LinearLayout
-                android:id="@+id/group_chat_del_ll"
+                android:id="@+id/jmui_group_chat_del_ll"
                 style="@style/ChatDetailItem" >
 
                 <TextView
@@ -174,7 +172,7 @@
                 android:layout_marginBottom="40dp">
 
                 <Button
-                    android:id="@+id/chat_detail_del_group"
+                    android:id="@+id/jmui_chat_detail_del_group"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"

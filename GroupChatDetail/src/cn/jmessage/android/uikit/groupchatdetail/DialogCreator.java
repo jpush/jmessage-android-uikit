@@ -12,20 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.jmessage.android.uicomponents.R;
 
 
 public class DialogCreator {
     public static Dialog createLoadingDialog(Context context, String msg) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.jmui_loading_view, null);
-        RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dialog_view);
-        ImageView mLoadImg = (ImageView) v.findViewById(R.id.loading_img);
-        TextView mLoadText = (TextView) v.findViewById(R.id.loading_txt);
+        View v = inflater.inflate(IdHelper.getLayout(context, "jmui_loading_view"), null);
+        RelativeLayout layout = (RelativeLayout) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_view"));
+        ImageView mLoadImg = (ImageView) v.findViewById(IdHelper.getViewID(context, "jmui_loading_img"));
+        TextView mLoadText = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_loading_txt"));
         AnimationDrawable mDrawable = (AnimationDrawable) mLoadImg.getDrawable();
         mDrawable.start();
         mLoadText.setText(msg);
-        final Dialog loadingDialog = new Dialog(context, R.style.LoadingDialog);
+        final Dialog loadingDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_loading_dialog_style"));
         loadingDialog.setCancelable(true);
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -36,14 +35,14 @@ public class DialogCreator {
     public static Dialog createExitGroupDialog(Context context, View.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
+        View v = inflater.inflate(IdHelper.getLayout(context, "jmui_dialog_base_with_button"), null);
         builder.setView(v);
         Dialog dialog = builder.create();
-        TextView title = (TextView) v.findViewById(R.id.title);
-        title.setText(context.getString(R.string.delete_group_confirm_title));
-        final Button cancel = (Button) v.findViewById(R.id.cancel_btn);
-        final Button commit = (Button) v.findViewById(R.id.commit_btn);
-        commit.setText(context.getString(R.string.confirm));
+        TextView title = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_title"));
+        title.setText(context.getString(IdHelper.getString(context, "jmui_delete_group_confirm_title")));
+        final Button cancel = (Button) v.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        final Button commit = (Button) v.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
+        commit.setText(context.getString(IdHelper.getString(context, "jmui_confirm")));
         cancel.setOnClickListener(listener);
         commit.setOnClickListener(listener);
         dialog.setCancelable(true);
@@ -55,19 +54,19 @@ public class DialogCreator {
                                                   boolean isSingle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.jmui_dialog_base_with_button, null);
+        View view = inflater.inflate(IdHelper.getLayout(context, "jmui_dialog_base_with_button"), null);
         builder.setView(view);
-        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) view.findViewById(IdHelper.getViewID(context, "jmui_title"));
         if (isSingle) {
-            title.setText(context.getString(R.string.delete_member_confirm_hint));
+            title.setText(context.getString(IdHelper.getString(context, "jmui_delete_member_confirm_hint")));
         } else {
-            title.setText(context.getString(R.string.delete_confirm_hint));
+            title.setText(context.getString(IdHelper.getString(context, "jmui_delete_confirm_hint")));
         }
-        final Button cancel = (Button) view.findViewById(R.id.cancel_btn);
-        final Button commit = (Button) view.findViewById(R.id.commit_btn);
+        final Button cancel = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_cancel_btn"));
+        final Button commit = (Button) view.findViewById(IdHelper.getViewID(context, "jmui_commit_btn"));
         cancel.setOnClickListener(listener);
         commit.setOnClickListener(listener);
-        commit.setText(context.getString(R.string.confirm));
+        commit.setText(context.getString(IdHelper.getString(context, "jmui_confirm")));
         final Dialog dialog = builder.create();
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
