@@ -12,6 +12,7 @@ import cn.jmessage.android.uikit.groupchatdetail.BaseActivity;
 import cn.jmessage.android.uikit.groupchatdetail.DialogCreator;
 import cn.jmessage.android.uikit.groupchatdetail.GroupDetailActivity;
 import cn.jmessage.android.uikit.groupchatdetail.HandleResponseCode;
+import cn.jmessage.android.uikit.groupchatdetail.IdHelper;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.event.UserLogoutEvent;
@@ -36,14 +37,13 @@ public class DemoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jmui_activity_main);
-        JMessageClient.registerEventReceiver(this);
         mGroupDetailBtn = (Button) findViewById(R.id.group_detail_btn);
 
         mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_logging));
         mLoadingDialog.show();
         //设置用户信息及群聊Id, 此处使用了此AppKey下提前注册的用户和群组,关于注册用户在ReadMe中有提到
         final String myName = "user001";
-        String myPassword = "1111";
+        final String myPassword = "1111";
         final long groupId = 10053517;
         //登录
         JMessageClient.login(myName, myPassword, new BasicCallback() {
@@ -77,14 +77,34 @@ public class DemoActivity extends BaseActivity {
                     intent.putExtra(MY_USERNAME, myName);
                     intent.setClass(DemoActivity.this, GroupDetailActivity.class);
                     startActivity(intent);
+                } else {
+                    Dialog dialog = DialogCreator.createLoadingDialog(DemoActivity.this,
+                            DemoActivity.this.getString(R.string.jmui_logging));
+                    dialog.show();
+                    JMessageClient.login(myName, myPassword, new BasicCallback() {
+                        @Override
+                        public void gotResult(int status, String desc) {
+                            if (status == 0) {
+                                Conversation conv = JMessageClient.getGroupConversation(groupId);
+                                if (null == conv) {
+                                    conv = Conversation.createGroupConversation(groupId);
+                                }
+                                GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+                                Intent intent = new Intent();
+                                intent.putExtra(GROUP_ID, groupId);
+                                intent.putExtra(MY_USERNAME, myName);
+                                intent.setClass(DemoActivity.this, GroupDetailActivity.class);
+                                startActivity(intent);
+                            } else {
+                                HandleResponseCode.onHandle(DemoActivity.this, status, false);
+                            }
+                        }
+                    });
                 }
             }
         });
     }
 
-    public void onEventMainThread(UserLogoutEvent event) {
-
-    }
 
     @Override
     protected void onPause() {
@@ -98,9 +118,4 @@ public class DemoActivity extends BaseActivity {
         super.onResume();
     }
 
-    @Override
-    protected void onDestroy() {
-        JMessageClient.unRegisterEventReceiver(this);
-        super.onDestroy();
-    }
 }

@@ -24,6 +24,7 @@ import cn.jpush.im.android.api.event.UserLogoutEvent;
 public class BaseActivity extends Activity {
     private static final String TAG = "BaseActivity";
 
+    protected BaseHandler mHandler;
     protected float mDensity;
     protected int mDensityDpi;
     protected int mAvatarSize;
@@ -37,6 +38,7 @@ public class BaseActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //初始化JMessage-sdk
         JMessageClient.init(this);
+        //订阅接收消息 这里主要是添加或删除群成员的event
         JMessageClient.registerEventReceiver(this);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -51,6 +53,17 @@ public class BaseActivity extends Activity {
     protected void onDestroy() {
         JMessageClient.unRegisterEventReceiver(this);
         super.onDestroy();
+    }
+
+    public class BaseHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            handleMsg(msg);
+        }
+    }
+
+    public void handleMsg(Message message) {
     }
 
     public void onEventMainThread(UserLogoutEvent event) {

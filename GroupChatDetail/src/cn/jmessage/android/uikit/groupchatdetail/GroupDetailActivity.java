@@ -66,8 +66,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(IdHelper.getLayout(this, "jmui_activity_group_detail"));
-        //订阅接收消息 这里主要是添加或删除群成员的event
-        JMessageClient.registerEventReceiver(this);
         mContext = this;
         mChatDetailView = (ChatDetailView) findViewById(IdHelper.getViewID(mContext, "jmui_chat_detail_view"));
         mChatDetailView.initModule();
@@ -263,12 +261,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
         }
         mChatDetailView.setAdapter(mAdapter);
         mChatDetailView.setMembersNum(mMembersList.size());
-    }
-
-    @Override
-    protected void onDestroy() {
-        JMessageClient.unRegisterEventReceiver(this);
-        super.onDestroy();
     }
 
     @Override
