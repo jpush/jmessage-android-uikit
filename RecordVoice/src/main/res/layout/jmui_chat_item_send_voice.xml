@@ -46,7 +46,7 @@
             android:layout_marginRight="5dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/voice_fl"
-            android:text="@string/voice_length"
+            android:text="@string/jmui_voice_length"
             android:textColor="#555555"
             android:textSize="12sp" />
 

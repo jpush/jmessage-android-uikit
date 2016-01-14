@@ -5,7 +5,7 @@ IM SDK UI 组件
 
 ###用法
 
-- 复制RecordVoiceButton到你的项目
+- 复制RecordVoiceButton,IdHelper到你的项目
 - 在XML中加入添加引用,比如:
 ```
     <cn.jmessage.android.uikit.recordvoice.RecordVoiceButton

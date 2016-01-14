@@ -143,7 +143,7 @@ public class ListAdapter extends BaseAdapter {
         holder.headIcon.setImageResource(R.drawable.jmui_head_icon);
         final VoiceMessage msg = mMsgList.get(position);
         int length = msg.getDuration();
-        String voiceLength = length + mContext.getString(R.string.symbol_second);
+        String voiceLength = length + mContext.getString(R.string.jmui_symbol_second);
         holder.voiceLength.setText(voiceLength);
         final String path = msg.getPath();
         //控制语音长度显示，长度增幅随语音长度逐渐缩小
@@ -154,7 +154,7 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(mContext, mContext.getString(R.string.sdcard_not_exist_toast),
+                    Toast.makeText(mContext, mContext.getString(R.string.jmui_sdcard_not_exist_toast),
                             Toast.LENGTH_SHORT).show();
                 } else {
                     // 如果之前存在播放动画，无论这次点击触发的是暂停还是播放，停止上次播放的动画
@@ -195,7 +195,7 @@ public class ListAdapter extends BaseAdapter {
                                 playVoice();
                             }
                         } catch (NullPointerException e) {
-                            Toast.makeText(mActivity, mContext.getString(R.string.file_not_found_toast),
+                            Toast.makeText(mActivity, mContext.getString(R.string.jmui_file_not_found_toast),
                                     Toast.LENGTH_SHORT).show();
                         } catch (IllegalArgumentException e) {
                             e.printStackTrace();
@@ -204,7 +204,7 @@ public class ListAdapter extends BaseAdapter {
                         } catch (IllegalStateException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
-                            Toast.makeText(mActivity, mContext.getString(R.string.file_not_found_toast),
+                            Toast.makeText(mActivity, mContext.getString(R.string.jmui_file_not_found_toast),
                                     Toast.LENGTH_SHORT).show();
                         } finally {
                             try {

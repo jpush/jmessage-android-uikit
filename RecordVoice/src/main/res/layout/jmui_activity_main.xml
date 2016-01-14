@@ -51,7 +51,7 @@
             android:padding="5dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="@string/record_voice_hint"
+            android:text="@string/jmui_record_voice_hint"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
