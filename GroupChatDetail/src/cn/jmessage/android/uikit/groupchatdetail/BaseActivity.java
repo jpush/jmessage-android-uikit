@@ -1,12 +1,18 @@
 package cn.jmessage.android.uikit.groupchatdetail;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.WindowManager;
+
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.UserLogoutEvent;
 
 /**
  * Created by Ken on 2015/3/13.
@@ -18,20 +24,20 @@ import cn.jpush.im.android.api.JMessageClient;
 public class BaseActivity extends Activity {
     private static final String TAG = "BaseActivity";
 
-    protected BaseHandler mHandler;
     protected float mDensity;
     protected int mDensityDpi;
     protected int mAvatarSize;
     protected int mWidth;
     protected int mHeight;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mHandler = new BaseHandler();
         //初始化JMessage-sdk
         JMessageClient.init(this);
+        JMessageClient.registerEventReceiver(this);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         mDensity = dm.density;
@@ -41,15 +47,26 @@ public class BaseActivity extends Activity {
         mAvatarSize = (int) (50 * mDensity);
     }
 
-    public class BaseHandler extends Handler {
+    @Override
+    protected void onDestroy() {
+        JMessageClient.unRegisterEventReceiver(this);
+        super.onDestroy();
+    }
 
+    public void onEventMainThread(UserLogoutEvent event) {
+        Context context = BaseActivity.this;
+        String title = context.getString(IdHelper.getString(context, "jmui_user_logout_dialog_title"));
+        String msg = context.getString(IdHelper.getString(context, "jmui_user_logout_dialog_message"));
+        mDialog = DialogCreator.createBaseCustomDialog(context, title, msg, onClickListener);
+        mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+        mDialog.show();
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
-        public void handleMessage(Message msg) {
-            handleMsg(msg);
+        public void onClick(View v) {
+            mDialog.dismiss();
         }
-    }
-
-    public void handleMsg(Message message) {
-    }
+    };
 
 }

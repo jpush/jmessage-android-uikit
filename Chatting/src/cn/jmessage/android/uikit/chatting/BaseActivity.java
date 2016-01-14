@@ -3,8 +3,6 @@ package cn.jmessage.android.uikit.chatting;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.DisplayMetrics;
 
 import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;

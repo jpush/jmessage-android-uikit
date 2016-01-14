@@ -14,6 +14,7 @@ import cn.jmessage.android.uikit.groupchatdetail.GroupDetailActivity;
 import cn.jmessage.android.uikit.groupchatdetail.HandleResponseCode;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.UserLogoutEvent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.api.BasicCallback;
@@ -35,6 +36,7 @@ public class DemoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jmui_activity_main);
+        JMessageClient.registerEventReceiver(this);
         mGroupDetailBtn = (Button) findViewById(R.id.group_detail_btn);
 
         mLoadingDialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_logging));
@@ -60,22 +62,28 @@ public class DemoActivity extends BaseActivity {
         mGroupDetailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //创建会话,模拟从会话跳转到群聊详情
-                Conversation conv = JMessageClient.getGroupConversation(groupId);
-                if (null == conv) {
-                    conv = Conversation.createGroupConversation(groupId);
+                if (JMessageClient.getMyInfo() != null) {
+                    //创建会话,模拟从会话跳转到群聊详情
+                    Conversation conv = JMessageClient.getGroupConversation(groupId);
+                    if (null == conv) {
+                        conv = Conversation.createGroupConversation(groupId);
+                    }
+                    //由于群组是在服务端创建,所以在进入群聊详情之前要先拿一次GroupInfo,这样sdk会在后台拿GroupInfo,
+                    //因为conv是本地创建的会话.在实际运用中不必如此(实际运用中,都是先创建会话,再加人)
+                    GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+                    Intent intent = new Intent();
+                    //传递groupId, username
+                    intent.putExtra(GROUP_ID, groupId);
+                    intent.putExtra(MY_USERNAME, myName);
+                    intent.setClass(DemoActivity.this, GroupDetailActivity.class);
+                    startActivity(intent);
                 }
-                //由于群组是在服务端创建,所以在进入群聊详情之前要先拿一次GroupInfo,这样sdk会在后台拿GroupInfo,
-                //因为conv是本地创建的会话.在实际运用中不必如此(实际运用中,都是先创建会话,再加人)
-                GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
-                Intent intent = new Intent();
-                //传递groupId, username
-                intent.putExtra(GROUP_ID, groupId);
-                intent.putExtra(MY_USERNAME, myName);
-                intent.setClass(DemoActivity.this, GroupDetailActivity.class);
-                startActivity(intent);
             }
         });
+    }
+
+    public void onEventMainThread(UserLogoutEvent event) {
+
     }
 
     @Override
@@ -88,5 +96,11 @@ public class DemoActivity extends BaseActivity {
     protected void onResume() {
         JPushInterface.onResume(this);
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        JMessageClient.unRegisterEventReceiver(this);
+        super.onDestroy();
     }
 }

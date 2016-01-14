@@ -32,6 +32,22 @@ public class DialogCreator {
         return loadingDialog;
     }
 
+    public static Dialog createBaseCustomDialog(Context context, String title, String text,
+                                                View.OnClickListener onClickListener) {
+        Dialog baseDialog = new Dialog(context, IdHelper.getStyle(context, "jmui_default_dialog_style"));
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View v = inflater.inflate(IdHelper.getLayout(context, "jmui_dialog_base"), null);
+        TextView titleTv = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_title_tv"));
+        TextView textTv = (TextView) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_text_tv"));
+        Button confirmBtn = (Button) v.findViewById(IdHelper.getViewID(context, "jmui_dialog_base_confirm_btn"));
+        titleTv.setText(title);
+        textTv.setText(text);
+        confirmBtn.setOnClickListener(onClickListener);
+        baseDialog.setContentView(v);
+        baseDialog.setCancelable(true);
+        return baseDialog;
+    }
+
     public static Dialog createExitGroupDialog(Context context, View.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);

@@ -36,6 +36,8 @@
     <string name="jmui_modifying_hint">正在修改</string>
     <string name="jmui_modify_success_toast">修改成功</string>
     <string name="jmui_change_pwd_tip">修改密码前请输入原密码</string>
+    <string name="jmui_user_logout_dialog_title">下线提示</string>
+    <string name="jmui_user_logout_dialog_message">您的账号已经在另一台设备上登录，您被迫下线</string>
 
     <!--以下为错误码提示-->
     <string name="jmui_server_800002">AppKey信息为空</string>
