@@ -114,10 +114,11 @@ IM SDK UI 组件
                 android:value="5fbb6030a7c7b853dc199ea0" />
     
 ```
-别忘了配置applicationId或者替换为你的包名, AppKey也要替换为你在极光控制台上注册的应用所对应的AppKey.
+别忘了**配置applicationId或者替换为你的包名, AppKey也要替换为你在极光控制台上注册的应用所对应的AppKey**.
 配置applicationId需要在build.gradle的defaultConfig中声明（注意将此处"io.jchat.android"更换为你的applicationId）:
 ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot3.png)
 注意，AndroidManifest中的package字段值与build.gradle中的ApplicationId需要保持一致。
+**如果你使用的是Eclipse，要将applicationId改为你的包名**
 在application下需要注册ChatActivity
 ```
 <activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"
@@ -142,7 +143,7 @@ sourceSets {
     }
     
 ```
-这样就可以兼容Android Studio和Eclipse。
+这样就可以兼容Android Studio和Eclipse，还要注意将build.gradle中buildToolsVersion的版本修改为你当前的版本。
 
 - 复制相关资源文件到你的项目中（注意不要漏了某些文件）
 - 在你的入口Activity（或者Application与启动Activity，总之先于ChatActivity启动的类中）做相关初始化操作:
