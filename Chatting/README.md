@@ -119,7 +119,8 @@ IM SDK UI 组件
 ![如图](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/screenshot3.png)
 注意，AndroidManifest中的package字段值与build.gradle中的ApplicationId需要保持一致。
 **如果你使用的是Eclipse，要将applicationId改为你的包名**
-在application下需要注册ChatActivity
+
+另外在AndroidManifest的application标签下需要注册ChatActivity
 ```
 <activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"
             android:theme="@style/noTitle"
