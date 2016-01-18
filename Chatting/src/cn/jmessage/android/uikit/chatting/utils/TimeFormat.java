@@ -26,7 +26,7 @@ public class TimeFormat {
     public TimeFormat(Context context, long timeStamp) {
         this.mContext = context;
         this.mTimeStamp = timeStamp;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm ", Locale.CHINA);
         String date = format.format(timeStamp);
     }
 
@@ -35,8 +35,8 @@ public class TimeFormat {
         long currentTime = Configs.getReportTime();
         Date date1 = new Date(currentTime);
         Date date2 = new Date(mTimeStamp);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm ");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.CHINA);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm ", Locale.CHINA);
         String date = format.format(mTimeStamp);
         int hour = Integer.parseInt(date.substring(0, 2));
         //今天

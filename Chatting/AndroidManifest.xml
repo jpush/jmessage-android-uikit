@@ -142,6 +142,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="cn.jmessage.android.uikit.chatting.BaseActivity"/>
         <activity android:name="cn.jmessage.android.uikit.AboutActivity"
             android:theme="@style/noTitle"/>
         <activity android:name="cn.jmessage.android.uikit.chatting.ChatActivity"

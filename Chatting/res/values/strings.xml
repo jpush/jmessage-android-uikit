@@ -19,6 +19,7 @@
     <string name="jmui_file_fetch_failed">文件获取失败</string>
     <string name="jmui_voice_length">10"</string>
     <string name="jmui_symbol_second">\"</string>
+    <string name="jmui_confirm">确定</string>
     <string name="jmui_resend_message_hint">确定重发消息?</string>
     <string name="jmui_cancel">取消</string>
     <string name="jmui_resend_commit">重发</string>
@@ -27,7 +28,11 @@
     <string name="jmui_forward_msg">转发</string>
     <string name="jmui_delete">删除</string>
     <string name="jmui_loading">加载中</string>
-    <string name="jmui_login">登录中</string>
+    <string name="jmui_username">用户名</string>
+    <string name="jmui_registering">注册中</string>
+    <string name="jmui_register_success">注册成功</string>
+    <string name="jmui_logging">登录中</string>
+    <string name="jmui_login_success">登录成功</string>
     <string name="jmui_record_voice_permission_denied">请在应用的权限管理中将使用录音选项设置为允许，
         否则将无法使用录音功能</string>
     <string name="jmui_record_voice_permission_request">若要使用语音功能，请选择允许录音</string>
