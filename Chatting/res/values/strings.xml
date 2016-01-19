@@ -31,6 +31,7 @@
     <string name="jmui_username">用户名</string>
     <string name="jmui_registering">注册中</string>
     <string name="jmui_register_success">注册成功</string>
+    <string name="jmui_login">登录</string>
     <string name="jmui_logging">登录中</string>
     <string name="jmui_login_success">登录成功</string>
     <string name="jmui_record_voice_permission_denied">请在应用的权限管理中将使用录音选项设置为允许，

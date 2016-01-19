@@ -6,6 +6,16 @@
     android:background="#3f80dc"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/jmui_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/jmui_send_picture_btn_bg"
+        android:text="@string/jmui_login"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
     <TextView
         android:id="@+id/jmui_title"
         android:layout_width="wrap_content"

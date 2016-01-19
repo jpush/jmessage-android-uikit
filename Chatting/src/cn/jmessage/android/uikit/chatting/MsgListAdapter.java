@@ -232,7 +232,7 @@ public class MsgListAdapter extends BaseAdapter {
      * 检查图片是否处于创建状态，如果是，则加入发送队列
      */
     private void checkSendingImgMsg() {
-        if (mMsgList.size() > 0) {
+        if (mMsgList != null && mMsgList.size() > 0) {
             for (Message msg : mMsgList) {
                 if (msg.getStatus() == MessageStatus.created
                         && msg.getContentType() == ContentType.image) {

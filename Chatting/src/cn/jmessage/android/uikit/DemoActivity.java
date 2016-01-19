@@ -51,38 +51,43 @@ public class DemoActivity extends BaseActivity {
         JMessageClient.registerEventReceiver(this);
         LinearLayout mSingleChatLl;
         LinearLayout mGroupChatLl;
+        Button mLoginBtn;
         Button mAboutBtn;
         mSingleChatLl = (LinearLayout) findViewById(R.id.jmui_single_chat_ll);
         mGroupChatLl = (LinearLayout) findViewById(R.id.jmui_group_chat_ll);
+        mLoginBtn = (Button) findViewById(R.id.jmui_login_btn);
         mAboutBtn = (Button) findViewById(R.id.jmui_about_btn);
 
         mSingleChatLl.setOnClickListener(listener);
         mGroupChatLl.setOnClickListener(listener);
+        mLoginBtn.setOnClickListener(listener);
         mAboutBtn.setOnClickListener(listener);
 
         //设置用户信息聊天对象及群聊Id, 此处使用了前缀加上随机生成的4个字符组成用户名, 而聊天对象是提前注册好的
         //关于注册在ReadMe中也有提到
-        String username = getUsername(4);
-        mMyName = "uikit_demo_" + username;
         mMyPassword = "1111";
         mTargetId = "user002";
         mGroupId = 10049741;
+        if (JMessageClient.getMyInfo() == null) {
+            String username = getUsername(4);
+            mMyName = "uikit_demo_" + username;
 
-        final Dialog dialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_registering));
-        dialog.show();
-        JMessageClient.register(mMyName, mMyPassword, new BasicCallback() {
-            @Override
-            public void gotResult(int status, String desc) {
-                dialog.dismiss();
-                if (status == 0) {
-                    myHandler.sendEmptyMessage(REGISTER);
-                    Toast.makeText(mContext, mContext.getString(R.string.jmui_username) + " " + mMyName
-                            + mContext.getString(R.string.jmui_register_success), Toast.LENGTH_SHORT).show();
-                } else {
-                    HandleResponseCode.onHandle(mContext, status, false);
+            final Dialog dialog = DialogCreator.createLoadingDialog(this, this.getString(R.string.jmui_registering));
+            dialog.show();
+            JMessageClient.register(mMyName, mMyPassword, new BasicCallback() {
+                @Override
+                public void gotResult(int status, String desc) {
+                    dialog.dismiss();
+                    if (status == 0) {
+                        myHandler.sendEmptyMessage(REGISTER);
+                        Toast.makeText(mContext, mContext.getString(R.string.jmui_username) + " " + mMyName
+                                + mContext.getString(R.string.jmui_register_success), Toast.LENGTH_SHORT).show();
+                    } else {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
@@ -137,6 +142,26 @@ public class DemoActivity extends BaseActivity {
                             }
                         });
 
+                    }
+                    break;
+                case R.id.jmui_login_btn:
+                    if (JMessageClient.getMyInfo() != null) {
+                        mMyName = JMessageClient.getMyInfo().getUserName();
+                        final Dialog dialog = DialogCreator.createLoadingDialog(mContext,
+                                mContext.getString(R.string.jmui_logging));
+                        dialog.show();
+                        JMessageClient.login(mMyName, mMyPassword, new BasicCallback() {
+                            @Override
+                            public void gotResult(int status, String desc) {
+                                dialog.dismiss();
+                                if (status == 0) {
+                                    Toast.makeText(mContext, mMyName + " " + mContext.getString(R.string
+                                            .jmui_login_success), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    HandleResponseCode.onHandle(mContext, status, false);
+                                }
+                            }
+                        });
                     }
                     break;
                 case R.id.jmui_about_btn:
