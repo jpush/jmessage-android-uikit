@@ -1,7 +1,9 @@
 # jmessage-android-ui-components
 IM SDK UI 组件
 
-简单的聊天组件, 实现了单聊和群聊功能.
+简单的聊天组件, 实现了单聊和群聊功能.(由于模拟器不支持录音和拍照，所以没有演示)
+
+![demo 演示](https://github.com/KenChoi1992/jchat-android/raw/dev/JChat/screenshots/demogif.gif)
 
 ###将聊天功能集成到你的项目（Android Studio平台）:
 
