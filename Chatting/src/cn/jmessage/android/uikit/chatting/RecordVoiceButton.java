@@ -31,11 +31,9 @@ import java.util.TimerTask;
 
 import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.content.CustomContent;
 import cn.jpush.im.android.api.content.VoiceContent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
-import cn.jpush.im.api.BasicCallback;
 
 public class RecordVoiceButton extends Button {
 
@@ -44,7 +42,6 @@ public class RecordVoiceButton extends Button {
     private MsgListAdapter mMsgListAdapter;
     private static final int MIN_INTERVAL_TIME = 1000;// 1s
     private final static int CANCEL_RECORD = 5;
-    private final static int SEND_CALLBACK = 6;
     private final static int START_RECORD = 7;
     private final static int RECORD_DENIED_STATUS = 1000;
     //依次为按下录音键坐标、手指离开屏幕坐标、手指移动坐标
@@ -64,6 +61,7 @@ public class RecordVoiceButton extends Button {
 
     private Handler mVolumeHandler;
     public static boolean mIsPressed = false;
+    private ChatView mChatView;
     private Context mContext;
     private Conversation mConv;
     private Timer timer = new Timer();
@@ -97,9 +95,10 @@ public class RecordVoiceButton extends Button {
                 IdHelper.getDrawable(mContext, "jmui_mic_5"), IdHelper.getDrawable(mContext, "jmui_cancel_record")};
     }
 
-    public void initConv(Conversation conv, MsgListAdapter adapter) {
+    public void initConv(Conversation conv, MsgListAdapter adapter, ChatView chatView) {
         this.mConv = conv;
         this.mMsgListAdapter = adapter;
+        mChatView = chatView;
     }
 
     @Override
@@ -257,22 +256,9 @@ public class RecordVoiceButton extends Button {
                     try {
                         VoiceContent content = new VoiceContent(myRecAudioFile, duration);
                         Message msg = mConv.createSendMessage(content);
-                        msg.setOnSendCompleteCallback(new BasicCallback() {
-
-                            @Override
-                            public void gotResult(int status, String desc) {
-                                //Callback返回时刷新界面
-                                android.os.Message msg = myHandler.obtainMessage();
-                                msg.what = SEND_CALLBACK;
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("status", status);
-                                bundle.putString("desc", desc);
-                                msg.setData(bundle);
-                                msg.sendToTarget();
-                            }
-                        });
                         JMessageClient.sendMessage(msg);
                         mMsgListAdapter.addMsgToList(msg);
+                        mChatView.setToBottom();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -435,15 +421,15 @@ public class RecordVoiceButton extends Button {
      */
     private static class ShowVolumeHandler extends Handler {
 
-        private final WeakReference<RecordVoiceButton> mController;
+        private final WeakReference<RecordVoiceButton> mButton;
 
-        public ShowVolumeHandler(RecordVoiceButton controller) {
-            mController = new WeakReference<RecordVoiceButton>(controller);
+        public ShowVolumeHandler(RecordVoiceButton button) {
+            mButton = new WeakReference<>(button);
         }
 
         @Override
         public void handleMessage(android.os.Message msg) {
-            RecordVoiceButton controller = mController.get();
+            RecordVoiceButton controller = mButton.get();
             if (controller != null) {
                 int restTime = msg.getData().getInt("restTime", -1);
                 // 若restTime>0, 进入倒计时
@@ -492,31 +478,18 @@ public class RecordVoiceButton extends Button {
     }
 
     private static class MyHandler extends Handler {
-        private final WeakReference<RecordVoiceButton> mController;
+        private final WeakReference<RecordVoiceButton> lButton;
 
-        public MyHandler(RecordVoiceButton controller) {
-            mController = new WeakReference<RecordVoiceButton>(controller);
+        public MyHandler(RecordVoiceButton button) {
+            lButton = new WeakReference<>(button);
         }
 
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            RecordVoiceButton controller = mController.get();
+            RecordVoiceButton controller = lButton.get();
             if (controller != null) {
                 switch (msg.what) {
-                    case SEND_CALLBACK:
-                        int status = msg.getData().getInt("status", -1);
-                        if (status == 803008) {
-                            CustomContent customContent = new CustomContent();
-                            customContent.setBooleanValue("blackList", true);
-                            Message customMsg = controller.mConv.createSendMessage(customContent);
-                            controller.mMsgListAdapter.addMsgToList(customMsg);
-                            return;
-                        }else if (status != 0) {
-                            HandleResponseCode.onHandle(controller.mContext, status, false);
-                        }
-                        controller.mMsgListAdapter.notifyDataSetChanged();
-                        break;
                     case START_RECORD:
                         if (mIsPressed) {
                             controller.initDialogAndStartRecord();

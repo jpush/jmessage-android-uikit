@@ -9,6 +9,8 @@
     <string name="jmui_picture">图片</string>
     <string name="jmui_take_photo">拍照</string>
     <string name="jmui_video">视频</string>
+    <string name="jmui_location">位置</string>
+    <string name="jmui_business_card">名片</string>
     <string name="jmui_create_file_failed">创建文件失败</string>
     <string name="jmui_record_voice_hint">按住 说话</string>
     <string name="jmui_cancel_record_voice_hint">松开手指，取消发送</string>
@@ -43,10 +45,11 @@
     <string name="jmui_file_not_found_toast">文件丢失</string>
     <string name="jmui_camera_not_prepared">摄像头尚未准备好</string>
     <string name="jmui_about_content">简单的聊天demo, 可以发文字, 语音及拍照发送图片.
-        jmessage—sdk版本为1.1.5</string>
+        jmessage—sdk版本为1.2.1</string>
 
-    <string name="jmui_time_format_hour">HH:mm</string>
-    <string name="jmui_time_format_year">yyyy年-MM月-dd日</string>
+    <string name="jmui_time_format_year_month_day">yyyy年-MM月-dd日</string>
+    <string name="jmui_time_format_accuracy">yyyy-MM-dd HH:mm </string>
+    <string name="jmui_time_format_hours">HH:mm</string>
     <string name="jmui_yesterday">昨天</string>
     <string name="jmui_before_dawn">凌晨</string>
     <string name="jmui_morning">早上</string>
@@ -59,7 +62,7 @@
     <string name="jmui_friday">周五</string>
     <string name="jmui_saturday">周六</string>
     <string name="jmui_sunday">周日</string>
-    <string name="jmui_year">年</string>
+    <string name="year">年</string>
     <string name="jmui_month">月</string>
     <string name="jmui_day">日</string>
 

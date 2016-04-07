@@ -4,17 +4,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,66 +26,82 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
-import cn.jmessage.android.uikit.R;
 import cn.jmessage.android.uikit.chatting.utils.BitmapLoader;
 import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
+import cn.jmessage.android.uikit.chatting.utils.Event;
 import cn.jmessage.android.uikit.chatting.utils.FileHelper;
 import cn.jmessage.android.uikit.chatting.utils.IdHelper;
 import cn.jmessage.android.uikit.chatting.utils.SharePreferenceManager;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.callback.GetGroupInfoCallback;
-import cn.jpush.im.android.api.callback.GetUserInfoCallback;
+import cn.jpush.im.android.api.content.EventNotificationContent;
 import cn.jpush.im.android.api.content.ImageContent;
 import cn.jpush.im.android.api.content.TextContent;
+import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.enums.ConversationType;
 import cn.jpush.im.android.api.event.MessageEvent;
-import cn.jpush.im.android.api.event.UserLogoutEvent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
+import de.greenrobot.event.EventBus;
 
-
-/**
- * 一个简单的聊天界面,可以发送文字,语音及拍照发送图片功能
+/*
+ * 对话界面
  */
 public class ChatActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener,
         ChatView.OnSizeChangedListener, ChatView.OnKeyBoardChangeListener {
 
     private static final String TAG = "ChatActivity";
+    private static final String MEMBERS_COUNT = "membersCount";
+    private static final String GROUP_NAME = "groupName";
+    private static final String DRAFT = "draft";
+    private static final String MsgIDs = "msgIDs";
+    private static final String NAME = "name";
+    public static final String NICKNAME = "nickname";
     private static final String TARGET_ID = "targetId";
+    private static final String TARGET_APP_KEY = "targetAppKey";
     private static final String GROUP_ID = "groupId";
-    public static final String MsgIDs = "msgIDs";
-    public static final String IS_GROUP = "isGroup";
-    public static final int REQUEST_CODE_TAKE_PHOTO = 4;
-    public static final int RESULT_CODE_SELECT_PICTURE = 8;
-    private ChatView mChatView;
-    private MsgListAdapter mChatAdapter;
-    Conversation mConv;
+    private static final int REQUEST_CODE_TAKE_PHOTO = 4;
+    private static final int REQUEST_CODE_SELECT_PICTURE = 6;
+    private static final int RESULT_CODE_SELECT_PICTURE = 8;
+    private static final int REQUEST_CODE_CHAT_DETAIL = 14;
+    private static final int RESULT_CODE_CHAT_DETAIL = 15;
+    private static final int RESULT_CODE_FRIEND_INFO = 17;
+    private static final int REFRESH_LAST_PAGE = 0x1023;
+    private static final int REFRESH_CHAT_TITLE = 0x1024;
+    private static final int REFRESH_GROUP_NAME = 0x1025;
+    private static final int REFRESH_GROUP_NUM = 0x1026;
+
+    private final UIHandler mUIHandler = new UIHandler(this);
+    private boolean mIsSingle = true;
     private boolean isInputByKeyBoard = true;
     private boolean mShowSoftInput = false;
-    private static final int REFRESH_LAST_PAGE = 1023;
+    private MsgListAdapter mChatAdapter;
+    private ChatView mChatView;
+    private Context mContext;
+    private Conversation mConv;
+    private Dialog mDialog;
+    private MyReceiver mReceiver;
+    private long mGroupId;
+    private String mGroupName;
+    private GroupInfo mGroupInfo;
     private String mTargetId;
+    private String mTargetAppKey;
     private String mPhotoPath = null;
-    private final MyHandler myHandler = new MyHandler(this);
+
     Window mWindow;
     InputMethodManager mImm;
-    private MyReceiver mReceiver;
-    private Context mContext;
-    private long mGroupId;
-    private boolean mIsSingle;
-    private Dialog mDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(IdHelper.getLayout(this, "jmui_activity_chat"));
         mChatView = (ChatView) findViewById(IdHelper.getViewID(this, "jmui_chat_view"));
-        mChatView.initModule();
-        mContext = this;
-        //注册接收消息(成为订阅者), 注册后可以直接重写onEvent方法接收消息
-        JMessageClient.registerEventReceiver(this);
+        mChatView.initModule(mDensity, mDensityDpi);
         this.mWindow = getWindow();
         this.mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         mChatView.setListeners(this);
@@ -92,32 +109,41 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mChatView.setOnSizeChangedListener(this);
         mChatView.setOnKbdStateListener(this);
         initReceiver();
+
         Intent intent = getIntent();
         mTargetId = intent.getStringExtra(TARGET_ID);
+        mTargetAppKey = intent.getStringExtra(TARGET_APP_KEY);
         if (!TextUtils.isEmpty(mTargetId)) {
             mIsSingle = true;
-            JMessageClient.getUserInfo(mTargetId, new GetUserInfoCallback() {
-                @Override
-                public void gotResult(int status, String desc, UserInfo userInfo) {
-                    if (status == 0) {
-                        mChatView.setChatTitle(userInfo.getUserName());
-                    }
+            mConv = JMessageClient.getSingleConversation(mTargetId, mTargetAppKey);
+            if (mConv != null) {
+                UserInfo userInfo = (UserInfo)mConv.getTargetInfo();
+                if (TextUtils.isEmpty(userInfo.getNickname())) {
+                    mChatView.setChatTitle(userInfo.getUserName());
+                }else {
+                    mChatView.setChatTitle(userInfo.getNickname());
                 }
-            });
-
-            mConv = JMessageClient.getSingleConversation(mTargetId);
-            if (mConv == null) {
-                mConv = Conversation.createSingleConversation(mTargetId);
+            } else {
+                mConv = Conversation.createSingleConversation(mTargetId, mTargetAppKey);
+                UserInfo userInfo = (UserInfo)mConv.getTargetInfo();
+                if (TextUtils.isEmpty(userInfo.getNickname())) {
+                    mChatView.setChatTitle(userInfo.getUserName());
+                }else {
+                    mChatView.setChatTitle(userInfo.getNickname());
+                }
             }
-            mChatAdapter = new MsgListAdapter(mContext, mTargetId);
+            mChatAdapter = new MsgListAdapter(mContext, mTargetId, mTargetAppKey, longClickListener);
         } else {
             mIsSingle = false;
             mGroupId = intent.getLongExtra(GROUP_ID, 0);
             Log.d(TAG, "GroupId : " + mGroupId);
+
+            //UIKit 直接用getGroupInfo更新标题,而不用考虑从创建群聊跳转过来
             JMessageClient.getGroupInfo(mGroupId, new GetGroupInfoCallback() {
                 @Override
                 public void gotResult(int status, String desc, GroupInfo groupInfo) {
                     if (status == 0) {
+                        mGroupInfo = groupInfo;
                         mChatView.setChatTitle(groupInfo.getGroupName());
                     }
                 }
@@ -126,19 +152,22 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             if (mConv == null) {
                 mConv = Conversation.createGroupConversation(mGroupId);
             }
-            mChatAdapter = new MsgListAdapter(mContext, mGroupId);
+            mChatAdapter = new MsgListAdapter(mContext, mGroupId, longClickListener);
+        }
+
+        String draft = intent.getStringExtra(DRAFT);
+        if (draft != null && !TextUtils.isEmpty(draft)) {
+            mChatView.setInputText(draft);
         }
         mChatView.setChatListAdapter(mChatAdapter);
 
 
         mChatAdapter.initMediaPlayer();
-
-
         //监听下拉刷新
         mChatView.getListView().setOnDropDownListener(new DropDownListView.OnDropDownListener() {
             @Override
             public void onDropDown() {
-                myHandler.sendEmptyMessageDelayed(REFRESH_LAST_PAGE, 1000);
+                mUIHandler.sendEmptyMessageDelayed(REFRESH_LAST_PAGE, 1000);
             }
         });
         // 滑动到底部
@@ -170,7 +199,24 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         if (v.getId() == IdHelper.getViewID(mContext, "jmui_return_btn")) {
+            mConv.resetUnreadCount();
+            dismissSoftInput();
+            JMessageClient.exitConversation();
+            //发送保存为草稿事件到会话列表
+            if (mIsSingle) {
+                EventBus.getDefault().post(new Event.DraftEvent(mTargetId, mTargetAppKey,
+                        mChatView.getChatInput()));
+            } else {
+                EventBus.getDefault().post(new Event.DraftEvent(mGroupId, mChatView.getChatInput()));
+            }
             finish();
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_right_btn")) {
+            if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
+                mChatView.dismissMoreMenu();
+            }
+            dismissSoftInput();
+            //TODO
+//            startChatDetailActivity(mTargetId, mTargetAppKey, mGroupId);
             // 切换输入
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_switch_voice_ib")) {
             mChatView.dismissMoreMenu();
@@ -181,7 +227,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 showSoftInputAndDismissMenu();
             } else {
                 //否则切换到语音输入
-                mChatView.notKeyBoard(mConv, mChatAdapter);
+                mChatView.notKeyBoard(mConv, mChatAdapter, mChatView);
                 if (mShowSoftInput) {
                     if (mImm != null) {
                         mImm.hideSoftInputFromWindow(mChatView.getInputView().getWindowToken(), 0); //强制隐藏键盘
@@ -190,7 +236,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 } else if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                     mChatView.dismissMoreMenu();
                 }
-                Log.i("ChatController", "setConversation success");
+                Log.i(TAG, "setConversation success");
             }
             // 发送文本消息
         } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_send_msg_btn")) {
@@ -226,14 +272,23 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                 mChatView.dismissMoreMenu();
             }
-        } else {
+        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_pick_from_local_btn")){
             if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
                 mChatView.dismissMoreMenu();
             }
             Intent intent = new Intent();
-            intent.putExtra(TARGET_ID, mTargetId);
-            //TODO 发送本地图片
-//                mContext.startPickPictureTotalActivity(intent);
+            if (mIsSingle) {
+                intent.putExtra(TARGET_ID, mTargetId);
+                intent.putExtra(TARGET_APP_KEY, mTargetAppKey);
+            } else {
+                intent.putExtra(GROUP_ID, mGroupId);
+            }
+//            if (!FileHelper.isSdCardExist()) {
+//                Toast.makeText(this, IdHelper.getString(mContext, "sdcard_not_exist_toast"), Toast.LENGTH_SHORT).show();
+//            } else {
+//                intent.setClass(this, PickPictureTotalActivity.class);
+//                startActivityForResult(intent, REQUEST_CODE_SELECT_PICTURE);
+//            }
         }
     }
 
@@ -245,12 +300,12 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             try {
                 startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
             } catch (ActivityNotFoundException anf) {
-                Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
-                                "jmui_camera_not_prepared")), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, IdHelper.getString(mContext, "camera_not_prepared"),
+                        Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
-                            "jmui_sdcard_not_exist_toast")), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, IdHelper.getString(mContext, "sdcard_not_exist_toast"),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -260,23 +315,8 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      * @param data intent
      */
     private void handleImgRefresh(Intent data) {
-        String targetId = data.getStringExtra(TARGET_ID);
-        long groupId = data.getLongExtra(GROUP_ID, 0);
-        Log.i(TAG, "Refresh Image groupId: " + groupId);
-        //判断是否在当前会话中发图片
-        if (targetId != null) {
-            if (targetId.equals(mTargetId)) {
-                mChatAdapter.setSendImg(targetId, data.getIntArrayExtra(MsgIDs));
-                mChatView.setToBottom();
-            }
-        } else if (groupId != 0) {
-            if (groupId == mGroupId) {
-                mChatAdapter.setSendImg(groupId, data.getIntArrayExtra(MsgIDs));
-                mChatView.setToBottom();
-            }
-        }
-
-
+        mChatAdapter.setSendImg(data.getIntArrayExtra(MsgIDs));
+        mChatView.setToBottom();
     }
 
     @Override
@@ -294,6 +334,14 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                 mConv.resetUnreadCount();
             }
         }
+        //发送保存为草稿事件到会话列表界面,作为UIKit使用可以去掉
+        if (mIsSingle) {
+            EventBus.getDefault().post(new Event.DraftEvent(mTargetId,
+                    mTargetAppKey, mChatView.getChatInput()));
+        } else {
+            EventBus.getDefault().post(new Event.DraftEvent(mGroupId, mChatView.getChatInput()));
+        }
+
         super.onBackPressed();
     }
 
@@ -302,18 +350,17 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      */
     @Override
     protected void onDestroy() {
-        //取消订阅
-        JMessageClient.unRegisterEventReceiver(this);
         unregisterReceiver(mReceiver);
         mChatAdapter.releaseMediaPlayer();
         mChatView.releaseRecorder();
+        mUIHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
         RecordVoiceButton.mIsPressed = false;
-        JMessageClient.exitConversaion();
+        JMessageClient.exitConversation();
         Log.i(TAG, "[Life cycle] - onPause");
         super.onPause();
     }
@@ -324,33 +371,29 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         if (mChatView.getMoreMenu().getVisibility() == View.VISIBLE) {
             mChatView.dismissMoreMenu();
         }
-        if (mConv != null)
+        if (mConv != null) {
             mConv.resetUnreadCount();
+        }
         Log.i(TAG, "[Life cycle] - onStop");
         super.onStop();
     }
 
     @Override
     protected void onResume() {
-        if (!RecordVoiceButton.mIsPressed)
+        if (!RecordVoiceButton.mIsPressed) {
             mChatView.dismissRecordDialog();
-        String targetID = getIntent().getStringExtra(TARGET_ID);
-        boolean isGroup = getIntent().getBooleanExtra(IS_GROUP, false);
-        if (isGroup) {
-            try {
-                long groupID = getIntent().getLongExtra(GROUP_ID, 0);
-                if (groupID == 0) {
-                    JMessageClient.enterGroupConversation(Long.parseLong(targetID));
-                } else JMessageClient.enterGroupConversation(groupID);
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
+        }
+        String targetId = getIntent().getStringExtra(TARGET_ID);
+        if (!mIsSingle) {
+            long groupId = getIntent().getLongExtra(GROUP_ID, 0);
+            if (groupId != 0) {
+                JMessageClient.enterGroupConversation(groupId);
             }
-        } else if (null != targetID) {
-            JMessageClient.enterSingleConversaion(targetID);
+        } else if (null != targetId) {
+            String appKey = getIntent().getStringExtra(TARGET_APP_KEY);
+            JMessageClient.enterSingleConversation(targetId, appKey);
         }
-        if (mChatAdapter != null) {
-            mChatAdapter.initMediaPlayer();
-        }
+        mChatAdapter.initMediaPlayer();
         Log.i(TAG, "[Life cycle] - onResume");
         super.onResume();
     }
@@ -370,29 +413,75 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
         if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
+            final Conversation conv = mConv;
             try {
-                Bitmap bitmap = BitmapLoader.getBitmapFromFile(mPhotoPath, 720, 1280);
+                String originPath = mPhotoPath;
+                Bitmap bitmap = BitmapLoader.getBitmapFromFile(originPath, 720, 1280);
                 ImageContent.createImageContentAsync(bitmap, new ImageContent.CreateImageContentCallback() {
                     @Override
                     public void gotResult(int status, String desc, ImageContent imageContent) {
                         if (status == 0) {
-                            Message msg = mConv.createSendMessage(imageContent);
+                            Message msg = conv.createSendMessage(imageContent);
                             Intent intent = new Intent();
                             intent.putExtra(MsgIDs, new int[]{msg.getId()});
-                            if (mConv.getType() == ConversationType.group) {
-                                intent.putExtra(GROUP_ID, mGroupId);
-                            } else {
-                                intent.putExtra(TARGET_ID, ((UserInfo) mConv.getTargetInfo()).getUserName());
-                            }
                             handleImgRefresh(intent);
                         }
                     }
                 });
-            } catch (NullPointerException e) {
+            }  catch (NullPointerException e) {
                 Log.i(TAG, "onActivityResult unexpected result");
             }
         } else if (resultCode == RESULT_CODE_SELECT_PICTURE) {
             handleImgRefresh(data);
+            //如果作为UIKit使用,去掉以下几段代码
+        } else if (resultCode == RESULT_CODE_CHAT_DETAIL) {
+            if (!mIsSingle) {
+                GroupInfo groupInfo = (GroupInfo) mConv.getTargetInfo();
+                UserInfo userInfo = groupInfo.getGroupMemberInfo(JMessageClient.getMyInfo().getUserName());
+                //如果自己在群聊中，同时显示群人数
+                if (userInfo != null) {
+                    if (TextUtils.isEmpty(data.getStringExtra(NAME))) {
+                        mChatView.setChatTitle(IdHelper.getString(mContext, "group"),
+                                data.getIntExtra(MEMBERS_COUNT, 0));
+                    } else {
+                        mChatView.setChatTitle(data.getStringExtra(NAME),
+                                data.getIntExtra(MEMBERS_COUNT, 0));
+                    }
+                } else {
+                    if (TextUtils.isEmpty(data.getStringExtra(NAME))) {
+                        mChatView.setChatTitle(IdHelper.getString(mContext, "group"));
+                        mChatView.dismissGroupNum();
+                    } else {
+                        mChatView.setChatTitle(data.getStringExtra(NAME));
+                        mChatView.dismissGroupNum();
+                    }
+                }
+
+            } else mChatView.setChatTitle(data.getStringExtra(NAME));
+            if (data.getBooleanExtra("deleteMsg", false)) {
+                mChatAdapter.clearMsgList();
+            }
+        } else if (resultCode == RESULT_CODE_FRIEND_INFO) {
+            if (mIsSingle) {
+                String nickname = data.getStringExtra(NICKNAME);
+                if (!TextUtils.isEmpty(nickname)) {
+                    mChatView.setChatTitle(nickname);
+                }
+            }
+        }
+    }
+
+    private void dismissSoftInput() {
+        if (mShowSoftInput) {
+            if (mImm != null) {
+                mImm.hideSoftInputFromWindow(mChatView.getInputView().getWindowToken(), 0);
+                mShowSoftInput = false;
+            }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -432,11 +521,11 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         mShowSoftInput = false;
     }
 
-    private static class MyHandler extends Handler {
+    private static class UIHandler extends Handler {
         private final WeakReference<ChatActivity> mActivity;
 
-        public MyHandler(ChatActivity controller) {
-            mActivity = new WeakReference<ChatActivity>(controller);
+        public UIHandler(ChatActivity activity) {
+            mActivity = new WeakReference<>(activity);
         }
 
         @Override
@@ -449,14 +538,49 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                         activity.mChatAdapter.dropDownToRefresh();
                         activity.mChatView.getListView().onDropDownComplete();
                         if (activity.mChatAdapter.isHasLastPage()) {
-                            activity.mChatView.getListView()
-                                    .setSelection(activity.mChatAdapter.getOffset());
+                            if (Build.VERSION.SDK_INT >= 21) {
+                                activity.mChatView.getListView()
+                                        .setSelectionFromTop(activity.mChatAdapter.getOffset(),
+                                                activity.mChatView.getListView().getHeaderHeight());
+                            } else {
+                                activity.mChatView.getListView().setSelection(activity.mChatAdapter
+                                        .getOffset());
+                            }
                             activity.mChatAdapter.refreshStartPosition();
                         } else {
                             activity.mChatView.getListView().setSelection(0);
                         }
                         activity.mChatView.getListView()
                                 .setOffset(activity.mChatAdapter.getOffset());
+                        break;
+                    case REFRESH_GROUP_NAME:
+                        if (activity.mConv != null) {
+                            int num = msg.getData().getInt(MEMBERS_COUNT);
+                            String groupName = msg.getData().getString(GROUP_NAME);
+                            activity.mChatView.setChatTitle(groupName, num);
+                        }
+                        break;
+                    case REFRESH_GROUP_NUM:
+                        int num = msg.getData().getInt(MEMBERS_COUNT);
+                        activity.mChatView.setChatTitle(IdHelper.getString(activity, "group"), num);
+                        break;
+                    case REFRESH_CHAT_TITLE:
+                        if (activity.mGroupInfo != null) {
+                            //检查自己是否在群组中
+                            UserInfo info = activity.mGroupInfo.getGroupMemberInfo(JMessageClient
+                                    .getMyInfo().getUserName());
+                            if (!TextUtils.isEmpty(activity.mGroupInfo.getGroupName())){
+                                activity.mGroupName = activity.mGroupInfo.getGroupName();
+                                if (info != null){
+                                    activity.mChatView.setChatTitle(activity.mGroupName,
+                                            activity.mGroupInfo.getGroupMembers().size());
+                                    activity.mChatView.showRightBtn();
+                                }else {
+                                    activity.mChatView.setChatTitle(activity.mGroupName);
+                                    activity.mChatView.dismissRightBtn();
+                                }
+                            }
+                        }
                         break;
                 }
             }
@@ -495,18 +619,71 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
      */
     public void onEvent(MessageEvent event) {
         final Message msg = event.getMessage();
-        Log.d(TAG, "收到消息 msg.toString() " + msg.toString());
         //若为群聊相关事件，如添加、删除群成员
         Log.i(TAG, event.getMessage().toString());
+        if (msg.getContentType() == ContentType.eventNotification) {
+            GroupInfo groupInfo = (GroupInfo) msg.getTargetInfo();
+            long groupId = groupInfo.getGroupID();
+            UserInfo myInfo = JMessageClient.getMyInfo();
+            EventNotificationContent.EventNotificationType type = ((EventNotificationContent) msg
+                    .getContent()).getEventNotificationType();
+            if (groupId == mGroupId) {
+                switch (type) {
+                    case group_member_added:
+                        //添加群成员事件
+                        List<String> userNames = ((EventNotificationContent) msg.getContent()).getUserNames();
+                        //群主把当前用户添加到群聊，则显示聊天详情按钮
+                        refreshGroupNum();
+                        if (userNames.contains(myInfo.getNickname()) || userNames.contains(myInfo.getUserName())) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mChatView.showRightBtn();
+                                }
+                            });
+                        }
+
+                        break;
+                    case group_member_removed:
+                        //删除群成员事件
+                        userNames = ((EventNotificationContent) msg.getContent()).getUserNames();
+                        //群主删除了当前用户，则隐藏聊天详情按钮
+                        if (userNames.contains(myInfo.getNickname()) || userNames.contains(myInfo.getUserName())) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mChatView.dismissRightBtn();
+                                    GroupInfo groupInfo = (GroupInfo) mConv.getTargetInfo();
+                                    if (TextUtils.isEmpty(groupInfo.getGroupName())) {
+                                        mChatView.setChatTitle(IdHelper.getString(mContext, "group"));
+                                    } else {
+                                        mChatView.setChatTitle(groupInfo.getGroupName());
+                                    }
+                                    mChatView.dismissGroupNum();
+                                }
+                            });
+                        } else {
+                            refreshGroupNum();
+                        }
+
+                        break;
+                    case group_member_exit:
+                        refreshGroupNum();
+                        break;
+                }
+            }
+        }
         //刷新消息
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 //收到消息的类型为单聊
                 if (msg.getTargetType() == ConversationType.single) {
-                    String targetId = ((UserInfo) msg.getTargetInfo()).getUserName();
+                    UserInfo userInfo = (UserInfo) msg.getTargetInfo();
+                    String targetId = userInfo.getUserName();
+                    String appKey = userInfo.getAppKey();
                     //判断消息是否在当前会话中
-                    if (targetId.equals(mTargetId)) {
+                    if (mIsSingle && targetId.equals(mTargetId) && appKey.equals(mTargetAppKey)) {
                         Message lastMsg = mChatAdapter.getLastMsg();
                         //收到的消息和Adapter中最后一条消息比较，如果最后一条为空或者不相同，则加入到MsgList
                         if (lastMsg == null || msg.getId() != lastMsg.getId()) {
@@ -517,7 +694,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
                     }
                 } else {
                     long groupId = ((GroupInfo) msg.getTargetInfo()).getGroupID();
-                    if (!mIsSingle && groupId == mGroupId) {
+                    if (groupId == mGroupId) {
                         Message lastMsg = mChatAdapter.getLastMsg();
                         if (lastMsg == null || msg.getId() != lastMsg.getId()) {
                             mChatAdapter.addMsgToList(msg);
@@ -530,23 +707,93 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-    /**
-     * 收到被踢下线事件
-     * @param event 登出事件
-     */
-    public void onEventMainThread(UserLogoutEvent event) {
-        String title = mContext.getString(R.string.jmui_user_logout_dialog_title);
-        String msg = mContext.getString(R.string.jmui_user_logout_dialog_message);
-        mDialog = DialogCreator.createBaseCustomDialog(mContext, title, msg, onClickListener);
-        mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
-        mDialog.show();
+    private void refreshGroupNum() {
+        Conversation conv = JMessageClient.getGroupConversation(mGroupId);
+        GroupInfo groupInfo = (GroupInfo) conv.getTargetInfo();
+        if (!TextUtils.isEmpty(groupInfo.getGroupName())) {
+            android.os.Message handleMessage = mUIHandler.obtainMessage();
+            handleMessage.what = REFRESH_GROUP_NAME;
+            Bundle bundle = new Bundle();
+            bundle.putString(GROUP_NAME, groupInfo.getGroupName());
+            bundle.putInt(MEMBERS_COUNT, groupInfo.getGroupMembers().size());
+            handleMessage.setData(bundle);
+            handleMessage.sendToTarget();
+        } else {
+            android.os.Message handleMessage = mUIHandler.obtainMessage();
+            handleMessage.what = REFRESH_GROUP_NUM;
+            Bundle bundle = new Bundle();
+            bundle.putInt(MEMBERS_COUNT, groupInfo.getGroupMembers().size());
+            handleMessage.setData(bundle);
+            handleMessage.sendToTarget();
+        }
     }
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
+    private MsgListAdapter.ContentLongClickListener longClickListener = new MsgListAdapter.ContentLongClickListener() {
         @Override
-        public void onClick(View v) {
-            mDialog.dismiss();
-            finish();
+        public void onContentLongClick(final int position, View view) {
+            Log.i(TAG, "long click position" + position);
+            final Message msg = mChatAdapter.getMessage(position);
+            UserInfo userInfo = msg.getFromUser();
+            if (msg.getContentType() != ContentType.image) {
+                // 长按文本弹出菜单
+                String name = userInfo.getNickname();
+                View.OnClickListener listener = new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (v.getId() == IdHelper.getViewID(mContext, "jmui_copy_msg_btn")) {
+                            if (msg.getContentType() == ContentType.text) {
+                                final String content = ((TextContent) msg.getContent()).getText();
+                                if (Build.VERSION.SDK_INT > 11) {
+                                    ClipboardManager clipboard = (ClipboardManager) mContext
+                                            .getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("Simple text", content);
+                                    clipboard.setPrimaryClip(clip);
+                                } else {
+                                    ClipboardManager clipboard = (ClipboardManager) mContext
+                                            .getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboard.getText();// 设置Clipboard 的内容
+                                    if (clipboard.hasText()) {
+                                        clipboard.getText();
+                                    }
+                                }
+
+                                Toast.makeText(mContext, IdHelper.getString(mContext, "jmui_copy_toast"),
+                                        Toast.LENGTH_SHORT).show();
+                                mDialog.dismiss();
+                            }
+                        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_forward_msg_btn")) {
+                            mDialog.dismiss();
+                        } else {
+                            mConv.deleteMessage(msg.getId());
+                            mChatAdapter.removeMessage(position);
+                            mDialog.dismiss();
+                        }
+                    }
+                };
+                boolean hide = msg.getContentType() == ContentType.voice;
+                mDialog = DialogCreator.createLongPressMessageDialog(mContext, name, hide, listener);
+                mDialog.show();
+                mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+            } else {
+                String name = msg.getFromUser().getNickname();
+                View.OnClickListener listener = new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (v.getId() == IdHelper.getViewID(mContext, "jmui_delete_msg_btn")) {
+                            mConv.deleteMessage(msg.getId());
+                            mChatAdapter.removeMessage(position);
+                            mDialog.dismiss();
+                        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_forward_msg_btn")) {
+                            mDialog.dismiss();
+                        }
+                    }
+                };
+                mDialog = DialogCreator.createLongPressMessageDialog(mContext, name, true, listener);
+                mDialog.show();
+                mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
+            }
         }
     };
 

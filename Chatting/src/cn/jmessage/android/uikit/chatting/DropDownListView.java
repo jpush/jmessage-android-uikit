@@ -26,7 +26,7 @@ public class DropDownListView extends ListView implements OnScrollListener {
 
     private boolean isDropDownStyle = true;
     private Context context;
-    public static final int PAGE_MESSAGE_COUNT = 18;
+    private static final int PAGE_MESSAGE_COUNT = 18;
 
     /**
      * header layout view
@@ -367,5 +367,9 @@ public class DropDownListView extends ListView implements OnScrollListener {
             isDropDownStyle = ta.getBoolean(1, true);
             ta.recycle();
         }
+    }
+
+    public int getHeaderHeight() {
+        return headerOriginalHeight;
     }
 }

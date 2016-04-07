@@ -3,9 +3,8 @@ package cn.jmessage.android.uikit.chatting;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -13,7 +12,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -32,19 +30,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
+import cn.jmessage.android.uikit.chatting.utils.FileHelper;
+import cn.jmessage.android.uikit.chatting.utils.HandleResponseCode;
 import cn.jmessage.android.uikit.chatting.utils.IdHelper;
+import cn.jmessage.android.uikit.chatting.utils.TimeFormat;
 import cn.jpush.im.android.api.callback.GetAvatarBitmapCallback;
 import cn.jpush.im.android.api.content.CustomContent;
 import cn.jpush.im.android.api.content.EventNotificationContent;
 import cn.jpush.im.android.api.enums.MessageStatus;
 import cn.jpush.im.android.api.model.GroupInfo;
 import cn.jpush.im.android.api.model.UserInfo;
-
-import cn.jmessage.android.uikit.chatting.utils.DialogCreator;
-import cn.jmessage.android.uikit.chatting.utils.FileHelper;
-import cn.jmessage.android.uikit.chatting.utils.HandleResponseCode;
-import cn.jmessage.android.uikit.chatting.utils.TimeFormat;
-
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -72,7 +68,7 @@ import cn.jpush.im.api.BasicCallback;
 public class MsgListAdapter extends BaseAdapter {
 
     private static final String TAG = "MsgListAdapter";
-    public static final int PAGE_MESSAGE_COUNT = 18;
+    private static final int PAGE_MESSAGE_COUNT = 18;
     private Context mContext;
     private String mTargetId;
     private Conversation mConv;
@@ -83,18 +79,23 @@ public class MsgListAdapter extends BaseAdapter {
     private boolean mIsGroup = false;
     private long mGroupId;
     private int mPosition = -1;// 和mSetData一起组成判断播放哪条录音的依据
-    // 7种Item的类型
+    // 9种Item的类型
     // 文本
     private final int TYPE_RECEIVE_TXT = 0;
     private final int TYPE_SEND_TXT = 1;
     // 图片
     private final int TYPE_SEND_IMAGE = 2;
     private final int TYPE_RECEIVER_IMAGE = 3;
+    // 位置
+    private final int TYPE_SEND_LOCATION = 4;
+    private final int TYPE_RECEIVER_LOCATION = 5;
     // 语音
-    private final int TYPE_SEND_VOICE = 4;
-    private final int TYPE_RECEIVER_VOICE = 5;
+    private final int TYPE_SEND_VOICE = 6;
+    private final int TYPE_RECEIVER_VOICE = 7;
+    //群成员变动
+    private final int TYPE_GROUP_CHANGE = 8;
     //自定义消息
-    private final int TYPE_CUSTOM_TXT = 6;
+    private final int TYPE_CUSTOM_TXT = 9;
     private final MediaPlayer mp = new MediaPlayer();
     private AnimationDrawable mVoiceAnimation;
     private FileInputStream mFIS;
@@ -115,16 +116,25 @@ public class MsgListAdapter extends BaseAdapter {
     private float mDensity;
     private int mWidth;
     private Animation mSendingAnim;
+    private ContentLongClickListener mLongClickListener;
+    private String mTargetAppKey;
 
-    public MsgListAdapter(Context context, String targetId) {
+    public MsgListAdapter(Context context, String targetId, String appKey,
+                          ContentLongClickListener longClickListener) {
         initData(context);
         this.mTargetId = targetId;
-        this.mConv = JMessageClient.getSingleConversation(mTargetId);
+        if (appKey != null) {
+            mTargetAppKey = appKey;
+            this.mConv = JMessageClient.getSingleConversation(mTargetId, appKey);
+        } else {
+            this.mConv = JMessageClient.getSingleConversation(mTargetId);
+        }
+        this.mLongClickListener = longClickListener;
         this.mMsgList = mConv.getMessagesFromNewest(0, mOffset);
         reverse(mMsgList);
         mStart = mOffset;
-        UserInfo userInfo = (UserInfo)mConv.getTargetInfo();
-        if (!TextUtils.isEmpty(userInfo.getAvatar())){
+        UserInfo userInfo = (UserInfo) mConv.getTargetInfo();
+        if (!TextUtils.isEmpty(userInfo.getAvatar())) {
             userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
                 @Override
                 public void gotResult(int status, String desc, Bitmap bitmap) {
@@ -139,21 +149,22 @@ public class MsgListAdapter extends BaseAdapter {
         checkSendingImgMsg();
     }
 
-    public MsgListAdapter(Context context, long groupId) {
+    private void reverse(List<Message> list) {
+        if (list.size() >0 ){
+            Collections.reverse(list);
+        }
+    }
+
+    public MsgListAdapter(Context context, long groupId, ContentLongClickListener longClickListener) {
         initData(context);
         this.mGroupId = groupId;
         this.mIsGroup = true;
-        this.mConv = JMessageClient.getGroupConversation(mGroupId);
+        this.mLongClickListener = longClickListener;
+        this.mConv = JMessageClient.getGroupConversation(groupId);
         this.mMsgList = mConv.getMessagesFromNewest(0, mOffset);
         reverse(mMsgList);
         mStart = mOffset;
         checkSendingImgMsg();
-    }
-
-    private void reverse(List<Message> list) {
-        if (list != null) {
-            Collections.reverse(list);
-        }
     }
 
     private void initData(Context context) {
@@ -161,14 +172,14 @@ public class MsgListAdapter extends BaseAdapter {
         mActivity = (Activity) context;
         DisplayMetrics dm = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        mDensity = dm.density;
         mWidth = dm.widthPixels;
+        mDensity = dm.density;
+        mInflater = LayoutInflater.from(mContext);
 
         mSendingAnim = AnimationUtils.loadAnimation(mContext, IdHelper.getAnim(mContext, "jmui_rotate"));
         LinearInterpolator lin = new LinearInterpolator();
         mSendingAnim.setInterpolator(lin);
 
-        mInflater = LayoutInflater.from(mContext);
         AudioManager audioManager = (AudioManager) mContext
                 .getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_NORMAL);
@@ -232,20 +243,23 @@ public class MsgListAdapter extends BaseAdapter {
      * 检查图片是否处于创建状态，如果是，则加入发送队列
      */
     private void checkSendingImgMsg() {
-        if (mMsgList != null && mMsgList.size() > 0) {
-            for (Message msg : mMsgList) {
-                if (msg.getStatus() == MessageStatus.created
-                        && msg.getContentType() == ContentType.image) {
-                    mMsgQueue.offer(msg);
-                }
+        for (Message msg : mMsgList) {
+            if (msg.getStatus() == MessageStatus.created
+                    && msg.getContentType() == ContentType.image) {
+                mMsgQueue.offer(msg);
             }
         }
     }
 
     //发送图片 将图片加入发送队列
-    public void setSendImg(String targetId, int[] msgIds) {
+    public void setSendImg(int[] msgIds) {
         Message msg;
-        mConv = JMessageClient.getSingleConversation(targetId);
+        if (mIsGroup) {
+            mConv = JMessageClient.getGroupConversation(mGroupId);
+        } else {
+            mConv = JMessageClient.getSingleConversation(mTargetId, mTargetAppKey);
+            Log.d(TAG, "mTargetAppKey: " + mTargetAppKey);
+        }
         for (int msgId : msgIds) {
             msg = mConv.getMessage(msgId);
             if (msg != null) {
@@ -255,32 +269,16 @@ public class MsgListAdapter extends BaseAdapter {
             }
         }
 
-        Message message = mMsgQueue.element();
-        sendNextImgMsg(message);
-        notifyDataSetChanged();
-    }
-
-    public void setSendImg(long groupId, int[] msgIds) {
-        Message msg;
-        mConv = JMessageClient.getGroupConversation(groupId);
-        for (int msgId : msgIds) {
-            msg = mConv.getMessage(msgId);
-            if (msg != null) {
-                mMsgList.add(msg);
-                incrementStartPosition();
-                mMsgQueue.offer(msg);
-            }
+        if (mMsgQueue.size() > 0) {
+            Message message = mMsgQueue.element();
+            sendNextImgMsg(message);
+            notifyDataSetChanged();
         }
-
-        Message message = mMsgQueue.element();
-        sendNextImgMsg(message);
-        notifyDataSetChanged();
-
     }
-
 
     /**
      * 从发送队列中出列，并发送图片
+     *
      * @param msg 图片消息
      */
     private void sendNextImgMsg(Message msg) {
@@ -328,6 +326,15 @@ public class MsgListAdapter extends BaseAdapter {
         }
     }
 
+    public Message getMessage(int position) {
+        return mMsgList.get(position);
+    }
+
+    public void removeMessage(int position) {
+        mMsgList.remove(position);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mMsgList.size();
@@ -337,17 +344,23 @@ public class MsgListAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         Message msg = mMsgList.get(position);
         //是文字类型或者自定义类型（用来显示群成员变化消息）
-        if (msg.getContentType() == ContentType.text) {
-            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_TXT
-                    : TYPE_RECEIVE_TXT;
-        } else if (msg.getContentType() == ContentType.image) {
-            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_IMAGE
-                    : TYPE_RECEIVER_IMAGE;
-        } else if (msg.getContentType() == ContentType.voice) {
-            return msg.getDirect() == MessageDirect.send ? TYPE_SEND_VOICE
-                    : TYPE_RECEIVER_VOICE;
-        } else {
-            return TYPE_CUSTOM_TXT;
+        switch (msg.getContentType()) {
+            case text:
+                return msg.getDirect() == MessageDirect.send ? TYPE_SEND_TXT
+                        : TYPE_RECEIVE_TXT;
+            case image:
+                return msg.getDirect() == MessageDirect.send ? TYPE_SEND_IMAGE
+                        : TYPE_RECEIVER_IMAGE;
+            case voice:
+                return msg.getDirect() == MessageDirect.send ? TYPE_SEND_VOICE
+                        : TYPE_RECEIVER_VOICE;
+            case location:
+                return msg.getDirect() == MessageDirect.send ? TYPE_SEND_LOCATION
+                        : TYPE_RECEIVER_LOCATION;
+            case eventNotification:
+                return TYPE_GROUP_CHANGE;
+            default:
+                return TYPE_CUSTOM_TXT;
         }
     }
 
@@ -366,6 +379,13 @@ public class MsgListAdapter extends BaseAdapter {
                 return getItemViewType(position) == TYPE_SEND_VOICE ? mInflater
                         .inflate(IdHelper.getLayout(mContext, "jmui_chat_item_send_voice"), null) : mInflater
                         .inflate(IdHelper.getLayout(mContext, "jmui_chat_item_receive_voice"), null);
+            case location:
+                return getItemViewType(position) == TYPE_SEND_LOCATION ? mInflater
+                        .inflate(IdHelper.getLayout(mContext, "jmui_chat_item_send_location"), null) : mInflater
+                        .inflate(IdHelper.getLayout(mContext, "jmui_chat_item_receive_location"), null);
+            case eventNotification:
+                if (getItemViewType(position) == TYPE_GROUP_CHANGE)
+                    return mInflater.inflate(IdHelper.getLayout(mContext, "jmui_chat_item_group_change"), null);
             case text:
                 return getItemViewType(position) == TYPE_SEND_TXT ? mInflater
                         .inflate(IdHelper.getLayout(mContext, "jmui_chat_item_send_text"), null) : mInflater
@@ -427,8 +447,6 @@ public class MsgListAdapter extends BaseAdapter {
                             .findViewById(IdHelper.getViewID(mContext, "jmui_sending_iv"));
                     holder.resend = (ImageButton) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_fail_resend_ib"));
-                    holder.groupChange = (TextView) convertView
-                            .findViewById(IdHelper.getViewID(mContext, "jmui_group_content"));
                     break;
                 case image:
                     holder.headIcon = (CircleImageView) convertView
@@ -440,7 +458,7 @@ public class MsgListAdapter extends BaseAdapter {
                     holder.sendingIv = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_sending_iv"));
                     holder.progressTv = (TextView) convertView
-                            .findViewById((IdHelper.getViewID(mContext, "jmui_progress_tv")));
+                            .findViewById(IdHelper.getViewID(mContext, "jmui_progress_tv"));
                     holder.resend = (ImageButton) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_fail_resend_ib"));
                     break;
@@ -451,8 +469,8 @@ public class MsgListAdapter extends BaseAdapter {
                             .findViewById(IdHelper.getViewID(mContext, "jmui_display_name_tv"));
                     holder.txtContent = (TextView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_msg_content"));
-                    holder.voice = ((ImageView) convertView
-                            .findViewById(IdHelper.getViewID(mContext, "jmui_voice_iv")));
+                    holder.voice = (ImageView) convertView
+                            .findViewById(IdHelper.getViewID(mContext, "jmui_voice_iv"));
                     holder.sendingIv = (ImageView) convertView
                             .findViewById(IdHelper.getViewID(mContext, "jmui_sending_iv"));
                     holder.voiceLength = (TextView) convertView
@@ -529,83 +547,62 @@ public class MsgListAdapter extends BaseAdapter {
 
         //显示头像
         if (holder.headIcon != null) {
-          if (userInfo != null && !TextUtils.isEmpty(userInfo.getAvatar())){
+            if (userInfo != null && !TextUtils.isEmpty(userInfo.getAvatar())) {
                 userInfo.getAvatarBitmap(new GetAvatarBitmapCallback() {
                     @Override
                     public void gotResult(int status, String desc, Bitmap bitmap) {
                         if (status == 0) {
                             holder.headIcon.setImageBitmap(bitmap);
-                        }else {
-                            holder.headIcon.setImageResource(IdHelper.getDrawable(mContext, "jmui_head_icon"));
+                        } else {
+                            holder.headIcon.setImageResource(IdHelper.getDrawable(mContext,
+                                    "jmui_head_icon"));
                             HandleResponseCode.onHandle(mContext, status, false);
                         }
                     }
                 });
-            }else {
-              holder.headIcon.setImageResource(IdHelper.getDrawable(mContext, "jmui_head_icon"));
-          }
-
-            //TODO 点击头像事件
-
-        }
-
-        OnLongClickListener longClickListener = new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View arg0) {
-                // 长按文本弹出菜单
-                OnClickListener listener = new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        if (v.getId() == IdHelper.getViewID(mContext, "jmui_copy_msg_btn")) {
-                            if (msg.getContentType() == ContentType.text) {
-                                final String content = ((TextContent) msg.getContent()).getText();
-                                if (Build.VERSION.SDK_INT > 11) {
-                                    ClipboardManager clipboard = (ClipboardManager) mContext
-                                            .getSystemService(mContext.CLIPBOARD_SERVICE);
-                                    ClipData clip = ClipData.newPlainText("Simple text", content);
-                                    clipboard.setPrimaryClip(clip);
-                                } else {
-                                    ClipboardManager clipboard = (ClipboardManager) mContext
-                                            .getSystemService(mContext.CLIPBOARD_SERVICE);
-                                    clipboard.setText(content);// 设置Clipboard 的内容
-                                    if (clipboard.hasText()) {
-                                        clipboard.getText();
-                                    }
-                                }
-
-                                Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
-                                        "jmui_copy_toast")), Toast.LENGTH_SHORT).show();
-                                mDialog.dismiss();
-                            }
-                        } else if (v.getId() == IdHelper.getViewID(mContext, "jmui_delete_msg_btn")) {
-                            mConv.deleteMessage(msg.getId());
-                            mMsgList.remove(position);
-                            notifyDataSetChanged();
-                            mDialog.dismiss();
-                        } else {
-                            mDialog.dismiss();
-                        }
-                    }
-                };
-                boolean hide = msg.getContentType() == ContentType.voice;
-                String name = userInfo.getUserName();
-                mDialog = DialogCreator.createLongPressMessageDialog(mContext, name, hide, listener);
-                mDialog.show();
-                mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
-                return true;
+            } else {
+                holder.headIcon.setImageResource(IdHelper.getDrawable(mContext, "jmui_head_icon"));
             }
-        };
+
+            // 点击头像跳转到个人信息界面
+            holder.headIcon.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    //TODO jump to InfoActivity
+//                    Intent intent = new Intent();
+//                    if (msg.getDirect() == MessageDirect.send) {
+//                        intent.putExtra(JChatDemoApplication.TARGET_ID, mTargetId);
+//                        Log.i(TAG, "msg.getFromName() " + mTargetId);
+//                        intent.setClass(mContext, MeInfoActivity.class);
+//                        mContext.startActivity(intent);
+//                    } else {
+//                        String targetID = userInfo.getUserName();
+//                        intent.putExtra(JChatDemoApplication.TARGET_ID, targetID);
+//                        if (!mIsGroup) {
+//                            intent.putExtra(JChatDemoApplication.TARGET_APP_KEY, mTargetAppKey);
+//                        }
+//                        intent.putExtra(JChatDemoApplication.GROUP_ID, mGroupId);
+//                        intent.setClass(mContext, FriendInfoActivity.class);
+//                        ((Activity) mContext).startActivityForResult(intent,
+//                                JChatDemoApplication.REQUEST_CODE_FRIEND_INFO);
+//                    }
+                }
+            });
+        }
 
         switch (msg.getContentType()) {
             case text:
-                handleTextMsg(msg, holder, longClickListener);
+                handleTextMsg(msg, holder, position);
                 break;
             case image:
                 handleImgMsg(msg, holder, position);
                 break;
             case voice:
-                handleVoiceMsg(msg, holder, position, longClickListener);
+                handleVoiceMsg(msg, holder, position);
+                break;
+            case location:
+                handleLocationMsg(msg, holder, position);
                 break;
             case eventNotification:
                 handleGroupChangeMsg(msg, holder, msgTime);
@@ -617,21 +614,54 @@ public class MsgListAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private void handleGroupChangeMsg(Message msg, ViewHolder holder, TextView msgTime) {
+        UserInfo myInfo = JMessageClient.getMyInfo();
+        GroupInfo groupInfo = (GroupInfo) msg.getTargetInfo();
+        String content = ((EventNotificationContent) msg.getContent()).getEventText();
+        EventNotificationContent.EventNotificationType type = ((EventNotificationContent) msg
+                .getContent()).getEventNotificationType();
+        switch (type) {
+            case group_member_added:
+                holder.groupChange.setText(content);
+                holder.groupChange.setVisibility(View.VISIBLE);
+                break;
+            case group_member_exit:
+                holder.groupChange.setVisibility(View.GONE);
+                msgTime.setVisibility(View.GONE);
+                break;
+            case group_member_removed:
+                List<String> userNames = ((EventNotificationContent) msg.getContent()).getUserNames();
+                //被删除的人显示EventNotification
+                if (userNames.contains(myInfo.getNickname()) || userNames.contains(myInfo.getUserName())) {
+                    holder.groupChange.setText(content);
+                    holder.groupChange.setVisibility(View.VISIBLE);
+                    //群主亦显示
+                } else if (myInfo.getUserName().equals(groupInfo.getGroupOwner())) {
+                    holder.groupChange.setText(content);
+                    holder.groupChange.setVisibility(View.VISIBLE);
+                } else {
+                    holder.groupChange.setVisibility(View.GONE);
+                    msgTime.setVisibility(View.GONE);
+                }
+                break;
+        }
+    }
 
     private void handleCustomMsg(Message msg, ViewHolder holder) {
         CustomContent content = (CustomContent) msg.getContent();
         Boolean isBlackListHint = content.getBooleanValue("blackList");
         if (isBlackListHint != null && isBlackListHint) {
-            holder.groupChange.setText(mContext.getString(IdHelper.getString(mContext, "jmui_server_803008")));
+            holder.groupChange.setText(IdHelper.getString(mContext, "server_803008"));
         } else {
             holder.groupChange.setVisibility(View.GONE);
         }
     }
 
-    private void handleTextMsg(final Message msg, final ViewHolder holder, OnLongClickListener longClickListener) {
+    private void handleTextMsg(final Message msg, final ViewHolder holder, int position) {
         final String content = ((TextContent) msg.getContent()).getText();
         holder.txtContent.setText(content);
-        holder.txtContent.setOnLongClickListener(longClickListener);
+        holder.txtContent.setTag(position);
+        holder.txtContent.setOnLongClickListener(mLongClickListener);
         // 检查发送状态，发送方有重发机制
         if (msg.getDirect() == MessageDirect.send) {
             switch (msg.getStatus()) {
@@ -646,7 +676,7 @@ public class MsgListAdapter extends BaseAdapter {
                     holder.resend.setVisibility(View.VISIBLE);
                     break;
                 case send_going:
-                    sendingTextOrVoice(holder, mSendingAnim, msg);
+                    sendingTextOrVoice(holder, msg);
                     break;
                 default:
             }
@@ -655,7 +685,7 @@ public class MsgListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    showResendDialog(holder, mSendingAnim, msg);
+                    showResendDialog(holder, msg);
                 }
             });
 
@@ -672,9 +702,9 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     //正在发送文字或语音
-    private void sendingTextOrVoice(final ViewHolder holder, Animation sendingAnim, Message msg) {
+    private void sendingTextOrVoice(final ViewHolder holder, Message msg) {
         holder.sendingIv.setVisibility(View.VISIBLE);
-        holder.sendingIv.startAnimation(sendingAnim);
+        holder.sendingIv.startAnimation(mSendingAnim);
         holder.resend.setVisibility(View.GONE);
         //消息正在发送，重新注册一个监听消息发送完成的Callback
         if (!msg.isSendCompleteCallbackExists()) {
@@ -698,7 +728,7 @@ public class MsgListAdapter extends BaseAdapter {
     }
 
     //重发对话框
-    private void showResendDialog(final ViewHolder holder, final Animation sendingAnim, final Message msg) {
+    private void showResendDialog(final ViewHolder holder, final Message msg) {
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -707,14 +737,15 @@ public class MsgListAdapter extends BaseAdapter {
                 } else {
                     mDialog.dismiss();
                     if (msg.getContentType() == ContentType.image) {
-                        resendImage(holder, sendingAnim, msg);
+                        resendImage(holder, msg);
                     } else {
-                        resendTextOrVoice(holder, sendingAnim, msg);
+                        resendTextOrVoice(holder, msg);
                     }
                 }
             }
         };
         mDialog = DialogCreator.createResendDialog(mContext, listener);
+        mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
         mDialog.show();
     }
 
@@ -765,7 +796,6 @@ public class MsgListAdapter extends BaseAdapter {
                 Picasso.with(mContext).load(IdHelper.getDrawable(mContext, "jmui_picture_not_found"))
                         .into(holder.picture);
             }
-
             //检查状态
             switch (msg.getStatus()) {
                 case send_success:
@@ -783,7 +813,7 @@ public class MsgListAdapter extends BaseAdapter {
                     holder.resend.setVisibility(View.VISIBLE);
                     break;
                 case send_going:
-                    sendingImage(holder, mSendingAnim, msg);
+                    sendingImage(msg, holder);
                     break;
                 default:
                     holder.picture.setAlpha(0.75f);
@@ -799,7 +829,7 @@ public class MsgListAdapter extends BaseAdapter {
                             Log.d(TAG, "Start sending message");
                             JMessageClient.sendMessage(message);
                             mSendMsgId = message.getId();
-                            sendingImage(holder, mSendingAnim, message);
+                            sendingImage(message, holder);
                         }
                     }
             }
@@ -807,47 +837,26 @@ public class MsgListAdapter extends BaseAdapter {
             holder.resend.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    showResendDialog(holder, mSendingAnim, msg);
+                    showResendDialog(holder, msg);
                 }
             });
         }
         if (holder.picture != null) {
+            // 点击预览图片
+            holder.picture.setOnClickListener(new BtnOrTxtListener(position, holder));
 
-            //TODO 点击图片事件
-
-            holder.picture.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    String name = msg.getFromUser().getUserName();
-                    OnClickListener listener = new OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            if (v.getId() == IdHelper.getViewID(mContext, "jmui_delete_msg_btn")) {
-                                mConv.deleteMessage(msg.getId());
-                                mMsgList.remove(position);
-                                notifyDataSetChanged();
-                                mDialog.dismiss();
-                            } else {
-                                mDialog.dismiss();
-                            }
-                        }
-                    };
-                    mDialog = DialogCreator.createLongPressMessageDialog(mContext, name, true, listener);
-                    mDialog.show();
-                    mDialog.getWindow().setLayout((int) (0.8 * mWidth), WindowManager.LayoutParams.WRAP_CONTENT);
-                    return true;
-                }
-            });
+            holder.picture.setTag(position);
+            holder.picture.setOnLongClickListener(mLongClickListener);
 
         }
     }
 
-    private void sendingImage(final ViewHolder holder, final Animation sendingAnim, final Message msg) {
+    private void sendingImage(final Message msg, final ViewHolder holder) {
         holder.picture.setAlpha(0.75f);
         holder.sendingIv.setVisibility(View.VISIBLE);
-        holder.sendingIv.startAnimation(sendingAnim);
+        holder.sendingIv.startAnimation(mSendingAnim);
         holder.progressTv.setVisibility(View.VISIBLE);
+        holder.progressTv.setText("0%");
         holder.resend.setVisibility(View.GONE);
         //如果图片正在发送，重新注册上传进度Callback
         if (!msg.isContentUploadProgressCallbackExists()) {
@@ -891,10 +900,44 @@ public class MsgListAdapter extends BaseAdapter {
                     mMsgList.set(mMsgList.indexOf(msg), message);
                     Log.d(TAG, "msg.getId " + msg.getId() + " msg.getStatus " + msg.getStatus());
                     Log.d(TAG, "message.getId " + message.getId() + " message.getStatus " + message.getStatus());
+//                    notifyDataSetChanged();
                 }
             });
 
         }
+    }
+
+    private ArrayList<Integer> getImgMsgIDList() {
+        ArrayList<Integer> imgMsgIDList = new ArrayList<Integer>();
+        for (Message msg : mMsgList) {
+            if (msg.getContentType() == ContentType.image) {
+                imgMsgIDList.add(msg.getId());
+            }
+        }
+        return imgMsgIDList;
+    }
+
+    private void resendTextOrVoice(final ViewHolder holder, Message msg) {
+        holder.resend.setVisibility(View.GONE);
+        holder.sendingIv.setVisibility(View.VISIBLE);
+        holder.sendingIv.startAnimation(mSendingAnim);
+
+        if (!msg.isSendCompleteCallbackExists()) {
+            msg.setOnSendCompleteCallback(new BasicCallback() {
+                @Override
+                public void gotResult(final int status, String desc) {
+                    holder.sendingIv.clearAnimation();
+                    holder.sendingIv.setVisibility(View.GONE);
+                    if (status != 0) {
+                        HandleResponseCode.onHandle(mContext, status, false);
+                        holder.resend.setVisibility(View.VISIBLE);
+                        Log.i(TAG, "Resend message failed!");
+                    }
+                }
+            });
+        }
+
+        JMessageClient.sendMessage(msg);
     }
 
     /**
@@ -920,34 +963,9 @@ public class MsgListAdapter extends BaseAdapter {
         imageView.setLayoutParams(params);
     }
 
-    private void resendTextOrVoice(final ViewHolder holder, Animation sendingAnim, Message msg) {
-        holder.resend.setVisibility(View.GONE);
+    private void resendImage(final ViewHolder holder, Message msg) {
         holder.sendingIv.setVisibility(View.VISIBLE);
-        holder.sendingIv.startAnimation(sendingAnim);
-
-        if (!msg.isSendCompleteCallbackExists()) {
-            msg.setOnSendCompleteCallback(new BasicCallback() {
-                @Override
-                public void gotResult(final int status, String desc) {
-                    holder.sendingIv.clearAnimation();
-                    holder.sendingIv.setVisibility(View.GONE);
-                    if (status != 0) {
-                        HandleResponseCode.onHandle(mContext, status, false);
-                        holder.resend.setVisibility(View.VISIBLE);
-                        Log.i(TAG, "Resend message failed!");
-                    }
-                }
-            });
-        }
-
-        JMessageClient.sendMessage(msg);
-    }
-
-    private void resendImage(final ViewHolder holder, Animation sendingAnim, Message msg) {
-        ImageContent imgContent = (ImageContent) msg.getContent();
-        final String path = imgContent.getLocalThumbnailPath();
-        holder.sendingIv.setVisibility(View.VISIBLE);
-        holder.sendingIv.startAnimation(sendingAnim);
+        holder.sendingIv.startAnimation(mSendingAnim);
         holder.picture.setAlpha(0.75f);
         holder.resend.setVisibility(View.GONE);
         holder.progressTv.setVisibility(View.VISIBLE);
@@ -986,8 +1004,7 @@ public class MsgListAdapter extends BaseAdapter {
         }
     }
 
-    private void handleVoiceMsg(final Message msg, final ViewHolder holder, final int position,
-    OnLongClickListener longClickListener) {
+    private void handleVoiceMsg(final Message msg, final ViewHolder holder, final int position) {
         final VoiceContent content = (VoiceContent) msg.getContent();
         final MessageDirect msgDirect = msg.getDirect();
         int length = content.getDuration();
@@ -996,7 +1013,8 @@ public class MsgListAdapter extends BaseAdapter {
         //控制语音长度显示，长度增幅随语音长度逐渐缩小
         int width = (int) (-0.04 * length * length + 4.526 * length + 75.214);
         holder.txtContent.setWidth((int) (width * mDensity));
-        holder.txtContent.setOnLongClickListener(longClickListener);
+        holder.txtContent.setTag(position);
+        holder.txtContent.setOnLongClickListener(mLongClickListener);
         if (msgDirect == MessageDirect.send) {
             holder.voice.setImageResource(IdHelper.getDrawable(mContext, "jmui_send_3"));
             switch (msg.getStatus()) {
@@ -1011,7 +1029,7 @@ public class MsgListAdapter extends BaseAdapter {
                     holder.resend.setVisibility(View.VISIBLE);
                     break;
                 case send_going:
-                    sendingTextOrVoice(holder, mSendingAnim, msg);
+                    sendingTextOrVoice(holder, msg);
                     break;
                 default:
             }
@@ -1020,11 +1038,11 @@ public class MsgListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View arg0) {
                     if (msg.getContent() != null) {
-                        showResendDialog(holder, mSendingAnim, msg);
-                    }
-                    else {
+                        showResendDialog(holder, msg);
+                    } else {
                         Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
-                                        "jmui_sdcard_not_exist_toast")), Toast.LENGTH_SHORT).show();
+                                        "jmui_sdcard_not_exist_toast")),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -1066,8 +1084,9 @@ public class MsgListAdapter extends BaseAdapter {
                             @Override
                             public void onComplete(int status, String desc, File file) {
                                 if (status != 0) {
-                                    Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext,
-                                                    "jmui_voice_fetch_failed_toast")), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, IdHelper.getString(mContext,
+                                                    "jmui_voice_fetch_failed_toast"),
+                                            Toast.LENGTH_SHORT).show();
                                 } else {
                                     Log.i("VoiceMessage", "reload success");
                                 }
@@ -1080,107 +1099,7 @@ public class MsgListAdapter extends BaseAdapter {
         }
 
 
-        holder.txtContent.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (!FileHelper.isSdCardExist() && msg.getDirect() == MessageDirect.send) {
-                    Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, 
-                            "jmui_sdcard_not_exist_toast")), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                // 如果之前存在播放动画，无论这次点击触发的是暂停还是播放，停止上次播放的动画
-                if (mVoiceAnimation != null) {
-                    mVoiceAnimation.stop();
-                }
-                // 播放中点击了正在播放的Item 则暂停播放
-                if (mp.isPlaying() && mPosition == position) {
-                    if (msgDirect == MessageDirect.send) {
-                        holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_send"));
-                    } else {
-                        holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_receive"));
-                    }
-                    mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
-                    pauseVoice();
-                    mVoiceAnimation.stop();
-                    // 开始播放录音
-                } else if (msgDirect == MessageDirect.send) {
-                    holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_send"));
-                    mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
-
-                    // 继续播放之前暂停的录音
-                    if (mSetData && mPosition == position) {
-                        mVoiceAnimation.start();
-                        mp.start();
-                        // 否则重新播放该录音或者其他录音
-                    } else {
-                        playVoice(position, holder, true);
-                    }
-                    // 语音接收方特殊处理，自动连续播放未读语音
-                } else {
-                    try {
-                        // 继续播放之前暂停的录音
-                        if (mSetData && mPosition == position) {
-                            if (mVoiceAnimation != null) {
-                                mVoiceAnimation.start();
-                            }
-                            mp.start();
-                            // 否则开始播放另一条录音
-                        } else {
-                            // 选中的录音是否已经播放过，如果未播放，自动连续播放这条语音之后未播放的语音
-                            if (msg.getContent().getBooleanExtra("isReaded") == null
-                                    || !msg.getContent().getBooleanExtra("isReaded")) {
-                                autoPlay = true;
-                                playVoice(position, holder, false);
-                                // 否则直接播放选中的语音
-                            } else {
-                                holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_receive"));
-                                mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
-                                playVoice(position, holder, false);
-                            }
-                        }
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    private void handleGroupChangeMsg(Message msg, ViewHolder holder, TextView msgTime) {
-        UserInfo myInfo = JMessageClient.getMyInfo();
-        GroupInfo groupInfo = (GroupInfo) msg.getTargetInfo();
-        String content = ((EventNotificationContent) msg.getContent()).getEventText();
-        EventNotificationContent.EventNotificationType type = ((EventNotificationContent) msg
-                .getContent()).getEventNotificationType();
-        switch (type) {
-            case group_member_added:
-                holder.groupChange.setText(content);
-                holder.groupChange.setVisibility(View.VISIBLE);
-                break;
-            case group_member_exit:
-                holder.groupChange.setVisibility(View.GONE);
-                msgTime.setVisibility(View.GONE);
-                break;
-            case group_member_removed:
-                List<String> userNames = ((EventNotificationContent) msg.getContent()).getUserNames();
-                //被删除的人显示EventNotification
-                if (userNames.contains(myInfo.getNickname()) || userNames.contains(myInfo.getUserName())) {
-                    holder.groupChange.setText(content);
-                    holder.groupChange.setVisibility(View.VISIBLE);
-                    //群主亦显示
-                } else if (myInfo.getUserName().equals(groupInfo.getGroupOwner())) {
-                    holder.groupChange.setText(content);
-                    holder.groupChange.setVisibility(View.VISIBLE);
-                } else {
-                    holder.groupChange.setVisibility(View.GONE);
-                    msgTime.setVisibility(View.GONE);
-                }
-                break;
-        }
+        holder.txtContent.setOnClickListener(new BtnOrTxtListener(position, holder));
     }
 
     private void playVoice(final int position, final ViewHolder holder, final boolean isSender) {
@@ -1194,8 +1113,7 @@ public class MsgListAdapter extends BaseAdapter {
                 mVoiceAnimation.stop();
                 mVoiceAnimation = null;
             }
-            holder.voice.setImageResource(mContext.getResources().getIdentifier("jmui_voice_receive",
-                    "anim", mContext.getPackageName()));
+            holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_receive"));
             mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
         }
         try {
@@ -1244,10 +1162,10 @@ public class MsgListAdapter extends BaseAdapter {
                 }
             });
         } catch (FileNotFoundException e) {
-            Toast.makeText(mContext, mContext.getString(IdHelper.getString(mContext, "jmui_file_not_found_toast")),
+            Toast.makeText(mContext, IdHelper.getString(mContext, "jmui_file_not_found_toast"),
                     Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(mActivity, mContext.getString(IdHelper.getString(mContext, "jmui_file_not_found_toast")),
+            Toast.makeText(mContext, IdHelper.getString(mContext, "jmui_file_not_found_toast"),
                     Toast.LENGTH_SHORT).show();
         } finally {
             try {
@@ -1271,9 +1189,120 @@ public class MsgListAdapter extends BaseAdapter {
         Collections.sort(mIndexList);
     }
 
+    private void handleLocationMsg(Message msg, ViewHolder holder, int position) {
+
+    }
+
     public void stopMediaPlayer() {
         if (mp.isPlaying())
             mp.stop();
+    }
+
+    public static abstract class ContentLongClickListener implements OnLongClickListener {
+
+        @Override
+        public boolean onLongClick(View v) {
+            onContentLongClick((Integer)v.getTag(), v);
+            return true;
+        }
+
+        public abstract void onContentLongClick(int position, View view);
+    }
+
+    class BtnOrTxtListener implements OnClickListener {
+
+        private int position;
+        private ViewHolder holder;
+
+        public BtnOrTxtListener(int index, ViewHolder viewHolder) {
+            this.position = index;
+            this.holder = viewHolder;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Message msg = mMsgList.get(position);
+            MessageDirect msgDirect = msg.getDirect();
+            if (holder.txtContent != null && v.getId() == holder.txtContent.getId()) {
+                if (msg.getContentType() == ContentType.voice) {
+                    if (!FileHelper.isSdCardExist() && msg.getDirect() == MessageDirect.send) {
+                        Toast.makeText(mContext, IdHelper.getString(mContext, "jmui_sdcard_not_exist_toast"),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // 如果之前存在播放动画，无论这次点击触发的是暂停还是播放，停止上次播放的动画
+                    if (mVoiceAnimation != null) {
+                        mVoiceAnimation.stop();
+                    }
+                    // 播放中点击了正在播放的Item 则暂停播放
+                    if (mp.isPlaying() && mPosition == position) {
+                        if (msgDirect == MessageDirect.send) {
+                            holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_send"));
+                        } else {
+                            holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_receive"));
+                        }
+                        mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
+                        pauseVoice();
+                        mVoiceAnimation.stop();
+                        // 开始播放录音
+                    } else if (msgDirect == MessageDirect.send) {
+                        holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_send"));
+                        mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
+
+                        // 继续播放之前暂停的录音
+                        if (mSetData && mPosition == position) {
+                            mVoiceAnimation.start();
+                            mp.start();
+                            // 否则重新播放该录音或者其他录音
+                        } else {
+                            playVoice(position, holder, true);
+                        }
+                        // 语音接收方特殊处理，自动连续播放未读语音
+                    } else {
+                        try {
+                            // 继续播放之前暂停的录音
+                            if (mSetData && mPosition == position) {
+                                if (mVoiceAnimation != null) {
+                                    mVoiceAnimation.start();
+                                }
+                                mp.start();
+                                // 否则开始播放另一条录音
+                            } else {
+                                // 选中的录音是否已经播放过，如果未播放，自动连续播放这条语音之后未播放的语音
+                                if (msg.getContent().getBooleanExtra("isReaded") == null
+                                        || !msg.getContent().getBooleanExtra("isReaded")) {
+                                    autoPlay = true;
+                                    playVoice(position, holder, false);
+                                    // 否则直接播放选中的语音
+                                } else {
+                                    holder.voice.setImageResource(IdHelper.getAnim(mContext, "jmui_voice_receive"));
+                                    mVoiceAnimation = (AnimationDrawable) holder.voice.getDrawable();
+                                    playVoice(position, holder, false);
+                                }
+                            }
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        } catch (IllegalStateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else if (holder.picture != null && v.getId() == holder.picture.getId()) {
+                //TODO jump to BrowserViewPagerActivity
+//                Intent intent = new Intent();
+//                intent.putExtra(JChatDemoApplication.TARGET_ID, mTargetId);
+//                intent.putExtra("msgId", msg.getId());
+//                intent.putExtra(JChatDemoApplication.GROUP_ID, mGroupId);
+//                intent.putExtra(JChatDemoApplication.TARGET_APP_KEY, mTargetAppKey);
+//                intent.putExtra("msgCount", mMsgList.size());
+//                intent.putIntegerArrayListExtra(JChatDemoApplication.MsgIDs, getImgMsgIDList());
+//                intent.putExtra("fromChatActivity", true);
+//                intent.setClass(mContext, BrowserViewPagerActivity.class);
+//                mContext.startActivity(intent);
+            }
+        }
     }
 
     public static class ViewHolder {
@@ -1287,6 +1316,7 @@ public class MsgListAdapter extends BaseAdapter {
         ImageView voice;
         // 录音是否播放过的标志
         ImageView readStatus;
+        TextView location;
         TextView groupChange;
         ImageView sendingIv;
     }
